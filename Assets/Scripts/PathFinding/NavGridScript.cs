@@ -11,9 +11,10 @@ public class NavGridScript : Singleton<NavGridScript> {
     public float _cellSize = 1.0f;
     public float _spiralSize = 20;
     public NavGrid _grid;
-    public int _currentWidth;
-    public int _currentHeight;
-    public float _currentCellSize;
+
+    public int _currentWidth { get; private set; }
+    public int _currentHeight { get; private set; }
+    public float _currentCellSize { get; private set; }
     private Vector2 _BottomCornerWorldPosition;
     private LayerMask _AccessibleLayer;
     private LayerMask _invertAccessibleLayer;
@@ -46,6 +47,7 @@ public class NavGridScript : Singleton<NavGridScript> {
     public void GenerateNavGrid()
     {
         UpdateEnviromentMasks();
+        _currentCellSize = _cellSize;
         _currentWidth = Mathf.CeilToInt(_width / _cellSize) * 2 + 1;
         _currentHeight = Mathf.CeilToInt(_height / _cellSize) * 2 + 1;
         var to_left_bottom_x = _width + .5f * _cellSize;
@@ -150,16 +152,6 @@ public class NavGridScript : Singleton<NavGridScript> {
         {
             GameObject.DestroyImmediate(transform.GetChild(i-1).gameObject);
         }
-    }
-
-    public void AccessableCheckUsingWorldPosition(ref float x, ref float y)
-    {
-        var x_from_bottom_of_grid = (x + _width ) / _cellSize + .5f;
-        var y_from_bottom_of_grid = (y + _height ) / _cellSize + .5f;
-        var index_x = Mathf.Floor(x_from_bottom_of_grid);
-        var index_y = Mathf.Floor(y_from_bottom_of_grid);
-        x = (index_x + .5f) * _cellSize;
-        y = (index_y + .5f) * _cellSize;
     }
 
     public bool IsWorldPositionAccessable(ref float x, ref float y)

@@ -16,6 +16,7 @@ public class InputHandler : Singleton<InputHandler> {
     private Vector3 m_camera_input = new Vector3();
     private SelectionState m_selection_state = SelectionState.None;
     private LinkedList<SelectionState> m_selection_queue = new LinkedList<SelectionState>();
+    public bool m_waiting_for_mouse_to_move = false;
 
     private GameObject m_tmp;
     private GameObject m_tmp2;
@@ -64,7 +65,10 @@ public class InputHandler : Singleton<InputHandler> {
         if (Input.GetKeyDown(KeyCode.Space))
             m_selection_queue.AddLast(SelectionState.Movemement);
         if (Input.GetKeyUp(KeyCode.Space))
+        {
+            m_waiting_for_mouse_to_move = false;
             m_selection_queue.Remove(SelectionState.Movemement);
+        }
 
         if (m_selection_queue.Count == 0)
             m_selection_state = SelectionState.None;
@@ -74,22 +78,38 @@ public class InputHandler : Singleton<InputHandler> {
 
     private void HandleMovementState()
     {
+        bool move = false;
         if (!Input.GetMouseButton(0))
-            return;
+        {
+            if (!m_waiting_for_mouse_to_move)
+                return;
+            else
+            {
+                move = true;
+                m_waiting_for_mouse_to_move = false;
+            }
+        }
 
         var t = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
         Ray r = Camera.main.ScreenPointToRay(t);
         RaycastHit hit = new RaycastHit();
         if (Physics.Raycast(r, out hit, 1000.0f, NavGridScript.Instance.invertAccesbileEnviromentMask))
-        {
+        { 
             if (Input.GetMouseButtonDown(0))
             {
                 m_tmp.SetActive(true);
                 m_tmp2.SetActive(true);
+                m_waiting_for_mouse_to_move = true;
             }
             float x = hit.point[0];
             float y = hit.point[1];
-            if (NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y))
+            bool accessable = NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y);
+            if (move && accessable)
+            {
+                var mover = GameObject.FindGameObjectWithTag("Player").GetComponent<SimpleCharacterMovement>();
+                mover.MoveTo(new Vector3(x, y, 1.0f));
+            }
+            else if (accessable)
                 m_tmp.GetComponent<Renderer>().material.color = Color.green;
             else
                 m_tmp.GetComponent<Renderer>().material.color = Color.red;

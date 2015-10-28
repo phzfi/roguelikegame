@@ -98,12 +98,11 @@ public class NavPath {
         _path.Clear();
         _catmullRom = false;
         _startWorldPos = startWorldPos;
-        _startWorldPos = startWorldPos;
         GridPosition start = GetGridPosition(startWorldPos);
         GridPosition end = GetGridPosition(endWorldPos);
         FindClosetAccessableWithSpiral(ref end);
         
-        var closedSet = new Dictionary<GridPosition, Node>();
+        var closedSet = new Dictionary<GridPosition, Node>(); 
         var map = new Dictionary<GridPosition, Node>();
         var openSet = new Dictionary<GridPosition, Node>();
         var startNode = new Node(start.Distance(end), .0f, GridPosition.None);
