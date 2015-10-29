@@ -7,21 +7,21 @@ using System.Collections;
 */
 public class NavGridCell
 {
-    public NavGridCell() { _worldPos = Vector3.zero; _accessible = false; _outOfTheScene = true; _movementCost = 1.0f; _smallestMaxAccessDistance = .0f; }
+    public NavGridCell() { m_worldPos = Vector3.zero; m_accessible = false; m_outOfTheScene = true; m_movementCost = 1.0f; m_smallestMaxAccessDistance = .0f; }
 
-    public float _smallestMaxAccessDistance;
-    public Vector3 _worldPos;
-    public bool _accessible;
-    public bool _outOfTheScene;
-    public float _movementCost;
+    public float m_smallestMaxAccessDistance;
+    public Vector3 m_worldPos;
+    public bool m_accessible;
+    public bool m_outOfTheScene;
+    public float m_movementCost;
 };
 
 public class NavGrid {
 
-    public NavGridCell[,] _navigationGrid; 
+    public NavGridCell[,] m_navigationGrid; 
 
     public NavGrid(int w, int h)
     {
-        _navigationGrid = new NavGridCell[w, h];
+        m_navigationGrid = new NavGridCell[w, h];
     }
 }

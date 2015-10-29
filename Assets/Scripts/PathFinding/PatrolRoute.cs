@@ -4,49 +4,49 @@ using System.Collections.Generic;
 
 public class PatrolRoute : MonoBehaviour {
     
-    public List<Vector3> _pointList = new List<Vector3>();
-    public bool _drawGizmos = true;
-    private float _d = .0f;
-    private int _currentPt = 0;
-    private int _nextPt = 1;
+    public List<Vector3> m_pointList = new List<Vector3>();
+    public bool m_drawGizmos = true;
+    private float m_d = .0f;
+    private int m_currentPt = 0;
+    private int m_nextPt = 1;
 
     public Vector3 GetNextPosition(float dist)
     {
-        _d += dist;
-        float ptDist = Vector3.Distance(_pointList[_currentPt], _pointList[_nextPt]);
-        if (_d > ptDist)
+        m_d += dist;
+        float ptDist = Vector3.Distance(m_pointList[m_currentPt], m_pointList[m_nextPt]);
+        if (m_d > ptDist)
         {
-            _d -= ptDist;
-            _currentPt++;
-            _currentPt = _currentPt % _pointList.Count;
-            _nextPt = (_currentPt + 1) % _pointList.Count;
-            ptDist = Vector3.Distance(_pointList[_currentPt], _pointList[_nextPt]);
+            m_d -= ptDist;
+            m_currentPt++;
+            m_currentPt = m_currentPt % m_pointList.Count;
+            m_nextPt = (m_currentPt + 1) % m_pointList.Count;
+            ptDist = Vector3.Distance(m_pointList[m_currentPt], m_pointList[m_nextPt]);
         }
-        return Vector3.Lerp(_pointList[_currentPt], _pointList[_nextPt], _d / ptDist);
+        return Vector3.Lerp(m_pointList[m_currentPt], m_pointList[m_nextPt], m_d / ptDist);
     }
 
     public Vector3 GetDirection()
     {
-        return (_pointList[_nextPt] - _pointList[_currentPt]).normalized;
+        return (m_pointList[m_nextPt] - m_pointList[m_currentPt]).normalized;
     }
 
-    public void Reset() { _d = .0f; _currentPt = 0; _nextPt = 1; } 
+    public void Reset() { m_d = .0f; m_currentPt = 0; m_nextPt = 1; } 
 
     void OnDrawGizmos()
     {
-        if (!_drawGizmos)
+        if (!m_drawGizmos)
             return;
         Gizmos.color = Color.blue;
-        for (int i = 0; i < _pointList.Count; ++i)
+        for (int i = 0; i < m_pointList.Count; ++i)
         {
-            Gizmos.DrawSphere(_pointList[i], .25f);
+            Gizmos.DrawSphere(m_pointList[i], .25f);
         }
-        if (_pointList.Count >= 2)
+        if (m_pointList.Count >= 2)
         {
-            for (int i = 0; i < _pointList.Count; ++i)
+            for (int i = 0; i < m_pointList.Count; ++i)
             {
-                int next = (i + 1) % _pointList.Count;
-                Gizmos.DrawLine(_pointList[i], _pointList[next]);
+                int next = (i + 1) % m_pointList.Count;
+                Gizmos.DrawLine(m_pointList[i], m_pointList[next]);
             }
         }
     }

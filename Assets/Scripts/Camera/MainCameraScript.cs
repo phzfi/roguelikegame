@@ -3,18 +3,18 @@ using System.Collections;
 
 public class MainCameraScript : MonoBehaviour {
 
-    public float m_camera_acceleration_constant = .1f;
-    public float m_camera_max_velocity = 1.0f;
+    public float m_cameraAccelerationConstant = .1f;
+    public float m_cameraMaxVelocity = 1.0f;
 
-    private Vector3 m_max_velocity = new Vector3();
+    private Vector3 m_maxVelocity = new Vector3();
     private Vector3 m_velocity;
 
     void Awake()
     {
-        m_max_velocity = new Vector3(
-            m_camera_max_velocity,
-            m_camera_max_velocity,
-            m_camera_max_velocity);
+        m_maxVelocity = new Vector3(
+            m_cameraMaxVelocity,
+            m_cameraMaxVelocity,
+            m_cameraMaxVelocity);
     }
 
 	void Update ()
@@ -22,7 +22,7 @@ public class MainCameraScript : MonoBehaviour {
         var input = InputHandler.Instance.CameraInput;
         var dt = Time.deltaTime;
         m_velocity = Vector3.Lerp(m_velocity, 
-            MultiplyComponentsOfVectors(input, m_max_velocity), m_camera_acceleration_constant * dt);
+            MultiplyComponentsOfVectors(input, m_maxVelocity), m_cameraAccelerationConstant * dt);
         transform.localPosition += transform.localRotation * m_velocity * dt;
     }
 
