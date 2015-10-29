@@ -49,15 +49,11 @@ public class InputHandler : Singleton<InputHandler> {
 
     private void UpdateCameraInputs()
     {
-        m_camera_input[1] += Input.GetKeyDown(KeyCode.W) ? 1.0f : .0f;
-        m_camera_input[1] += Input.GetKeyDown(KeyCode.S) ? -1.0f : .0f;
-        m_camera_input[1] += Input.GetKeyUp(KeyCode.W) ? -1.0f : .0f;
-        m_camera_input[1] += Input.GetKeyUp(KeyCode.S) ? 1.0f : .0f;
+        m_camera_input[1] = Input.GetKey(KeyCode.W) ? 1.0f : .0f;
+        m_camera_input[1] += Input.GetKey(KeyCode.S) ? -1.0f : .0f;
 
-        m_camera_input[0] += Input.GetKeyDown(KeyCode.D) ? 1.0f : .0f;
-        m_camera_input[0] += Input.GetKeyDown(KeyCode.A) ? -1.0f : .0f;
-        m_camera_input[0] += Input.GetKeyUp(KeyCode.D) ? -1.0f : .0f;
-        m_camera_input[0] += Input.GetKeyUp(KeyCode.A) ? 1.0f : .0f;
+        m_camera_input[0] = Input.GetKey(KeyCode.D) ? 1.0f : .0f;
+        m_camera_input[0] += Input.GetKey(KeyCode.A) ? -1.0f : .0f;
     }
 
     private void HandleSelectionStates()
