@@ -7,47 +7,63 @@ public class SyncTransform : NetworkBehaviour
 
     [SerializeField]
     Transform myTransform;
-    [SerializeField]
-    float lerprate = 15;
     [SyncVar]
     Vector3 syncPosition;
     [SyncVar]
     Quaternion syncRotation;
 
-    void FixedUpdate()
+    [SerializeField]
+    float syncRate = .5f;
+    private float lastSync = -99.0f;
+
+    void Update()
     {
-        TransmitTransform();
         InterpolateTransform();
+        syncClients();
+    }
+
+    [Server]
+    void syncClients()
+    {
+        if (Time.realtimeSinceStartup - lastSync > syncRate)
+        {
+            lastSync = Time.realtimeSinceStartup;
+            var clientObjects = GameObject.FindGameObjectsWithTag("Player");
+            foreach (var obj in clientObjects)
+            {
+                var syncer = obj.GetComponent<SyncTransform>();
+                if (syncer == null)
+                    continue;
+                syncer.RpcSyncClientObject();
+            }
+        }
     }
 
     void InterpolateTransform()
     {
         if(!isLocalPlayer)
         {
-            myTransform.position = Vector3.Lerp(myTransform.position, syncPosition, lerprate * Time.deltaTime);
-            myTransform.rotation = Quaternion.Slerp(myTransform.rotation, syncRotation, lerprate * Time.deltaTime);
+            myTransform.position = syncPosition; //don't actually interpolate for now
+            myTransform.rotation = syncRotation;
         }
     }
 
     [Command]
-    void CmdSendPosition(Vector3 pos)
+    void CmdSendPositionToServer(Vector3 pos)
     {
         syncPosition = pos;
     }
 
     [Command]
-    void CmdSendRotation(Quaternion rot)
+    void CmdSendRotationToServer(Quaternion rot)
     {
         syncRotation = rot;
     }
 
-    [ClientCallback]
-    void TransmitTransform()
+    [ClientRpc]
+    void RpcSyncClientObject()
     {
-        if (isLocalPlayer)
-        {
-            CmdSendPosition(myTransform.position);
-            CmdSendRotation(myTransform.rotation);
-        }
+        CmdSendPositionToServer(myTransform.position);
+        CmdSendRotationToServer(myTransform.rotation);
     }
 }
