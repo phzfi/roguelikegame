@@ -13,7 +13,7 @@ public delegate float MovementEvalFuncDelegate(NavMovementEvalData d);
 public class NavPath {
 
     public float _characterSize = .1f;
-    public List<Vector3> _path;
+    public List<GridPosition> _path;
     public bool _catmullRom = false;
     public Vector3 _startWorldPos;
     public Vector3 _endWorldPos;
@@ -84,7 +84,7 @@ public class NavPath {
     {
         _data = pathFindingData;
         _init = true;
-        _path = new List<Vector3>();
+        _path = new List<GridPosition>();
     }
 
     public void SeekPath(MovementEvalFuncDelegate del, Vector3 startWorldPos, Vector3 endWorldPos)
@@ -120,15 +120,15 @@ public class NavPath {
             if (best.Key == end)
             {
                 if (_path == null)
-                    _path = new List<Vector3>();
+                    _path = new List<GridPosition>();
                 else
                     _path.Clear();
 
                 Node n = best.Value;
-                _path.Add(GetWorldPos(best.Key));
+                _path.Add(best.Key);
                 while (n != null && n.cameFrom != GridPosition.None)
                 {
-                    _path.Insert(0, GetWorldPos(n.cameFrom));
+                    _path.Insert(0, n.cameFrom);
                     n = map[n.cameFrom];
                 }
                 return;
@@ -190,7 +190,7 @@ public class NavPath {
         } 
     }
 
-    GridPosition GetGridPosition(Vector3 worldPosition)
+    public GridPosition GetGridPosition(Vector3 worldPosition)
     {
         return new GridPosition
         {
@@ -199,7 +199,7 @@ public class NavPath {
         };
     }
 
-    Vector3 GetWorldPos(GridPosition gridPos)
+    public Vector3 GetWorldPos(GridPosition gridPos)
     {
         return _data._grid._navigationGrid[gridPos.x, gridPos.y]._worldPos;
     }
@@ -225,24 +225,24 @@ public class NavPath {
         return neighbours;
     }
 
-    public bool EditPathToFitCatmullRomSpline()
-    {
-        if (_path.Count >= 2)
-        {
-            _catmullRom = true;
-            Vector3 lastControlPoint = _path[_path.Count - 1];
-            Vector3 secondLastControlPoint = _path[_path.Count - 2];
-            Vector3 p = lastControlPoint + (lastControlPoint - secondLastControlPoint);
-            _path.Add(p);
+    //public bool EditPathToFitCatmullRomSpline()
+    //{
+    //    if (_path.Count >= 2)
+    //    {
+    //        _catmullRom = true;
+    //        Vector3 lastControlPoint = _path[_path.Count - 1];
+    //        Vector3 secondLastControlPoint = _path[_path.Count - 2];
+    //        Vector3 p = lastControlPoint + (lastControlPoint - secondLastControlPoint);
+    //        _path.Add(p);
 
-            Vector3 firstControlPoint = _path[0];
-            Vector3 secondControlPoint = _path[1];
-            p = firstControlPoint + (firstControlPoint - secondControlPoint);
-            _path.Insert(0,p);
-            return true;
-        }
-        else
-            return false;
-    }
+    //        Vector3 firstControlPoint = _path[0];
+    //        Vector3 secondControlPoint = _path[1];
+    //        p = firstControlPoint + (firstControlPoint - secondControlPoint);
+    //        _path.Insert(0,p);
+    //        return true;
+    //    }
+    //    else
+    //        return false;
+    //}
 
 }

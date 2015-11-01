@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992db0e2aa002c74a83a2c7f07aaea04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myTransform: {fileID: 497532}
+  mover: {fileID: 11432662}
   syncRate: .5
 --- !u!114 &11420804
 MonoBehaviour:
@@ -133,8 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31350f0aab4fb5e44bd875820e14aafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_speed: 1
-  m_rotationSpeed: 1
+  speed: 1
+  rotationSpeed: 1
 --- !u!114 &11433906
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -173,6 +173,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: db3322e65aea6344a8b85cee572c3116, type: 2}
+    - target: {fileID: 0}
+      propertyPath: mover
+      value: 
+      objectReference: {fileID: 11432662}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180150}

@@ -94,6 +94,8 @@ public class NavGridScript : Singleton<NavGridScript> {
                 {
                     int nextX, nextY;
                     s.Next(out nextX, out nextY);
+                    if (x + nextX < 0 || x + nextX < 0 || y + nextY >= _height || x + nextX >= _width) // prevent indexing out of bounds
+                        continue;
                     NavGridCell n = g._navigationGrid[(x + nextX), (y + nextY)];
                     if (!n._accessible)
                     {

@@ -274,7 +274,7 @@ Transform:
   - {fileID: 1021125222}
   - {fileID: 643396918}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!114 &87237842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -866,10 +866,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45c46653fcb8ca149820ec167ab7f3dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _width: 8
-  _height: 12
+  _width: 20
+  _height: 20
   _cellSize: 1
-  _spiralSize: 100
+  _spiralSize: 20
 --- !u!4 &915472245
 Transform:
   m_ObjectHideFlags: 0

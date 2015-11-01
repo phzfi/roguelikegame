@@ -6,7 +6,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	    if(isLocalPlayer)
+	    //if(isLocalPlayer)
         {
             GetComponent<SimpleCharacterMovement>().enabled = true;
         }
