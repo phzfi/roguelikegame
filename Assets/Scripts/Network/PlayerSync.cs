@@ -5,15 +5,15 @@ using UnityEngine.Networking;
 public class PlayerSync : NetworkBehaviour {
 
     [SerializeField]
-    SimpleCharacterMovement mover;
+    SimpleCharacterMovement m_mover;
 
     [SyncVar]
-    NavPath.GridPosition syncPosition;
+    NavPath.GridPosition m_syncPosition;
 
     // Use this for initialization
     void Start ()
     {
-        SyncTransform.players.Add(gameObject);
+        SyncTransform.sm_players.Add(gameObject);
 	}
 	
 	// Update is called once per frame
@@ -24,21 +24,21 @@ public class PlayerSync : NetworkBehaviour {
     
     void OnDestroy()
     {
-        SyncTransform.players.Remove(gameObject);
+        SyncTransform.sm_players.Remove(gameObject);
     }
 
     void InterpolateTransform()
     {
         if (!isLocalPlayer)
         {
-            mover.pos = syncPosition;
+            m_mover.pos = m_syncPosition;
         }
     }
 
     [Command]
     void CmdSendPositionToServer(NavPath.GridPosition pos)
     {
-        syncPosition = pos;
+        m_syncPosition = pos;
         //Debug.Log("Synced pos :" + pos + ", time = " + lastSync);
     }
 
@@ -47,7 +47,7 @@ public class PlayerSync : NetworkBehaviour {
     {
         if (!isLocalPlayer)
             return;
-        mover.TakeStep();
-        CmdSendPositionToServer(mover.pos);
+        m_mover.TakeStep();
+        CmdSendPositionToServer(m_mover.pos);
     }
 }

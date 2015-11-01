@@ -106,6 +106,11 @@ public class InputHandler : Singleton<InputHandler> {
                 foreach (var p in players)
                 {
                     var mover = p.GetComponent<SimpleCharacterMovement>();
+                    if (mover == null)
+                    {
+                        Debug.Log("Found player with no movement component");
+                        continue;
+                    }
                     if(mover.enabled)
                         mover.MoveTo(new Vector3(x, y, 1.0f));
                 }

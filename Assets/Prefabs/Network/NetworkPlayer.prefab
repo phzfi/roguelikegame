@@ -15,6 +15,7 @@ GameObject:
   - 114: {fileID: 11420804}
   - 114: {fileID: 11415356}
   - 82: {fileID: 8294360}
+  - 114: {fileID: 11457766}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -72,8 +73,8 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 180150}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
+  m_IsTrigger: 1
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -158,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 715b96504a02ad54292e966cb8799e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mover: {fileID: 11432662}
+  m_mover: {fileID: 11432662}
 --- !u!114 &11420804
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -204,6 +205,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   rotationSpeed: 1
+--- !u!114 &11457766
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d123bec8cd2f4a43911de200c45dbf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_maxItems: 5
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -243,6 +256,14 @@ Prefab:
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_mover
+      value: 
+      objectReference: {fileID: 11432662}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180150}

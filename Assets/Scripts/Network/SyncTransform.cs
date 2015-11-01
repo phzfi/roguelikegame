@@ -5,32 +5,30 @@ using System.Collections.Generic;
 
 public class SyncTransform : NetworkBehaviour
 {
-    public static List<GameObject> players;
-    
-    [SerializeField]
-    float syncRate = .5f;
+    public static List<GameObject> sm_players;
+    public float m_syncRate = .5f;
 
-    private float lastSync = -99.0f;
+    private float m_lastSync = -99.0f;
     
     void Start()
     {
-        players = new List<GameObject>();
+        sm_players = new List<GameObject>();
     }
 
     void Update()
     {
         if(isServer)
-            syncClients();
+            SyncClients();
     }
 
     [Server]
-    void syncClients()
+    void SyncClients()
     {
-        if (Time.realtimeSinceStartup - lastSync > syncRate)
+        if (Time.realtimeSinceStartup - m_lastSync > m_syncRate)
         {
-            lastSync = Time.realtimeSinceStartup;
+            m_lastSync = Time.realtimeSinceStartup;
             //var clientObjects = GameObject.FindGameObjectsWithTag("Player"); // find all network objects (not the smartest way maybe)
-            foreach (var obj in players)
+            foreach (var obj in sm_players)
             {
                 var syncer = obj.GetComponent<PlayerSync>();
                 if (syncer == null)
