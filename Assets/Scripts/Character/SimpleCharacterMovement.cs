@@ -12,6 +12,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
     public NavPath.GridPosition pos;
     private NavGridScript navGrid;
     private MovementEvalFuncDelegate m_del;
+    private AudioSource m_audioSource;
 
     void Start ()
     {
@@ -20,6 +21,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
         pathScript = new NavPath();
         pathScript.Initialize(navGrid);
         pathScript._characterSize = .5f;
+        m_audioSource = GetComponent<AudioSource>();
 
         m_del = new MovementEvalFuncDelegate(EvalPathMovementFunc);
 
@@ -69,6 +71,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
         {
             pos = nextPos;
             pathScript._path.RemoveAt(0);
+            m_audioSource.Play();
         }
     }
 

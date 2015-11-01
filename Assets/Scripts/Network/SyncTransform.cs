@@ -5,21 +5,20 @@ using System.Collections.Generic;
 
 public class SyncTransform : NetworkBehaviour
 {
-    [SerializeField]
-    SimpleCharacterMovement mover;
-
-    [SyncVar]
-    NavPath.GridPosition syncPosition;
-
+    public static List<GameObject> players;
+    
     [SerializeField]
     float syncRate = .5f;
 
     private float lastSync = -99.0f;
     
+    void Start()
+    {
+        players = new List<GameObject>();
+    }
 
     void Update()
     {
-        InterpolateTransform();
         if(isServer)
             syncClients();
     }
@@ -30,10 +29,10 @@ public class SyncTransform : NetworkBehaviour
         if (Time.realtimeSinceStartup - lastSync > syncRate)
         {
             lastSync = Time.realtimeSinceStartup;
-            var clientObjects = GameObject.FindGameObjectsWithTag("Player"); // find all network objects (not the smartest way maybe)
-            foreach (var obj in clientObjects)
+            //var clientObjects = GameObject.FindGameObjectsWithTag("Player"); // find all network objects (not the smartest way maybe)
+            foreach (var obj in players)
             {
-                var syncer = obj.GetComponent<SyncTransform>();
+                var syncer = obj.GetComponent<PlayerSync>();
                 if (syncer == null)
                     continue;
                 syncer.RpcSyncClientObject(); // call synchronization on remote client for all player objects
@@ -41,28 +40,5 @@ public class SyncTransform : NetworkBehaviour
         }
     }
 
-    void InterpolateTransform()
-    {
-        if (!isLocalPlayer)
-        {
-            mover.pos = syncPosition;
-            //Debug.Log("Synced pos :" + mover.pos + ", time = " + lastSync);
-        }
-    }
 
-    [Command]
-    void CmdSendPositionToServer(NavPath.GridPosition pos)
-    {
-        syncPosition = pos;
-        //Debug.Log("Synced pos :" + pos + ", time = " + lastSync);
-    }
-
-    [ClientRpc]
-    void RpcSyncClientObject()
-    {
-        if (!isLocalPlayer)
-            return;
-        mover.TakeStep();
-        CmdSendPositionToServer(mover.pos);
-    }
 }
