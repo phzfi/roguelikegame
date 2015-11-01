@@ -7,7 +7,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
     public float speed = 1.0f;
     public float rotationSpeed = 1.0f;
 
-    private NavPath pathScript;
+    public NavPath pathScript;
 
     public NavPath.GridPosition pos;
     private NavGridScript navGrid;
@@ -51,10 +51,10 @@ public class SimpleCharacterMovement : MonoBehaviour {
         pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
     }
 
-    public void TakeStep()
+    public bool TakeStep()
     {
         if (pathScript._path.Count == 0)
-            return;
+            return false;
 
         var nextPos = pathScript._path[0];
 
@@ -79,7 +79,10 @@ public class SimpleCharacterMovement : MonoBehaviour {
             pos = nextPos;
             pathScript._path.RemoveAt(0);
             m_audioSource.Play();
+            return true;
         }
+
+        return false;
     }
 
  }

@@ -9,14 +9,13 @@ public class PlayerSync : NetworkBehaviour {
 
     [SyncVar]
     NavPath.GridPosition m_syncPosition;
-
-    // Use this for initialization
+    
     void Start ()
     {
-        SyncTransform.sm_players.Add(gameObject);
+
+        SyncTransform.sm_players.Add(gameObject); // add this to list of player objects
 	}
 	
-	// Update is called once per frame
 	void Update ()
     {
         InterpolateTransform();
@@ -24,30 +23,49 @@ public class PlayerSync : NetworkBehaviour {
     
     void OnDestroy()
     {
-        SyncTransform.sm_players.Remove(gameObject);
+        SyncTransform.sm_players.Remove(gameObject); // remove this from list of player objects
     }
 
-    void InterpolateTransform()
-    {
-        if (!isLocalPlayer)
-        {
-            m_mover.pos = m_syncPosition;
-        }
-    }
-
-    [Command]
-    void CmdSendPositionToServer(NavPath.GridPosition pos)
-    {
-        m_syncPosition = pos;
-        //Debug.Log("Synced pos :" + pos + ", time = " + lastSync);
-    }
-
-    [ClientRpc]
-    public void RpcSyncClientObject()
+    public void MoveOrder(Vector3 target) // called from input handler, run pathfinding locally and tell server to run it too if not currently server
     {
         if (!isLocalPlayer)
             return;
-        m_mover.TakeStep();
-        CmdSendPositionToServer(m_mover.pos);
+
+        m_mover.MoveTo(target);
+        if(!isServer)
+        {
+            CmdRunServerPathFinding(target);
+        }
+    }
+
+    [Server]
+    public void TakeTurn()  // runs the server-side turn logic for this object
+    {
+        bool moved = m_mover.TakeStep();
+        m_syncPosition = m_mover.pos;
+
+        if(!isLocalPlayer)
+            RpcTookStep(moved);
+    }
+
+    [ClientRpc]
+    void RpcTookStep(bool moved) // tell client a step was taken
+    {
+        if (!isLocalPlayer)
+            return;
+        
+        if(m_mover.pathScript._path.Count > 0 && moved) // remove next segment from pathfinding path if moved this turn
+            m_mover.pathScript._path.RemoveAt(0);
+    }
+
+    [Command]
+    void CmdRunServerPathFinding(Vector3 target)
+    {
+        m_mover.MoveTo(target);
+    }
+
+    void InterpolateTransform() // read synced position 
+    {
+        m_mover.pos = m_syncPosition;
     }
 }

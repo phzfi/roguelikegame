@@ -105,14 +105,14 @@ public class InputHandler : Singleton<InputHandler> {
                 for(int i = 0; i < MovementManager.sm_movingObjects.Count; ++i)
                 {
                     var obj = MovementManager.sm_movingObjects[i];
-                    var mover = obj.GetComponent<SimpleCharacterMovement>();
-                    if (mover == null)
+                    var syncer = obj.GetComponent<PlayerSync>();
+                    if (syncer == null)
                     {
-                        Debug.Log("Found player with no movement component");
+                        Debug.Log("Found player with no PlayerSync component");
                         continue;
                     }
-                    if(mover.enabled)
-                        mover.MoveTo(new Vector3(x, y, 1.0f));
+                    if(syncer.enabled)
+                        syncer.MoveOrder(new Vector3(x, y, 1.0f));
                 }
             }
             else if (accessable)
