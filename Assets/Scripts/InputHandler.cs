@@ -102,10 +102,10 @@ public class InputHandler : Singleton<InputHandler> {
             bool accessable = NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y);
             if (move && accessable)
             {
-                var players = GameObject.FindGameObjectsWithTag("Player");
-                foreach (var p in players)
+                for(int i = 0; i < MovementManager.sm_movingObjects.Count; ++i)
                 {
-                    var mover = p.GetComponent<SimpleCharacterMovement>();
+                    var obj = MovementManager.sm_movingObjects[i];
+                    var mover = obj.GetComponent<SimpleCharacterMovement>();
                     if (mover == null)
                     {
                         Debug.Log("Found player with no movement component");

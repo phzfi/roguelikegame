@@ -31,12 +31,19 @@ public class SimpleCharacterMovement : MonoBehaviour {
             Debug.LogError("Character " + gameObject.name + "is in unaccessable location");
 
         transform.position = new Vector3(x, y, transform.position.z);
+
+        MovementManager.sm_movingObjects.Add(gameObject);
     }
     float EvalPathMovementFunc(NavMovementEvalData d) { return d.f; }
 
     public void Update()
     {
         transform.position = pathScript.GetWorldPos(pos);
+    }
+
+    public void OnDestroy()
+    {
+        MovementManager.sm_movingObjects.Remove(gameObject);
     }
 
     public void MoveTo(Vector3 to)
@@ -52,10 +59,10 @@ public class SimpleCharacterMovement : MonoBehaviour {
         var nextPos = pathScript._path[0];
 
         bool movementBlocked = false;
-
-        var objs = GameObject.FindGameObjectsWithTag("Player"); // get list of dynamic objects (stupid version)
-        foreach(var obj in objs) // loop over objects to check next path step is not blocked
+        
+        for(int i = 0; i < MovementManager.sm_movingObjects.Count; ++i) // loop over objects to check next path step is not blocked
         {
+            var obj = MovementManager.sm_movingObjects[i];
             var mover = obj.GetComponent<SimpleCharacterMovement>();
             if (mover == null || mover == this)
                 continue;

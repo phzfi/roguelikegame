@@ -94,6 +94,7 @@ public class NavPath {
             Debug.LogError("Trying to use NavPath without initialization");
             return;
         }
+        Debug.Log("pathing");
 
         _path.Clear();
         _catmullRom = false;

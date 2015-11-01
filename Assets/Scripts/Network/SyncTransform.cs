@@ -27,9 +27,9 @@ public class SyncTransform : NetworkBehaviour
         if (Time.realtimeSinceStartup - m_lastSync > m_syncRate)
         {
             m_lastSync = Time.realtimeSinceStartup;
-            //var clientObjects = GameObject.FindGameObjectsWithTag("Player"); // find all network objects (not the smartest way maybe)
-            foreach (var obj in sm_players)
+            for (int i = 0; i < sm_players.Count; ++i)
             {
+                var obj = sm_players[i];
                 var syncer = obj.GetComponent<PlayerSync>();
                 if (syncer == null)
                     continue;
