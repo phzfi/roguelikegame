@@ -42,5 +42,25 @@ public class CatmullRomSpline {
     public Vector3 NextPoint(){ return _pts[_currentSection + 2]; }
 
     public Vector3 GetLastPoint() { return _pts[_pts.Count - 2];  }
-	
+    
+    public static bool EditPathToFitCatmullRomSpline(ref List<Vector3> path)
+    {
+        if (path.Count >= 2)
+        {
+            Vector3 lastControlPoint = path[path.Count - 1];
+            Vector3 secondLastControlPoint = path[path.Count - 2];
+            Vector3 p = lastControlPoint + (lastControlPoint - secondLastControlPoint);
+            path.Add(p);
+
+            Vector3 firstControlPoint = path[0];
+            Vector3 secondControlPoint = path[1];
+            p = firstControlPoint + (firstControlPoint - secondControlPoint);
+            path.Insert(0, p);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

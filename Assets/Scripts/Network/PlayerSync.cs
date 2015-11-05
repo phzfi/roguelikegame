@@ -8,64 +8,35 @@ public class PlayerSync : NetworkBehaviour {
     SimpleCharacterMovement m_mover;
 
     [SyncVar]
-    NavPath.GridPosition m_syncPosition;
+    Vector2i m_syncPosition;
     
     void Start ()
     {
-
-        SyncTransform.sm_players.Add(gameObject); // add this to list of player objects
+        SyncManager.sm_players.Add(this); // add this to list of player objects
 	}
 	
 	void Update ()
     {
-        InterpolateTransform();
+        m_mover.m_gridPos = m_syncPosition;
     }
     
     void OnDestroy()
     {
-        SyncTransform.sm_players.Remove(gameObject); // remove this from list of player objects
+        SyncManager.sm_players.Remove(this); // remove this from list of player objects
+    }
+    
+    public void SyncPosition(Vector2i pos)
+    {
+        m_syncPosition = pos;
     }
 
-    public void MoveOrder(Vector3 target) // called from input handler, run pathfinding locally and tell server to run it too if not currently server
+    public bool IsLocalPlayer()
     {
-        if (!isLocalPlayer)
-            return;
-
-        m_mover.MoveTo(target);
-        if(!isServer)
-        {
-            CmdRunServerPathFinding(target);
-        }
+        return isLocalPlayer;
     }
 
     [Server]
-    public void TakeTurn()  // runs the server-side turn logic for this object
+    public void TakeServerTurn()  // runs the server-side turn logic for this object
     {
-        bool moved = m_mover.TakeStep();
-        m_syncPosition = m_mover.pos;
-
-        if(!isLocalPlayer)
-            RpcTookStep(moved);
-    }
-
-    [ClientRpc]
-    void RpcTookStep(bool moved) // tell client a step was taken
-    {
-        if (!isLocalPlayer)
-            return;
-        
-        if(m_mover.pathScript._path.Count > 0 && moved) // remove next segment from pathfinding path if moved this turn
-            m_mover.pathScript._path.RemoveAt(0);
-    }
-
-    [Command]
-    void CmdRunServerPathFinding(Vector3 target)
-    {
-        m_mover.MoveTo(target);
-    }
-
-    void InterpolateTransform() // read synced position 
-    {
-        m_mover.pos = m_syncPosition;
     }
 }

@@ -3,39 +3,42 @@ using System.Collections;
 
 public class Item : MonoBehaviour {
 
-    public string m_name = "Palikka";
+    public string m_name = "Palikka"; // placeholder
+    public Vector2i m_pos;
+    public int ID;
 
     private bool m_onMap = true;
-
-	// Use this for initialization
+    
 	void Start () {
-        ItemManager.sm_allItems.Add(gameObject);
-        ItemManager.sm_itemsOnMap.Add(gameObject);
+        ItemManager.Register(this, out ID);
+        m_pos = MovementManager.sm_grid.GetGridPosition(transform.position);
     }
 	
 	void Update () {
 	
 	}
 
-    void OnTriggerEnter(Collider other)
+    public void Pickup(GameObject obj)
     {
-        var obj = other.gameObject;
-        if (obj.tag != "Player")
-            return;
-
         var inventory = obj.GetComponent<Inventory>();
         if (inventory == null || !inventory.AddItem(gameObject))
             return;
 
         gameObject.SetActive(false);
-        ItemManager.sm_itemsOnMap.Remove(gameObject);
+        ItemManager.UnregisterFromMap(ID);
         m_onMap = false;
+    }
+
+    public bool CanPickup(GameObject obj)
+    {
+        var inventory = obj.GetComponent<Inventory>();
+        if (inventory == null || !inventory.CanAddItem(gameObject))
+            return false;
+        return true;
     }
 
     void OnDestroy()
     {
-        ItemManager.sm_allItems.Remove(gameObject);
-        if(m_onMap)
-            ItemManager.sm_itemsOnMap.Remove(gameObject);
+        ItemManager.Unregister(ID);
     }
 }
