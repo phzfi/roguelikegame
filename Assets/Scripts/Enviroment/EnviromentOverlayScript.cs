@@ -3,14 +3,14 @@ using System.Collections;
 
 public class EnviromentOverlayScript : MonoBehaviour {
 
-    static private int _envAcc;
-    static private int _envUnAcc;
+    static private int m_envAcc;
+    static private int m_envUnAcc;
 
     public static bool LayerIsEnviroment(int layer)
     {
-        _envAcc = LayerMask.NameToLayer("EnviromentAccessible");
-        _envUnAcc = LayerMask.NameToLayer("EnviromentUnaccessible");
-        if(layer == _envAcc || layer == _envUnAcc)
+        m_envAcc = LayerMask.NameToLayer("EnviromentAccessible");
+        m_envUnAcc = LayerMask.NameToLayer("EnviromentUnaccessible");
+        if(layer == m_envAcc || layer == m_envUnAcc)
             return true;
         else
             return false;

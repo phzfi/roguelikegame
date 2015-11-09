@@ -13,17 +13,18 @@ public class InputHandler : Singleton<InputHandler> {
         Count
     }
 
-    private Vector3 m_camera_input = new Vector3();
-    private SelectionState m_selection_state = SelectionState.None;
-    private LinkedList<SelectionState> m_selection_queue = new LinkedList<SelectionState>();
-    public bool m_waiting_for_mouse_to_move = false;
+    private NavGridScript m_navGrid;
+    private Vector3 m_cameraInput = new Vector3();
+    private SelectionState m_selectionState = SelectionState.None;
+    private LinkedList<SelectionState> m_selectionQueue = new LinkedList<SelectionState>();
+    public bool m_waitingForMouseToMove = false;
 
     private GameObject m_tmp;
     private GameObject m_tmp2;
 
     public Vector3 CameraInput
     {
-        get { return m_camera_input; }
+        get { return m_cameraInput; }
     }
 
     void Awake()
@@ -32,13 +33,14 @@ public class InputHandler : Singleton<InputHandler> {
         m_tmp2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
         m_tmp2.transform.localScale = new Vector3(1.0f, 1.0f, .25f);
         m_tmp2.GetComponent<Renderer>().material.color = Color.blue;
+        m_navGrid = FindObjectOfType<NavGridScript>();
     }
 
     void Update()
     {
         UpdateCameraInputs();
         HandleSelectionStates();
-        if (m_selection_state == SelectionState.Movemement)
+        if (m_selectionState == SelectionState.Movemement)
             HandleMovementState();
         else
         {
@@ -49,27 +51,27 @@ public class InputHandler : Singleton<InputHandler> {
 
     private void UpdateCameraInputs()
     {
-        m_camera_input[1] = Input.GetKey(KeyCode.W) ? 1.0f : .0f;
-        m_camera_input[1] += Input.GetKey(KeyCode.S) ? -1.0f : .0f;
+        m_cameraInput[1] = Input.GetKey(KeyCode.W) ? 1.0f : .0f;
+        m_cameraInput[1] += Input.GetKey(KeyCode.S) ? -1.0f : .0f;
 
-        m_camera_input[0] = Input.GetKey(KeyCode.D) ? 1.0f : .0f;
-        m_camera_input[0] += Input.GetKey(KeyCode.A) ? -1.0f : .0f;
+        m_cameraInput[0] = Input.GetKey(KeyCode.D) ? 1.0f : .0f;
+        m_cameraInput[0] += Input.GetKey(KeyCode.A) ? -1.0f : .0f;
     }
 
     private void HandleSelectionStates()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            m_selection_queue.AddLast(SelectionState.Movemement);
+            m_selectionQueue.AddLast(SelectionState.Movemement);
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            m_waiting_for_mouse_to_move = false;
-            m_selection_queue.Remove(SelectionState.Movemement);
+            m_waitingForMouseToMove = false;
+            m_selectionQueue.Remove(SelectionState.Movemement);
         }
 
-        if (m_selection_queue.Count == 0)
-            m_selection_state = SelectionState.None;
+        if (m_selectionQueue.Count == 0)
+            m_selectionState = SelectionState.None;
         else
-            m_selection_state = m_selection_queue.First.Value;
+            m_selectionState = m_selectionQueue.First.Value;
     }
 
     private void HandleMovementState()
@@ -77,29 +79,29 @@ public class InputHandler : Singleton<InputHandler> {
         bool move = false;
         if (!Input.GetMouseButton(0))
         {
-            if (!m_waiting_for_mouse_to_move)
+            if (!m_waitingForMouseToMove)
                 return;
             else
             {
                 move = true;
-                m_waiting_for_mouse_to_move = false;
+                m_waitingForMouseToMove = false;
             }
         }
 
         var t = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
         Ray r = Camera.main.ScreenPointToRay(t);
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(r, out hit, 1000.0f, NavGridScript.Instance.invertAccesbileEnviromentMask))
+        if (Physics.Raycast(r, out hit, 1000.0f, m_navGrid.invertAccesbileEnviromentMask))
         { 
             if (Input.GetMouseButtonDown(0))
             {
                 m_tmp.SetActive(true);
                 m_tmp2.SetActive(true);
-                m_waiting_for_mouse_to_move = true;
+                m_waitingForMouseToMove = true;
             }
             float x = hit.point[0];
             float y = hit.point[1];
-            bool accessable = NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y);
+            bool accessable = m_navGrid.IsWorldPositionAccessable(ref x, ref y);
             if (move && accessable)
             {
                 var players = GameObject.FindGameObjectsWithTag("Player");
