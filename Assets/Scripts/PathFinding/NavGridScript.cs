@@ -2,7 +2,8 @@
 using System.Collections;
 using System;
 
-public class NavGridScript : Singleton<NavGridScript> {
+public class NavGridScript : MonoBehaviour
+{
 
     protected NavGridScript() { }
 

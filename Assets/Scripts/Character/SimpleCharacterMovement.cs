@@ -24,7 +24,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
 
     void Start ()
     {
-        m_navGrid = NavGridScript.Instance;
+        m_navGrid = GameObject.FindObjectOfType<NavGridScript>();
 
         m_pathScript = new NavPath();
         m_pathScript.Initialize(m_navGrid);
@@ -36,7 +36,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
 
         float x = transform.position.x;
         float y = transform.position.y;
-        if (!NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y))
+        if (!m_navGrid.IsWorldPositionAccessable(ref x, ref y))
             Debug.LogError("Character " + gameObject.name + ", ID: " + ID + " is in unaccessable location");
 
         transform.position = new Vector3(x, y, transform.position.z);
@@ -92,16 +92,16 @@ public class SimpleCharacterMovement : MonoBehaviour {
         {
             float d = m_visualizationSpeed * Time.deltaTime;
             m_distanceOnStep += d;
-            while (m_distanceOnStep > NavGridScript.Instance.m_currentCellSize)
+            while (m_distanceOnStep > m_navGrid.m_currentCellSize)
             {
-                m_distanceOnStep -= NavGridScript.Instance.m_currentCellSize;
+                m_distanceOnStep -= m_navGrid.m_currentCellSize;
                 spline.NextSection();
                 m_step++;
             }
 
             if (m_step < (currentPath.Count - 4))
             {
-                Vector3 p = spline.Interpolate(m_distanceOnStep / NavGridScript.Instance.m_currentCellSize);
+                Vector3 p = spline.Interpolate(m_distanceOnStep / m_navGrid.m_currentCellSize);
                 Quaternion look = Quaternion.LookRotation(Vector3.forward, (spline.NextPoint() - transform.position).normalized);
                 transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * m_visualizationRotationSpeed);
                 transform.position = p;

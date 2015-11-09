@@ -11,7 +11,7 @@ public class Item : MonoBehaviour {
     
 	void Start () {
         ItemManager.Register(this, out ID);
-        m_pos = MovementManager.sm_grid.GetGridPosition(transform.position);
+        m_pos = GameObject.FindObjectOfType<NavGridScript>().GetGridPosition(transform.position);
     }
 	
 	void Update () {

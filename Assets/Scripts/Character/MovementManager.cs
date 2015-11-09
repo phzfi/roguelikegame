@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 public class MovementManager : MonoBehaviour {
 
     //TODO: don't use GameObject here
-    public static NavGridScript sm_grid;
+    private NavGridScript m_grid;
 
     private static List<SimpleCharacterMovement> sm_objects = new List<SimpleCharacterMovement>(); // Private list for iterating over all objects
     private static Dictionary<int, SimpleCharacterMovement> sm_objectDictionary = new Dictionary<int, SimpleCharacterMovement>(); // Private dictionary for fast item fetching by ID. Use GetObject to access this.
@@ -16,7 +16,7 @@ public class MovementManager : MonoBehaviour {
 
     public void Start()
     {
-        sm_grid = NavGridScript.Instance;
+        m_grid = GameObject.FindObjectOfType<NavGridScript>();
     }
 
     public void OnLevelWasLoaded(int level) // Reset all containers and sm_curID when loading new scene
