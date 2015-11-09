@@ -12,14 +12,14 @@ public delegate float MovementEvalFuncDelegate(NavMovementEvalData d);
 
 public class NavPath {
 
-    public float _characterSize = .1f;
-    public List<Vector3> _path;
-    public bool _catmullRom = false;
-    public Vector3 _startWorldPos;
-    public Vector3 _endWorldPos;
+    public float m_characterSize = .1f;
+    public List<Vector3> m_path;
+    public bool m_catmullRom = false;
+    public Vector3 m_startWorldPos;
+    public Vector3 m_endWorldPos;
 
-    private NavGridScript _data;
-    private bool _init = false;
+    private NavGridScript m_data;
+    private bool m_init = false;
 
     public class Node
     {
@@ -35,23 +35,23 @@ public class NavPath {
 
     public void Initialize(NavGridScript pathFindingData)
     {
-        _data = pathFindingData;
-        _init = true;
-        _path = new List<Vector3>();
+        m_data = pathFindingData;
+        m_init = true;
+        m_path = new List<Vector3>();
     }
 
     public List<Vector3> SeekPath(MovementEvalFuncDelegate del, Vector3 startWorldPos, Vector3 endWorldPos)
     {
         List<Vector3> path = new List<Vector3>();
-        if (!_init)
+        if (!m_init)
         {
             Debug.LogError("Trying to use NavPath without initialization");
             return null;
         }
 
         path.Clear();
-        _catmullRom = false;
-        _startWorldPos = startWorldPos;
+        m_catmullRom = false;
+        m_startWorldPos = startWorldPos;
         Vector2i start = GetGridPosition(startWorldPos);
         Vector2i end = GetGridPosition(endWorldPos);
         FindClosetAccessableWithSpiral(ref end);
@@ -129,7 +129,7 @@ public class NavPath {
         if (!IsAccessableForSize(gp))
         {
             Spiral s = new Spiral();
-            for (int i = 0; i < _data._spiralSize; i++)
+            for (int i = 0; i < m_data.m_spiralSize; i++)
             {
                 int nextX, nextY;
                 s.Next(out nextX, out nextY);
@@ -149,20 +149,20 @@ public class NavPath {
     {
         return new Vector2i
         {
-            x = Mathf.FloorToInt((worldPosition.x + ((float)_data._currentWidth * _data._currentCellSize) * .5f) / _data._currentCellSize),
-            y = Mathf.FloorToInt((worldPosition.y + ((float)_data._currentHeight * _data._currentCellSize) * .5f) / _data._currentCellSize)
+            x = Mathf.FloorToInt((worldPosition.x + ((float)m_data.m_currentWidth * m_data.m_currentCellSize) * .5f) / m_data.m_currentCellSize),
+            y = Mathf.FloorToInt((worldPosition.y + ((float)m_data.m_currentHeight * m_data.m_currentCellSize) * .5f) / m_data.m_currentCellSize)
         };
     }
 
     public Vector3 GetWorldPos(Vector2i gridPos)
     {
-        return _data._grid._navigationGrid[gridPos.x, gridPos.y]._worldPos;
+        return m_data.m_grid.m_navigationGrid[gridPos.x, gridPos.y].m_worldPos;
     }
 
 
     bool IsAccessableForSize(Vector2i gridPos)
     {
-        return _characterSize < (_data._grid._navigationGrid[gridPos.x, gridPos.y]._smallestMaxAccessDistance);
+        return m_characterSize < (m_data.m_grid.m_navigationGrid[gridPos.x, gridPos.y].m_smallestMaxAccessDistance);
     }
 
     List<Vector2i> GetNeighbours(Vector2i gridPosition)
@@ -173,7 +173,7 @@ public class NavPath {
             for (var y = -1; y <= 1; y++)
             {
                 Vector2i current = gridPosition + new Vector2i { x = x, y = y };
-                if (current.x >= 0 && current.y >= 0 && current.x < _data._currentWidth && current.y < _data._currentHeight)
+                if (current.x >= 0 && current.y >= 0 && current.x < m_data.m_currentWidth && current.y < m_data.m_currentHeight)
                     neighbours.Add(current);
             }
         }

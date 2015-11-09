@@ -28,7 +28,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
 
         m_pathScript = new NavPath();
         m_pathScript.Initialize(m_navGrid);
-        m_pathScript._characterSize = .5f;
+        m_pathScript.m_characterSize = .5f;
         m_audioSource = GetComponent<AudioSource>();
         m_syncer = GetComponent<PlayerSync>();
 
@@ -52,7 +52,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
 
     public void MoveCommand(Vector3 to)
     {
-        m_pathScript._path = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
+        m_pathScript.m_path = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
     }
 
     public void VisualizeMove(Vector3 to)
@@ -82,7 +82,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
         }
         else
         {
-            StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(m_pathScript._startWorldPos, m_pathScript._endWorldPos, true));
+            StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(m_pathScript.m_startWorldPos, m_pathScript.m_endWorldPos, true));
         }
     }
 
@@ -92,16 +92,16 @@ public class SimpleCharacterMovement : MonoBehaviour {
         {
             float d = m_visualizationSpeed * Time.deltaTime;
             m_distanceOnStep += d;
-            while (m_distanceOnStep > NavGridScript.Instance._currentCellSize)
+            while (m_distanceOnStep > NavGridScript.Instance.m_currentCellSize)
             {
-                m_distanceOnStep -= NavGridScript.Instance._currentCellSize;
+                m_distanceOnStep -= NavGridScript.Instance.m_currentCellSize;
                 spline.NextSection();
                 m_step++;
             }
 
             if (m_step < (currentPath.Count - 4))
             {
-                Vector3 p = spline.Interpolate(m_distanceOnStep / NavGridScript.Instance._currentCellSize);
+                Vector3 p = spline.Interpolate(m_distanceOnStep / NavGridScript.Instance.m_currentCellSize);
                 Quaternion look = Quaternion.LookRotation(Vector3.forward, (spline.NextPoint() - transform.position).normalized);
                 transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * m_visualizationRotationSpeed);
                 transform.position = p;
@@ -141,7 +141,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
 
     public bool TakeStep()
     {
-        if (m_pathScript._path.Count == 0)
+        if (m_pathScript.m_path.Count == 0)
             return false;
 
         bool moved = false;
@@ -149,10 +149,10 @@ public class SimpleCharacterMovement : MonoBehaviour {
 
         for (int step = 0; step < m_gridSpeed; step++)
         {
-            if (m_pathScript._path.Count == 0)
+            if (m_pathScript.m_path.Count == 0)
                 return moved;
 
-            var nextPos = m_pathScript._path[0];
+            var nextPos = m_pathScript.m_path[0];
 
             bool movementBlocked = false;
             for (int i = 0; i < MovementManager.Objects.Count; ++i) // loop over objects to check next path step is not blocked
@@ -173,7 +173,7 @@ public class SimpleCharacterMovement : MonoBehaviour {
             {
                 m_gridPos = m_pathScript.GetGridPosition(nextPos);
                 m_worldPos = nextPos;
-                m_pathScript._path.RemoveAt(0);
+                m_pathScript.m_path.RemoveAt(0);
                 moved = true;
 
                 for(int i = 0; i < ItemManager.ItemsOnMap.Count; ++i)

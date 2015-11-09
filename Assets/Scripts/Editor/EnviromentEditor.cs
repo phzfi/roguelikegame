@@ -6,28 +6,28 @@ public class EnviromentEditor : EditorWindow {
 
     enum EnvEditorState
     {
-        EnvEditorState_Boundary,
-        EnvEditorState_PatrolAndSpawn
+        EnvEditorStatem_Boundary,
+        EnvEditorStatem_PatrolAndSpawn
     }
 
-	public string _sceneName;
-	public float _sceneWidth;
-	public float _sceneHeight;
-    public float _sceneDepth;
-	public GameObject _prefab;
-    public GameObject _enemyPrefab;
-    public float _depth;
+	public string m_sceneName;
+	public float m_sceneWidth;
+	public float m_sceneHeight;
+    public float m_sceneDepth;
+	public GameObject m_prefab;
+    public GameObject m_enemyPrefab;
+    public float m_depth;
 
-    private GameObject _overlayObj;
-    private GameObject _gridObj;
-    private GameObject _currentObj;
-    private GameObject _navOverlayObj;
-    private Grid _grid;
-    private Vector3 _firstMousePos;
-    private EnvEditorState _state;
-    private bool _editorInit = false;
-    private int _patrolRouteCounter = 0;
-    private int _spawnCounter = 0;
+    private GameObject m_overlayObj;
+    private GameObject m_gridObj;
+    private GameObject m_currentObj;
+    private GameObject m_navOverlayObj;
+    private Grid m_grid;
+    private Vector3 m_firstMousePos;
+    private EnvEditorState m_state;
+    private bool m_editorInit = false;
+    private int m_patrolRouteCounter = 0;
+    private int m_spawnCounter = 0;
 
     [MenuItem("Window/EnviromentEditor")]
 	public static void ShowWindow()
@@ -37,36 +37,36 @@ public class EnviromentEditor : EditorWindow {
 
 	void OnGUI()
 	{
-        if (!_editorInit)
+        if (!m_editorInit)
         {
             GUILayout.Label("Settings", EditorStyles.boldLabel);
-            _sceneName = EditorGUILayout.TextField("Name", _sceneName);
-            _sceneWidth = EditorGUILayout.FloatField("Width of the scene", _sceneWidth);
-            _sceneHeight = EditorGUILayout.FloatField("Height of the scene", _sceneHeight);
-            _sceneDepth = EditorGUILayout.FloatField("Depth of the scene", _sceneDepth);
+            m_sceneName = EditorGUILayout.TextField("Name", m_sceneName);
+            m_sceneWidth = EditorGUILayout.FloatField("Width of the scene", m_sceneWidth);
+            m_sceneHeight = EditorGUILayout.FloatField("Height of the scene", m_sceneHeight);
+            m_sceneDepth = EditorGUILayout.FloatField("Depth of the scene", m_sceneDepth);
 
             GUILayout.Label("Boundary Prefab", EditorStyles.miniLabel);
-            _prefab = (GameObject)EditorGUILayout.ObjectField(_prefab, typeof(Object), true);
+            m_prefab = (GameObject)EditorGUILayout.ObjectField(m_prefab, typeof(Object), true);
             if (GUILayout.Button("Create!"))
             {
-                if (_prefab == null)
+                if (m_prefab == null)
                     ShowNotification(new GUIContent("No boundary prefab selected"));
                 else
                 {
                     SceneBoundaries creator = new SceneBoundaries();
-                    _overlayObj = new GameObject("En_BoundariesOverlay - " + _sceneName);
-                    _overlayObj.AddComponent<EnviromentOverlayScript>();
-                    creator.CreateBoundaries(new Vector3(_sceneWidth, _sceneHeight, _sceneDepth), _prefab, _overlayObj);
-                    _gridObj = new GameObject("GridEditor");
-                    _gridObj.AddComponent<Grid>();
-                    _grid = _gridObj.GetComponent<Grid>();
-                    _grid._prefab = _prefab;
-                    _grid._enemyPrefab = _enemyPrefab;
-                    _navOverlayObj = GameObject.Find("Nav_Overlay");
-                    _state = EnvEditorState.EnvEditorState_Boundary;
+                    m_overlayObj = new GameObject("Enm_BoundariesOverlay - " + m_sceneName);
+                    m_overlayObj.AddComponent<EnviromentOverlayScript>();
+                    creator.CreateBoundaries(new Vector3(m_sceneWidth, m_sceneHeight, m_sceneDepth), m_prefab, m_overlayObj);
+                    m_gridObj = new GameObject("GridEditor");
+                    m_gridObj.AddComponent<Grid>();
+                    m_grid = m_gridObj.GetComponent<Grid>();
+                    m_grid.m_prefab = m_prefab;
+                    m_grid.m_enemyPrefab = m_enemyPrefab;
+                    m_navOverlayObj = GameObject.Find("Navm_Overlay");
+                    m_state = EnvEditorState.EnvEditorStatem_Boundary;
                     SceneView.onSceneGUIDelegate = BoundaryUpdate;
-                    _depth = _sceneDepth;
-                    _editorInit = true;
+                    m_depth = m_sceneDepth;
+                    m_editorInit = true;
                 }
             }
         }
@@ -75,69 +75,69 @@ public class EnviromentEditor : EditorWindow {
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label(" Editor State ");
             EnvEditorState s;
-            s = (EnvEditorState)EditorGUILayout.EnumPopup(_state);
-            if (s != _state)
+            s = (EnvEditorState)EditorGUILayout.EnumPopup(m_state);
+            if (s != m_state)
             {
-                if (s == EnvEditorState.EnvEditorState_Boundary)
+                if (s == EnvEditorState.EnvEditorStatem_Boundary)
                     SceneView.onSceneGUIDelegate = BoundaryUpdate;
-                else if (s == EnvEditorState.EnvEditorState_PatrolAndSpawn)
+                else if (s == EnvEditorState.EnvEditorStatem_PatrolAndSpawn)
                     SceneView.onSceneGUIDelegate = PatrolUpdate;
-                _state = s;
-                _currentObj = null;
+                m_state = s;
+                m_currentObj = null;
             }
             GUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label(" Grid Width ");
-            _grid._width = EditorGUILayout.Slider(_grid._width, .1f, 5.0f);
+            m_grid.m_width = EditorGUILayout.Slider(m_grid.m_width, .1f, 5.0f);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(" Grid Height ");
-            _grid._height = EditorGUILayout.Slider(_grid._height, .1f, 5.0f);
+            m_grid.m_height = EditorGUILayout.Slider(m_grid.m_height, .1f, 5.0f);
             GUILayout.EndHorizontal();
 
 
-            if (_state == EnvEditorState.EnvEditorState_Boundary)
+            if (m_state == EnvEditorState.EnvEditorStatem_Boundary)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" Depth ");
-                _depth = EditorGUILayout.FloatField(_depth, GUILayout.Width(50));
+                m_depth = EditorGUILayout.FloatField(m_depth, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" Object Prefab ");
-                _grid._prefab = (GameObject)EditorGUILayout.ObjectField(_grid._prefab, typeof(GameObject), true);
+                m_grid.m_prefab = (GameObject)EditorGUILayout.ObjectField(m_grid.m_prefab, typeof(GameObject), true);
                 GUILayout.EndHorizontal();
             }
-            else if (_state == EnvEditorState.EnvEditorState_PatrolAndSpawn)
+            else if (m_state == EnvEditorState.EnvEditorStatem_PatrolAndSpawn)
             {
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Reset counters: ", EditorStyles.miniLabel);
-                GUILayout.Label(_spawnCounter.ToString());
+                GUILayout.Label(m_spawnCounter.ToString());
                 if (GUILayout.Button("Spawn"))
                 {
-                    _spawnCounter = 0;
+                    m_spawnCounter = 0;
                 }
-                GUILayout.Label(_patrolRouteCounter.ToString());
+                GUILayout.Label(m_patrolRouteCounter.ToString());
                 if (GUILayout.Button("Patrol"))
                 {
-                    _patrolRouteCounter = 0;
+                    m_patrolRouteCounter = 0;
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Enemy Prefab", EditorStyles.miniLabel);
-                _grid._enemyPrefab = (GameObject)EditorGUILayout.ObjectField(_grid._enemyPrefab, typeof(Object), true);
+                m_grid.m_enemyPrefab = (GameObject)EditorGUILayout.ObjectField(m_grid.m_enemyPrefab, typeof(Object), true);
                 GUILayout.EndHorizontal();
             }
             if (GUILayout.Button("Exit EnviromentEditor!"))
             {
-                _enemyPrefab = _grid._enemyPrefab;
-                _prefab = _grid._prefab;
-                if (_gridObj != null)
-                    GameObject.DestroyImmediate(_gridObj);
-                _editorInit = false;
+                m_enemyPrefab = m_grid.m_enemyPrefab;
+                m_prefab = m_grid.m_prefab;
+                if (m_gridObj != null)
+                    GameObject.DestroyImmediate(m_gridObj);
+                m_editorInit = false;
             }
         }
 	}
@@ -148,37 +148,37 @@ public class EnviromentEditor : EditorWindow {
 
         if (e.type == EventType.MouseDown && e.button == 0 && e.control)
         {
-            if (_grid._prefab)
+            if (m_grid.m_prefab)
             {
                 Ray r = Camera.current.ScreenPointToRay(new Vector3(e.mousePosition.x, Camera.current.pixelHeight - e.mousePosition.y));
                 RaycastHit hit = new RaycastHit();
                 if (Physics.Raycast(r, out hit, 1000.0f))
                 {
-                    _firstMousePos = new Vector3(Mathf.Floor(hit.point.x / _grid._width) * _grid._width + _grid._width / 2.0f,
-                                Mathf.Floor(hit.point.y / _grid._height) * _grid._height + _grid._height / 2.0f, hit.point.z - .5f * _depth);
-                    _currentObj = Instantiate(_grid._prefab, _firstMousePos, Quaternion.identity) as GameObject;
-                    _currentObj.transform.parent = _overlayObj.transform;
-                    _currentObj.transform.localScale = new Vector3(_currentObj.transform.localScale.x, _currentObj.transform.localScale.y, _depth);
+                    m_firstMousePos = new Vector3(Mathf.Floor(hit.point.x / m_grid.m_width) * m_grid.m_width + m_grid.m_width / 2.0f,
+                                Mathf.Floor(hit.point.y / m_grid.m_height) * m_grid.m_height + m_grid.m_height / 2.0f, hit.point.z - .5f * m_depth);
+                    m_currentObj = Instantiate(m_grid.m_prefab, m_firstMousePos, Quaternion.identity) as GameObject;
+                    m_currentObj.transform.parent = m_overlayObj.transform;
+                    m_currentObj.transform.localScale = new Vector3(m_currentObj.transform.localScale.x, m_currentObj.transform.localScale.y, m_depth);
                 }
             }
             else
                 Debug.Log("No object prefab selected");
         }
-        else if (e.alt && _currentObj != null)
+        else if (e.alt && m_currentObj != null)
         {
             Ray r = Camera.current.ScreenPointToRay(new Vector3(e.mousePosition.x, Camera.current.pixelHeight - e.mousePosition.y));
             RaycastHit hit = new RaycastHit();
             if (Physics.Raycast(r, out hit, 1000.0f))
             {
-                Vector3 aligned = new Vector3(Mathf.Floor(hit.point.x / _grid._width) * _grid._width + _grid._width / 2.0f,
-                            Mathf.Floor(hit.point.y / _grid._height) * _grid._height + _grid._height / 2.0f, hit.point.z - .5f * _depth);
-                Vector3 diff = new Vector3(aligned.x - _firstMousePos.x, aligned.y - _firstMousePos.y, .0f);
+                Vector3 aligned = new Vector3(Mathf.Floor(hit.point.x / m_grid.m_width) * m_grid.m_width + m_grid.m_width / 2.0f,
+                            Mathf.Floor(hit.point.y / m_grid.m_height) * m_grid.m_height + m_grid.m_height / 2.0f, hit.point.z - .5f * m_depth);
+                Vector3 diff = new Vector3(aligned.x - m_firstMousePos.x, aligned.y - m_firstMousePos.y, .0f);
                 if (diff.magnitude != .0f)
                 {
-                    if (_currentObj != null)
+                    if (m_currentObj != null)
                     {
-                        _currentObj.transform.localScale = new Vector3(Mathf.Abs(diff.x) + 1.0f, Mathf.Abs(diff.y) + 1.0f, _currentObj.transform.localScale.z);
-                        _currentObj.transform.localPosition = diff * .5f + _firstMousePos;
+                        m_currentObj.transform.localScale = new Vector3(Mathf.Abs(diff.x) + 1.0f, Mathf.Abs(diff.y) + 1.0f, m_currentObj.transform.localScale.z);
+                        m_currentObj.transform.localPosition = diff * .5f + m_firstMousePos;
                     }
                 }
             }
@@ -195,56 +195,56 @@ public class EnviromentEditor : EditorWindow {
             RaycastHit hit = new RaycastHit();
             if (Physics.Raycast(r, out hit, 1000.0f))
             {
-                Vector3 p = new Vector3(Mathf.Floor(hit.point.x / _grid._width) * _grid._width + _grid._width / 2.0f,
-                            Mathf.Floor(hit.point.y / _grid._height) * _grid._height + _grid._height / 2.0f, hit.point.z);
-                _currentObj = new GameObject("PatrolRoute" + _patrolRouteCounter);
-                _currentObj.AddComponent<PatrolRoute>();
-                _currentObj.GetComponent<PatrolRoute>()._pointList.Add(p);
-                _currentObj.transform.position = p;
-                _patrolRouteCounter++;
-                _currentObj.transform.parent = _navOverlayObj.transform;
+                Vector3 p = new Vector3(Mathf.Floor(hit.point.x / m_grid.m_width) * m_grid.m_width + m_grid.m_width / 2.0f,
+                            Mathf.Floor(hit.point.y / m_grid.m_height) * m_grid.m_height + m_grid.m_height / 2.0f, hit.point.z);
+                m_currentObj = new GameObject("PatrolRoute" + m_patrolRouteCounter);
+                m_currentObj.AddComponent<PatrolRoute>();
+                m_currentObj.GetComponent<PatrolRoute>().m_pointList.Add(p);
+                m_currentObj.transform.position = p;
+                m_patrolRouteCounter++;
+                m_currentObj.transform.parent = m_navOverlayObj.transform;
             }
         }
-        else if (e.type == EventType.MouseDown && e.alt && _currentObj != null)
+        else if (e.type == EventType.MouseDown && e.alt && m_currentObj != null)
         {
             Ray r = Camera.current.ScreenPointToRay(new Vector3(e.mousePosition.x, Camera.current.pixelHeight - e.mousePosition.y));
             RaycastHit hit = new RaycastHit();
             if (Physics.Raycast(r, out hit, 1000.0f))
             {
-                Vector3 p = new Vector3(Mathf.Floor(hit.point.x / _grid._width) * _grid._width + _grid._width / 2.0f,
-                            Mathf.Floor(hit.point.y / _grid._height) * _grid._height + _grid._height / 2.0f, hit.point.z);
-                PatrolRoute route = _currentObj.GetComponent<PatrolRoute>();
-                if (!route._pointList.Exists(d=>d == p))
+                Vector3 p = new Vector3(Mathf.Floor(hit.point.x / m_grid.m_width) * m_grid.m_width + m_grid.m_width / 2.0f,
+                            Mathf.Floor(hit.point.y / m_grid.m_height) * m_grid.m_height + m_grid.m_height / 2.0f, hit.point.z);
+                PatrolRoute route = m_currentObj.GetComponent<PatrolRoute>();
+                if (!route.m_pointList.Exists(d=>d == p))
                 {
-                    route._pointList.Add(p);
+                    route.m_pointList.Add(p);
                 }
                 
             }
         }
         else if (e.type == EventType.MouseDown && e.shift)
         {
-            GameObject overlay = GameObject.Find("Char_SpawnOverlay");
+            GameObject overlay = GameObject.Find("Charm_SpawnOverlay");
             if (overlay == null)
             {
-                overlay = new GameObject("Char_SpawnOverlay");
+                overlay = new GameObject("Charm_SpawnOverlay");
             }
             Ray r = Camera.current.ScreenPointToRay(new Vector3(e.mousePosition.x, Camera.current.pixelHeight - e.mousePosition.y));
             RaycastHit hit = new RaycastHit();
             if (Physics.Raycast(r, out hit, 1000.0f))
             {
-                Vector3 p = new Vector3(Mathf.Floor(hit.point.x / _grid._width) * _grid._width + _grid._width / 2.0f,
-                            Mathf.Floor(hit.point.y / _grid._height) * _grid._height + _grid._height / 2.0f, hit.point.z);
+                Vector3 p = new Vector3(Mathf.Floor(hit.point.x / m_grid.m_width) * m_grid.m_width + m_grid.m_width / 2.0f,
+                            Mathf.Floor(hit.point.y / m_grid.m_height) * m_grid.m_height + m_grid.m_height / 2.0f, hit.point.z);
                 string n = " - ";
-                if(_grid._enemyPrefab != null)
-                    n += _grid._enemyPrefab.name;
-                GameObject obj = new GameObject("SpawnPoint" + _spawnCounter + n);
-                _spawnCounter++;
+                if(m_grid.m_enemyPrefab != null)
+                    n += m_grid.m_enemyPrefab.name;
+                GameObject obj = new GameObject("SpawnPoint" + m_spawnCounter + n);
+                m_spawnCounter++;
                 obj.transform.position = p;
                 obj.transform.parent = overlay.transform;
                 CharSpawnPointScript spawn = obj.AddComponent<CharSpawnPointScript>();
-                spawn._prefab = _grid._enemyPrefab;
-                if (_patrolRouteCounter > 0)
-                    spawn._pathToPatrolRoute = "PatrolRoute" + (_patrolRouteCounter - 1); 
+                spawn.m_prefab = m_grid.m_enemyPrefab;
+                if (m_patrolRouteCounter > 0)
+                    spawn.m_pathToPatrolRoute = "PatrolRoute" + (m_patrolRouteCounter - 1); 
             }
         }
     }
