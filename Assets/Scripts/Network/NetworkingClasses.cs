@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
-public enum msgType : short { moveOrder = 100, pickupOrder, connected, visualize } // start higher since unity reserves some message types
+public enum msgType : short { moveOrder = 100, pickupOrder, connected, visualize, spawnItem } // start higher since unity reserves some message types
 
 public struct MoveOrder
 {
@@ -18,6 +18,7 @@ public struct MoveOrder
         m_target = target;
     }
 }
+
 
 public class ConnectionMessage : MessageBase
 {
@@ -44,6 +45,18 @@ public struct PickupOrder
 public class PickupOrderMessage : MessageBase
 {
     public PickupOrder[] m_orders;
+}
+
+public struct SpawnOrder
+{
+    public string m_prefabName;
+    public int m_ID;
+    public Vector2i m_position;
+}
+
+public class SpawnOrderMessage : MessageBase
+{
+    public SpawnOrder[] m_orders;
 }
 
 public class ClientData
