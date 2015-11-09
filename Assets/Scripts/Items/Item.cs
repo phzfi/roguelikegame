@@ -1,22 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class Item : MonoBehaviour {
+public class Item : NetworkBehaviour
+{
 
-    public string m_name = "Palikka"; // placeholder
-    public Vector2i m_pos;
-    public int ID;
+	[SyncVar]
+	public string m_name = "Palikka"; // placeholder
+	[SyncVar]
+	public Vector2i m_pos;
+	[SyncVar]
+    public int ID = -1;
 
-    private bool m_onMap = true;
-    
-	void Start () {
-        ItemManager.Register(this, out ID);
-        m_pos = MovementManager.sm_grid.GetGridPosition(transform.position);
-    }
-	
-	void Update () {
-	
+	[SyncVar]
+	private bool m_onMap = true;
+
+    void Start()
+    {
+		ItemManager.Register(this, m_onMap);
+		transform.position = MovementManager.sm_grid.GetWorldPos(m_pos);
+
+		if(!m_onMap) // if item has been picked up already
+		{
+			gameObject.SetActive(false);
+		}
 	}
+
+    void Update()
+    {
+
+    }
 
     public void Pickup(GameObject obj)
     {

@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class SimpleCharacterMovement : MonoBehaviour {
+public class SimpleCharacterMovement : NetworkBehaviour {
     
     public int ID;
 
@@ -40,8 +41,8 @@ public class SimpleCharacterMovement : MonoBehaviour {
             Debug.LogError("Character " + gameObject.name + ", ID: " + ID + " is in unaccessable location");
 
         transform.position = new Vector3(x, y, transform.position.z);
-
-        MovementManager.Register(this, out ID);
+		ID = (int)netId.Value;
+        MovementManager.Register(this);
     }
     float EvalPathMovementFunc(NavMovementEvalData d) { return d.f; }
     

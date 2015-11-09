@@ -19,7 +19,12 @@ public class SyncManager : NetworkBehaviour
     private static ClientData sm_clientData; // stores all data relevant only to client, null if server
     private static ServerData sm_serverData; // stores all data relevant only to server, null if client
     private static bool sm_isServer = false; // bool that tells if we're either dedicated server or host
-    
+
+    public static bool IsServer
+    {
+        get { return sm_isServer; }
+    }
+
     void Start()
     {
 

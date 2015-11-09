@@ -21,22 +21,23 @@ public class ItemManager : MonoBehaviour {
         Reset();
     }
 
-    public static void Register(Item item, out int ID, bool onMap = true)
+    public static void Register(Item item, bool onMap = true)
     {
-        // Add new item, return item ID.
-
-        ID = sm_curID++;
-
         sm_allItems.Add(item);
-        sm_allItemsDictionary.Add(ID, item);
+        sm_allItemsDictionary.Add(item.ID, item);
 
         if(onMap)
         {
             sm_itemsOnMap.Add(item);
-            sm_itemsOnMapDictionary.Add(ID, item);
+            sm_itemsOnMapDictionary.Add(item.ID, item);
         }
     }
-    
+
+	public static void GetID(out int ID)
+	{
+		ID = sm_curID++;
+	}
+
     public static void Unregister(int ID)
     {
         // Remove item from all containers by ID.

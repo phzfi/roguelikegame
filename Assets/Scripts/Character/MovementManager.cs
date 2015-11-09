@@ -10,7 +10,6 @@ public class MovementManager : MonoBehaviour {
 
     private static List<SimpleCharacterMovement> sm_objects = new List<SimpleCharacterMovement>(); // Private list for iterating over all objects
     private static Dictionary<int, SimpleCharacterMovement> sm_objectDictionary = new Dictionary<int, SimpleCharacterMovement>(); // Private dictionary for fast item fetching by ID. Use GetObject to access this.
-    private static int sm_curID = 0; // TODO: will not stay synchronized if client and server have different amounts of objects, eg. when not synchronizing unseen objects
 
     public static ReadOnlyCollection<SimpleCharacterMovement> Objects { get { return sm_objects.AsReadOnly(); } } // Public property exposes only read-only version of list to prevent modification
 
@@ -24,12 +23,10 @@ public class MovementManager : MonoBehaviour {
         Reset();
     }
 
-    public static void Register(SimpleCharacterMovement item, out int ID) // Add new object, return object ID.
+    public static void Register(SimpleCharacterMovement item) // Add new object, return object ID.
     {
-        ID = sm_curID++;
-
         sm_objects.Add(item);
-        sm_objectDictionary.Add(ID, item);
+        sm_objectDictionary.Add(item.ID, item);
     }
 
     public static void Unregister(int ID) // Remove object by ID.
@@ -90,7 +87,6 @@ public class MovementManager : MonoBehaviour {
 
     private static void Reset()
     {
-        sm_curID = 0;
         sm_objectDictionary = new Dictionary<int, SimpleCharacterMovement>();
         sm_objects = new List<SimpleCharacterMovement>();
     }

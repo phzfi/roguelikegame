@@ -19,7 +19,6 @@ public struct MoveOrder
     }
 }
 
-
 public class ConnectionMessage : MessageBase
 {
     public uint m_clientID;
@@ -45,18 +44,6 @@ public struct PickupOrder
 public class PickupOrderMessage : MessageBase
 {
     public PickupOrder[] m_orders;
-}
-
-public struct SpawnOrder
-{
-    public string m_prefabName;
-    public int m_ID;
-    public Vector2i m_position;
-}
-
-public class SpawnOrderMessage : MessageBase
-{
-    public SpawnOrder[] m_orders;
 }
 
 public class ClientData

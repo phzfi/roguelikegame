@@ -12,6 +12,11 @@ public class PlayerSync : NetworkBehaviour {
     
     void Start ()
     {
+		if(isLocalPlayer)
+		{
+			var renderer = GetComponent<MeshRenderer>();
+			renderer.material.color = new Color(0, 1, 0);
+		}
         SyncManager.sm_players.Add(this); // add this to list of player objects
 	}
 	
