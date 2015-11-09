@@ -1637,10 +1637,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1246329629}
     m_Modifications:
-    - target: {fileID: 11490472, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
-      propertyPath: m_SpawnPrefabs.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 404170, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1677,18 +1673,10 @@ Prefab:
       propertyPath: m_syncManager
       value: 
       objectReference: {fileID: 258938888}
-    - target: {fileID: 11418554, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
-      propertyPath: showGUI
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11418554, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 11490472, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
-      propertyPath: m_SpawnPrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+      propertyPath: m_SimulatedLatency
+      value: 235
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
   m_IsPrefabParent: 0

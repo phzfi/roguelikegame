@@ -32,15 +32,15 @@ public class SyncManager : NetworkBehaviour
 
     void Update()
     {
-        if (sm_isServer && Time.realtimeSinceStartup - m_lastSync > m_syncRate && !sm_serverData.m_turnInProgress)
+        if (sm_isServer && Time.realtimeSinceStartup - m_lastSync > m_syncRate && !sm_serverData.m_turnInProgress) // start turn change if enough time has passed since last turn, and we're on the server
         {
             m_lastSync = Time.realtimeSinceStartup;
             StartServerTurn();
         }
     }
-
-    public void InitOnServer()
-    {
+	
+    public void InitOnServer() // initialize server side sync logic
+	{
         NetworkServer.RegisterHandler((short)msgType.moveOrder, OnServerReceiveMoveOrders);
         NetworkServer.RegisterHandler((short)msgType.connected, OnServerReceiveConnection);
         NetworkServer.RegisterHandler((short)msgType.visualize, OnServerReceiveVisualizationOrders);
@@ -50,8 +50,8 @@ public class SyncManager : NetworkBehaviour
         sm_isServer = true;
     }
     
-    public void InitOnClient(NetworkConnection connection)
-    {
+    public void InitOnClient(NetworkConnection connection) // initialize client side sync logic
+	{
         sm_clientData = new ClientData();
         sm_clientData.m_connection = connection;
         sm_clientData.m_clientID = netId.Value;
@@ -66,8 +66,8 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.Send((short)msgType.connected, msg); // send netId of this object to server so that it can keep track of connections using it
     }
     
-    public void StopOnServer()
-    {
+    public void StopOnServer() // stop server side sync logic
+	{
         NetworkServer.UnregisterHandler((short)msgType.moveOrder);
         NetworkServer.UnregisterHandler((short)msgType.connected);
         NetworkServer.UnregisterHandler((short)msgType.visualize);
@@ -76,9 +76,9 @@ public class SyncManager : NetworkBehaviour
         enabled = false;
         sm_isServer = false;
     }
-    
-    public void StopOnClient()
-    {
+	
+	public void StopOnClient() // stop client side sync logic
+	{
         sm_clientData.m_connection.UnregisterHandler((short)msgType.moveOrder);
         sm_clientData.m_connection.UnregisterHandler((short)msgType.connected);
         sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
@@ -87,8 +87,8 @@ public class SyncManager : NetworkBehaviour
         enabled = false;
     }
     
-    public void DisconnectClient(NetworkConnection connection)
-    {
+    public void DisconnectClient(NetworkConnection connection) // remove disconnected client from players list so that we won't wait for them during turn changes
+	{
         for(int i = 0; i < sm_serverData.m_playerData.Count; ++i)
         {
             var playerData = sm_serverData.m_playerData[i];
@@ -119,9 +119,9 @@ public class SyncManager : NetworkBehaviour
         }
         sm_visualizeMoveOrders.Clear();
     }
-
+	
     void handlePickupOrdersOnClient()
-    {
+	{
         for (int i = 0; i < sm_pickupOrders.Count; ++i)
         {
             var order = sm_pickupOrders[i];
@@ -129,20 +129,19 @@ public class SyncManager : NetworkBehaviour
         }
         sm_pickupOrders.Clear();
     }
-
-    void StartServerTurn() // advances the game state by one turn, runs all the server-side game logic
-    {
+	
+	void StartServerTurn() // advances the game state by one turn, runs all the server-side game logic
+	{
         sm_serverData.m_turnInProgress = true;
         for (int i = 0; i < sm_serverData.m_playerData.Count; ++i)
             sm_serverData.m_playerData[i].m_receivedInput = false;
 
-        RpcRunClientTurn(); // tell clients to update their visualization and send their inputs to server
-
-        StartCoroutine(ServerTurnCoRoutine()); // start coroutine that waits until all clients have sent their input before starting new turn
+        RpcRunClientTurn();
+        StartCoroutine(ServerTurnCoRoutine());
     }
     
-    IEnumerator ServerTurnCoRoutine()
-    {
+    IEnumerator ServerTurnCoRoutine() // coroutine that waits until all clients have sent their input for this turn, then finishes the server side turn
+	{
         while(true)
         {
             bool receivedAllInput = true;
@@ -171,12 +170,12 @@ public class SyncManager : NetworkBehaviour
         }
     }
     
-    void EndServerTurn()
-    {
+    void EndServerTurn() // finishes the server side turn
+	{
         handleMoveOrdersOnServer();
         MovementManager.RunServerTurn();
-        SendVisualizeOrdersToClient();
-        SendPickupOrdersToClient();
+        SendVisualizeOrdersToClients();
+        SendPickupOrdersToClients();
 
         sm_currentTurn++;
         m_lastSync = Time.realtimeSinceStartup;
@@ -184,8 +183,8 @@ public class SyncManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RpcRunClientTurn() // advances client state by one turn, sends input to server
-    {
+	void RpcRunClientTurn() // advances client state by one turn, sends input to server
+	{
         sm_clientData.m_turnInProgress = true;
         sm_clientData.m_receivedInput = false;
 
@@ -199,15 +198,15 @@ public class SyncManager : NetworkBehaviour
         sm_currentTurn++;
     }
     
-    void SendVisualizeOrdersToClient()
+    void SendVisualizeOrdersToClients()
     {
         var msg = new MoveOrderMessage();
         msg.m_orders = sm_visualizeMoveOrders.ToArray();
         sm_visualizeMoveOrders.Clear();
         NetworkServer.SendToAll((short)msgType.visualize, msg);
     }
-
-    void SendPickupOrdersToClient()
+	
+    void SendPickupOrdersToClients()
     {
         var msg = new PickupOrderMessage();
         msg.m_orders = sm_pickupOrders.ToArray();
@@ -215,8 +214,8 @@ public class SyncManager : NetworkBehaviour
         NetworkServer.SendToAll((short)msgType.pickupOrder, msg);
     }
     
-    PlayerData GetPlayerDataFromID(uint ID)
-    {
+    PlayerData GetPlayerDataFromID(uint ID) // gets the player data container associated with given ID
+	{
         for(int i = 0; i < sm_serverData.m_playerData.Count; ++i)
         {
             var playerData = sm_serverData.m_playerData[i];
@@ -226,8 +225,8 @@ public class SyncManager : NetworkBehaviour
         return null;
     }
     
-    void OnServerReceiveMoveOrders(NetworkMessage msg)
-    {
+    void OnServerReceiveMoveOrders(NetworkMessage msg) // handles move order data received from client
+	{
         var moveOrderMessage = msg.ReadMessage<MoveOrderMessage>();
         sm_moveOrders.AddRange(moveOrderMessage.m_orders);
         
@@ -238,16 +237,16 @@ public class SyncManager : NetworkBehaviour
             Debug.Log("Can't find player data for client ID: " + moveOrderMessage.m_clientID);
     }
     
-    void OnClientReceiveMoveOrders(NetworkMessage msg)
+    void OnClientReceiveMoveOrders(NetworkMessage msg) // placeholder
+	{
+    }
+	
+	void OnServerReceiveVisualizationOrders(NetworkMessage msg) // placeholder
     {
     }
     
-    void OnServerReceiveVisualizationOrders(NetworkMessage msg)
-    {
-    }
-    
-    void OnClientReceiveVisualizationOrders(NetworkMessage msg)
-    {
+    void OnClientReceiveVisualizationOrders(NetworkMessage msg) // handles received move visualization order data on client
+	{
         var visualizeMoveOrderMessage = msg.ReadMessage<MoveOrderMessage>();
         sm_visualizeMoveOrders.AddRange(visualizeMoveOrderMessage.m_orders);
         handleVisualizeMoveOrdersOnClient();
@@ -256,8 +255,8 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_turnInProgress = false;
     }
     
-    void OnServerReceiveConnection(NetworkMessage msg)
-    {
+    void OnServerReceiveConnection(NetworkMessage msg) // creates new server data entry for connected client so that they can be tracked when changing turns
+	{
         var connectMsg = msg.ReadMessage<ConnectionMessage>(); // when receiving connection message from client, generate server data for the client
         uint clientID = connectMsg.m_clientID;
 
@@ -267,21 +266,22 @@ public class SyncManager : NetworkBehaviour
         playerData.m_connection = msg.conn;
         sm_serverData.m_playerData.Add(playerData);
     }
-    
-    void OnClientReceiveConnection(NetworkMessage msg)
-    {
+	
+	void OnClientReceiveConnection(NetworkMessage msg) //placeholder
+	{
     }
-    void OnServerReceivePickupOrders(NetworkMessage msg)
-    {
+	
+	void OnServerReceivePickupOrders(NetworkMessage msg) //placeholder
+	{
     }
-
-    void OnClientReceivePickupOrders(NetworkMessage msg)
-    {
+	
+	void OnClientReceivePickupOrders(NetworkMessage msg) // handle received item pickup orders on client
+	{
         var pickupMsg = msg.ReadMessage<PickupOrderMessage>();
         sm_pickupOrders.AddRange(pickupMsg.m_orders);
         handlePickupOrdersOnClient();
     }
-
+	
     public static void AddMoveOrder(Vector3 target, int moverID)
     {
         if (sm_clientData.m_turnInProgress) // block input when turn processing is in progress. TODO: visualize this somehow
@@ -291,12 +291,14 @@ public class SyncManager : NetworkBehaviour
         sm_moveOrders.Add(order);
     }
 
+	
     public static void AddMoveVisualizationOrder(Vector3 target, int moverID)
-    {
+	{
         var order = new MoveOrder(target, moverID);
         sm_visualizeMoveOrders.Add(order);
     }
 
+	// add new item pickup order to input list
     public static void AddPickupOrder(int moverID, int itemID)
     {
         var order = new PickupOrder(moverID, itemID);

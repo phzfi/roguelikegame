@@ -10,39 +10,34 @@ public class CustomNetworkManager : NetworkManager {
     {
         m_syncManager.enabled = false;
     }
-
-    // called when connected to a server
-    public override void OnClientConnect(NetworkConnection conn)
-    {
+	
+    public override void OnClientConnect(NetworkConnection conn) // called when connected to a server
+	{
         base.OnClientConnect(conn);
         m_syncManager.InitOnClient(conn);
     }
-
-    // called when starting server or host
-    public override void OnStartServer()
-    {
+	
+    public override void OnStartServer() // called when starting server or host
+	{
         base.OnStartServer();
         m_syncManager.InitOnServer();
         m_syncManager.enabled = true;
     }
-
-    // called on server (or host) when client disconnects
-    public override void OnServerDisconnect(NetworkConnection conn)
-    {
+	
+    public override void OnServerDisconnect(NetworkConnection conn) // called on server (or host) when client disconnects
+	{
         base.OnServerDisconnect(conn);
         m_syncManager.DisconnectClient(conn);
     }
-
-    // called on client when disconnected from a server
-    public override void OnClientDisconnect(NetworkConnection conn)
-    {
+	
+    public override void OnClientDisconnect(NetworkConnection conn) // called on client when disconnected from a server
+	{
         base.OnClientDisconnect(conn);
         m_syncManager.StopOnClient();
     }
-
-    // called on server when server (or host) is stopped
-    public override void OnStopServer()
-    {
+	
+    public override void OnStopServer() // called on server when server (or host) is stopped
+	{
         base.OnStopServer();
         m_syncManager.StopOnServer();
     }

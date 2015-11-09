@@ -21,7 +21,7 @@ public class ItemManager : MonoBehaviour {
         Reset();
     }
 
-    public static void Register(Item item, bool onMap = true)
+    public static void Register(Item item, bool onMap = true) // Add item to relevant containers
     {
         sm_allItems.Add(item);
         sm_allItemsDictionary.Add(item.ID, item);
@@ -33,15 +33,13 @@ public class ItemManager : MonoBehaviour {
         }
     }
 
-	public static void GetID(out int ID)
+	public static void GetID(out int ID) // get a new unique ID number
 	{
 		ID = sm_curID++;
 	}
 
-    public static void Unregister(int ID)
-    {
-        // Remove item from all containers by ID.
-
+    public static void Unregister(int ID) // Remove item from all containers by ID.
+	{
         var obj = GetItem(ID);
         if (obj == null)
             return;
@@ -55,10 +53,8 @@ public class ItemManager : MonoBehaviour {
         }
     }
 
-    public static void UnregisterFromMap(int ID)
-    {
-        // Remove item from map containers by ID.
-
+    public static void UnregisterFromMap(int ID) // Remove item from map containers by ID.
+	{
         var obj = GetItemOnMap(ID);
         if (obj == null)
             return;
@@ -84,7 +80,7 @@ public class ItemManager : MonoBehaviour {
         return sm_itemsOnMapDictionary[ID];
     }
 
-    public static void OrderPickup(PickupOrder order)
+    public static void OrderPickup(PickupOrder order) // Get mover and item associated with given order, tell mover to pick item up
     {
         var mover = MovementManager.GetObject(order.m_playerID);
         var item = GetItemOnMap(order.m_itemID);

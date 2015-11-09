@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 
+// Class that spawns a single instance of item prefab determined by editor, then self destructs. Handles spawn syncing.
 public class ItemSpawner : NetworkBehaviour {
 
 	public GameObject m_item;

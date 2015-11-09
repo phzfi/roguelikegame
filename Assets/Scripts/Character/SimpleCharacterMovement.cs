@@ -51,12 +51,12 @@ public class SimpleCharacterMovement : NetworkBehaviour {
         MovementManager.Unregister(ID);
     }
 
-    public void MoveCommand(Vector3 to)
+    public void MoveCommand(Vector3 to) // Tell this object to start moving towards new target
     {
         m_pathScript.m_path = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
     }
 
-    public void VisualizeMove(Vector3 to)
+    public void VisualizeMove(Vector3 to) // Start movement visualization towards given point
     {
         List<Vector3> tempPath = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
         if (tempPath.Count == 0)
@@ -140,7 +140,7 @@ public class SimpleCharacterMovement : NetworkBehaviour {
         }
     }
 
-    public bool TakeStep()
+    public bool TakeStep() // Move this object towards the current target, move m_gridSpeed steps
     {
         if (m_pathScript.m_path.Count == 0)
             return false;

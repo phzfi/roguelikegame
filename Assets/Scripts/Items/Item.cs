@@ -31,7 +31,7 @@ public class Item : NetworkBehaviour
 
     }
 
-    public void Pickup(GameObject obj)
+    public void Pickup(GameObject obj) // Adds this item to given object's inventory, if it has room
     {
         var inventory = obj.GetComponent<Inventory>();
         if (inventory == null || !inventory.AddItem(gameObject))
@@ -42,7 +42,7 @@ public class Item : NetworkBehaviour
         m_onMap = false;
     }
 
-    public bool CanPickup(GameObject obj)
+    public bool CanPickup(GameObject obj) // Finds out if this item will fit into given object's inventory
     {
         var inventory = obj.GetComponent<Inventory>();
         if (inventory == null || !inventory.CanAddItem(gameObject))

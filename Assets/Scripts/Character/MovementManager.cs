@@ -38,7 +38,7 @@ public class MovementManager : MonoBehaviour {
         sm_objects.Remove(obj);
     }
 
-    public static SimpleCharacterMovement GetObject(int ID)
+    public static SimpleCharacterMovement GetObject(int ID) // get mover associated with given ID
     {
         if (!sm_objectDictionary.ContainsKey(ID)) // if ID not found in dictionary, something's wrong
         {
@@ -48,7 +48,7 @@ public class MovementManager : MonoBehaviour {
         return sm_objectDictionary[ID];
     }
 
-    public static void InputMoveOrder(Vector3 target)
+    public static void InputMoveOrder(Vector3 target) // when mouse is clicked, send move order for all local player objects (should be only one)
     {
         for(int i = 0; i < sm_objects.Count; ++i)
         {
@@ -58,19 +58,19 @@ public class MovementManager : MonoBehaviour {
         }
     }
 
-    public static void OrderMove(MoveOrder order)
+    public static void OrderMove(MoveOrder order) // pass move order to the mover it is associated with by ID
     {
         var mover = GetObject(order.m_moverID);
         mover.MoveCommand(order.m_target);
     }
 
-    public static void OrderMoveVisualize(MoveOrder order)
-    {
+    public static void OrderMoveVisualize(MoveOrder order) // pass move visualization order to the mover it is associated with by ID
+	{
         var mover = GetObject(order.m_moverID);
         mover.VisualizeMove(order.m_target);
     }
 
-    public static void RunServerTurn()
+    public static void RunServerTurn() // run server side game logic for all movers, eg. walk along the path determined by path finding
     {
         for (int i = 0; i < sm_objects.Count; ++i)
         {

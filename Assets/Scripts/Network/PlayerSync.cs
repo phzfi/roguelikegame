@@ -12,7 +12,7 @@ public class PlayerSync : NetworkBehaviour {
     
     void Start ()
     {
-		if(isLocalPlayer)
+		if(isLocalPlayer) // change object color to green if this is the player's own cube
 		{
 			var renderer = GetComponent<MeshRenderer>();
 			renderer.material.color = new Color(0, 1, 0);
@@ -38,10 +38,5 @@ public class PlayerSync : NetworkBehaviour {
     public bool IsLocalPlayer()
     {
         return isLocalPlayer;
-    }
-
-    [Server]
-    public void TakeServerTurn()  // runs the server-side turn logic for this object
-    {
     }
 }
