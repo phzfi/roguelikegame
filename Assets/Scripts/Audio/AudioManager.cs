@@ -4,28 +4,54 @@ using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour {
 
-    public List<AudioClip> m_musicList;
+    //public List<AudioClip> m_musicList;
+    public AudioClip m_menuMusic;
+    public AudioClip m_ambientSounds;
     public AudioSource m_source;
 
-    private int m_currentSong = -1;
+    private float m_menuVolume = 1.0f;
+    private float m_ambientVolume = 0.0f;
+    private bool m_ambientPlaying = false;
+    //private int m_currentSong = -1;
     
-	void Start () {
-        
-	}
 	
-	void Update () {
-        if (m_source.isPlaying)
-            return;
-	    for(int i = 0; i < m_musicList.Count; ++i)
-        {
-            if (i == m_currentSong)
-                continue;
+    void Start()
+    {
+        m_source.clip = m_menuMusic;
+    }
 
-            var clip = m_musicList[i];
-            m_source.clip = clip;
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(5.0f);
+    }
+
+	void Update () {
+        if (!m_ambientPlaying && !MenuManager.sm_menuOpen)
+        {
+            m_ambientPlaying = true;
+            StartCoroutine("FadeOut");
+            StartCoroutine("Wait");
+            m_source.clip = m_ambientSounds;
+            StartCoroutine("FadeIn");
             m_source.Play();
-            m_currentSong = i;
-            break;
         }
-	}
+    }
+
+    IEnumerator FadeOut()
+    {
+        for (float f = 1f; f > 0f; f -= 0.1f * Time.deltaTime)
+        {
+            m_source.volume = f;
+            yield return null;
+        }
+    }
+
+    IEnumerator FadeIn()
+    {
+        for(float f = 0f; f < 1.0f; f += 0.1f * Time.deltaTime)
+        {
+            m_source.volume = f;
+            yield return null;
+        }
+    }
 }

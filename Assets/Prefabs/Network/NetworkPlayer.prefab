@@ -203,8 +203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31350f0aab4fb5e44bd875820e14aafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  rotationSpeed: 1
+  ID: 0
+  m_worldPos: {x: 0, y: 0, z: 0}
+  m_syncer: {fileID: 0}
 --- !u!114 &11457766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -216,6 +217,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d123bec8cd2f4a43911de200c45dbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_itemPickupAudio: {fileID: 8300000, guid: 4ce5bd5507f54f943915100a6659cb3f, type: 3}
+  m_coinPickupAudio: {fileID: 8300000, guid: 8075a1247fb557c4abe9d7f16db83de2, type: 3}
   m_maxItems: 5
 --- !u!1001 &100100000
 Prefab:
@@ -264,6 +267,14 @@ Prefab:
       propertyPath: m_mover
       value: 
       objectReference: {fileID: 11432662}
+    - target: {fileID: 0}
+      propertyPath: m_itemPickupAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: 4ce5bd5507f54f943915100a6659cb3f, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_coinPickupAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: 8075a1247fb557c4abe9d7f16db83de2, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180150}
