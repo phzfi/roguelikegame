@@ -6,33 +6,33 @@ public class NavGridScript : Singleton<NavGridScript> {
 
     protected NavGridScript() { }
 
-    public float _width;
-    public float _height;
-    public float _cellSize = 1.0f;
-    public float _spiralSize = 20;
-    public NavGrid _grid;
+    public float m_width;
+    public float m_height;
+    public float m_cellSize = 1.0f;
+    public float m_spiralSize = 20;
+    public NavGrid m_grid;
 
-    public int _currentWidth { get; private set; }
-    public int _currentHeight { get; private set; }
-    public float _currentCellSize { get; private set; }
-    private Vector2 _BottomCornerWorldPosition;
-    private LayerMask _AccessibleLayer;
-    private LayerMask _invertAccessibleLayer;
-    private LayerMask _invertEnviromentMask;
+    public int m_currentWidth { get; private set; }
+    public int m_currentHeight { get; private set; }
+    public float m_currentCellSize { get; private set; }
+    private Vector2 m_BottomCornerWorldPosition;
+    private LayerMask m_AccessibleLayer;
+    private LayerMask m_invertAccessibleLayer;
+    private LayerMask m_invertEnviromentMask;
 
     public LayerMask AccessibleMask
     {
-        get { return _AccessibleLayer;  }
+        get { return m_AccessibleLayer;  }
     }
 
     public LayerMask invertEnviromentMask
     {
-        get { return _invertEnviromentMask; }
+        get { return m_invertEnviromentMask; }
     }
 
     public LayerMask invertAccesbileEnviromentMask
     {
-        get { return _invertAccessibleLayer; }
+        get { return m_invertAccessibleLayer; }
     }
 
     void Awake()
@@ -47,61 +47,61 @@ public class NavGridScript : Singleton<NavGridScript> {
     public void GenerateNavGrid()
     {
         UpdateEnviromentMasks();
-        _currentCellSize = _cellSize;
-        _currentWidth = Mathf.CeilToInt(_width / _cellSize) * 2 + 1;
-        _currentHeight = Mathf.CeilToInt(_height / _cellSize) * 2 + 1;
-        var to_left_bottom_x = _width + .5f * _cellSize;
-        var to_left_bottom_y = _height + .5f * _cellSize;
-        _BottomCornerWorldPosition = new Vector2(to_left_bottom_x, to_left_bottom_y) * -1.0f;
-        _grid = new NavGrid(_currentWidth, _currentHeight);
-        RunRayCastingLoop(ref _grid, Camera.main.transform.position.z);
-        RunPostProcessSpiral(ref _grid);
+        m_currentCellSize = m_cellSize;
+        m_currentWidth = Mathf.CeilToInt(m_width / m_cellSize) * 2 + 1;
+        m_currentHeight = Mathf.CeilToInt(m_height / m_cellSize) * 2 + 1;
+        var tom_leftm_bottomm_x = m_width + .5f * m_cellSize;
+        var tom_leftm_bottomm_y = m_height + .5f * m_cellSize;
+        m_BottomCornerWorldPosition = new Vector2(tom_leftm_bottomm_x, tom_leftm_bottomm_y) * -1.0f;
+        m_grid = new NavGrid(m_currentWidth, m_currentHeight);
+        RunRayCastingLoop(ref m_grid, Camera.main.transform.position.z);
+        RunPostProcessSpiral(ref m_grid);
     }
 
     public void RunRayCastingLoop(ref NavGrid g, float d)
     {
-        for (int x = 0; x < _currentWidth; x++)
+        for (int x = 0; x < m_currentWidth; x++)
         {
-            for (int y = 0; y < _currentHeight; y++)
+            for (int y = 0; y < m_currentHeight; y++)
             {
-                Vector3 currentPosition = new Vector3(-1.0f * _width + x * _currentCellSize, -1.0f * _height + y * _currentCellSize, d);
+                Vector3 currentPosition = new Vector3(-1.0f * m_width + x * m_currentCellSize, -1.0f * m_height + y * m_currentCellSize, d);
                 RaycastHit hit;
                 NavGridCell cell = new NavGridCell();
-                if (Physics.Raycast(currentPosition, Vector3.forward, out hit, 100.0f, _invertEnviromentMask))
+                if (Physics.Raycast(currentPosition, Vector3.forward, out hit, 100.0f, m_invertEnviromentMask))
                 {
-                    cell._worldPos = hit.point;
-                    cell._outOfTheScene = false;
-                    if (hit.collider.gameObject.layer == _AccessibleLayer)
-                        cell._accessible = true;
+                    cell.m_worldPos = hit.point;
+                    cell.m_outOfTheScene = false;
+                    if (hit.collider.gameObject.layer == m_AccessibleLayer)
+                        cell.m_accessible = true;
                 }
-                g._navigationGrid[x, y] = cell;
+                g.m_navigationGrid[x, y] = cell;
             }
         } 
     }
 
     public void RunPostProcessSpiral(ref NavGrid g)
     {
-        for (int x = 0; x < _currentWidth; ++x)
+        for (int x = 0; x < m_currentWidth; ++x)
         {
-            for (int y = 0; y < _currentHeight; ++y)
+            for (int y = 0; y < m_currentHeight; ++y)
             {
-                NavGridCell cell = g._navigationGrid[x, y];
-                if (!cell._accessible)
+                NavGridCell cell = g.m_navigationGrid[x, y];
+                if (!cell.m_accessible)
                     continue;
                 Spiral s = new Spiral();
                 bool hit = false;
-                for (int i = 0; i < _spiralSize; i++)
+                for (int i = 0; i < m_spiralSize; i++)
                 {
                     int nextX, nextY;
                     s.Next(out nextX, out nextY);
-                    if (x + nextX < 0 || x + nextX < 0 || y + nextY >= _height || x + nextX >= _width) // prevent indexing out of bounds
+                    if (x + nextX < 0 || x + nextX < 0 || y + nextY >= m_height || x + nextX >= m_width) // prevent indexing out of bounds
                         continue;
-                    NavGridCell n = g._navigationGrid[(x + nextX), (y + nextY)];
-                    if (!n._accessible)
+                    NavGridCell n = g.m_navigationGrid[(x + nextX), (y + nextY)];
+                    if (!n.m_accessible)
                     {
-                        Vector3 d = n._worldPos - cell._worldPos;
+                        Vector3 d = n.m_worldPos - cell.m_worldPos;
                         d.z = 0;
-                        cell._smallestMaxAccessDistance = d.magnitude;
+                        cell.m_smallestMaxAccessDistance = d.magnitude;
                         hit = true;
                         break;
                     }
@@ -110,7 +110,7 @@ public class NavGridScript : Singleton<NavGridScript> {
                 {
                     int nextX, nextY;
                     s.Next(out nextX, out nextY);
-                    cell._smallestMaxAccessDistance = (new Vector2(nextX, nextY)).magnitude;
+                    cell.m_smallestMaxAccessDistance = (new Vector2(nextX, nextY)).magnitude;
                 }
             }
         }
@@ -118,30 +118,30 @@ public class NavGridScript : Singleton<NavGridScript> {
 
     public bool IsGridGenerated(out int w, out int h)
     {
-        w = _currentWidth/2;
-        h = _currentHeight/2;
-        return _grid != null;
+        w = m_currentWidth/2;
+        h = m_currentHeight/2;
+        return m_grid != null;
     }
 
-    public void DeleteNavMesh() { _grid = null; GC.Collect(); }
+    public void DeleteNavMesh() { m_grid = null; GC.Collect(); }
 
     void OnDrawGizmosSelected()
     {
-        if (_grid == null)
+        if (m_grid == null)
             return;
 
-        for (var x = 0; x < _currentWidth; x++)
+        for (var x = 0; x < m_currentWidth; x++)
         {
-            for (var y = 0; y < _currentHeight; y++)
+            for (var y = 0; y < m_currentHeight; y++)
             {
-                NavGridCell cell = _grid._navigationGrid[x, y];
-                if (cell._outOfTheScene)
+                NavGridCell cell = m_grid.m_navigationGrid[x, y];
+                if (cell.m_outOfTheScene)
                     continue;
-                Gizmos.color = cell._accessible ? Color.green : Color.red;
-                Vector3 drawPosition = cell._worldPos + Vector3.back * .25f;
-                Vector3 s = Vector3.one * _currentCellSize * 0.7f;
-                if(cell._accessible)
-                    s.z = cell._smallestMaxAccessDistance;
+                Gizmos.color = cell.m_accessible ? Color.green : Color.red;
+                Vector3 drawPosition = cell.m_worldPos + Vector3.back * .25f;
+                Vector3 s = Vector3.one * m_currentCellSize * 0.7f;
+                if(cell.m_accessible)
+                    s.z = cell.m_smallestMaxAccessDistance;
                 Gizmos.DrawCube(drawPosition, s);
             }
         }
@@ -158,19 +158,19 @@ public class NavGridScript : Singleton<NavGridScript> {
 
     public bool IsWorldPositionAccessable(ref float x, ref float y)
     {
-        var x_from_bottom_of_grid = (x + _width) / _cellSize + .5f;
-        var y_from_bottom_of_grid = (y + _height) / _cellSize + .5f;
-        var index_x = Mathf.FloorToInt(x_from_bottom_of_grid);
-        var index_y = Mathf.FloorToInt(y_from_bottom_of_grid);
-        x = _BottomCornerWorldPosition.x + ((float)index_x + .5f) * _cellSize;
-        y = _BottomCornerWorldPosition.y + ((float)index_y + .5f) * _cellSize;
+        var xm_fromm_bottomm_ofm_grid = (x + m_width) / m_cellSize + .5f;
+        var ym_fromm_bottomm_ofm_grid = (y + m_height) / m_cellSize + .5f;
+        var index_x = Mathf.FloorToInt(xm_fromm_bottomm_ofm_grid);
+        var index_y = Mathf.FloorToInt(ym_fromm_bottomm_ofm_grid);
+        x = m_BottomCornerWorldPosition.x + ((float)index_x + .5f) * m_cellSize;
+        y = m_BottomCornerWorldPosition.y + ((float)index_y + .5f) * m_cellSize;
 
-        if (index_x < 0 || index_x >= _grid._navigationGrid.GetLength(0))
+        if (index_x < 0 || index_x >= m_grid.m_navigationGrid.GetLength(0))
             return false;
-        else if (index_y < 0 || index_y >= _grid._navigationGrid.GetLength(1))
+        else if (index_y < 0 || index_y >= m_grid.m_navigationGrid.GetLength(1))
             return false;
         else
-            return _grid._navigationGrid[index_x, index_y]._accessible; 
+            return m_grid.m_navigationGrid[index_x, index_y].m_accessible; 
     }
 
 
@@ -178,20 +178,20 @@ public class NavGridScript : Singleton<NavGridScript> {
     {
         return new Vector2i
         {
-            x = Mathf.FloorToInt((worldPosition.x + ((float)_currentWidth * _currentCellSize) * .5f) / _currentCellSize),
-            y = Mathf.FloorToInt((worldPosition.y + ((float)_currentHeight * _currentCellSize) * .5f) / _currentCellSize)
+            x = Mathf.FloorToInt((worldPosition.x + ((float)m_currentWidth * m_currentCellSize) * .5f) / m_currentCellSize),
+            y = Mathf.FloorToInt((worldPosition.y + ((float)m_currentHeight * m_currentCellSize) * .5f) / m_currentCellSize)
         };
     }
 
     public Vector3 GetWorldPos(Vector2i gridPos)
     {
-        return _grid._navigationGrid[gridPos.x, gridPos.y]._worldPos;
+        return m_grid.m_navigationGrid[gridPos.x, gridPos.y].m_worldPos;
     }
 
     private void UpdateEnviromentMasks()
     {
-        _AccessibleLayer = LayerMask.NameToLayer("EnviromentAccessible");
-        _invertAccessibleLayer = 1 << _AccessibleLayer;
-        _invertEnviromentMask = _invertAccessibleLayer | 1 << LayerMask.NameToLayer("EnviromentUnaccessible");
+        m_AccessibleLayer = LayerMask.NameToLayer("EnviromentAccessible");
+        m_invertAccessibleLayer = 1 << m_AccessibleLayer;
+        m_invertEnviromentMask = m_invertAccessibleLayer | 1 << LayerMask.NameToLayer("EnviromentUnaccessible");
     }
 }
