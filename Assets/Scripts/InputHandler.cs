@@ -102,18 +102,7 @@ public class InputHandler : Singleton<InputHandler> {
             bool accessable = NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y);
             if (move && accessable)
             {
-                for(int i = 0; i < MovementManager.sm_movingObjects.Count; ++i)
-                {
-                    var obj = MovementManager.sm_movingObjects[i];
-                    var syncer = obj.GetComponent<PlayerSync>();
-                    if (syncer == null)
-                    {
-                        Debug.Log("Found player with no PlayerSync component");
-                        continue;
-                    }
-                    if(syncer.enabled)
-                        syncer.MoveOrder(new Vector3(x, y, 1.0f));
-                }
+                MovementManager.InputMoveOrder(new Vector3(x, y, 1.0f));
             }
             else if (accessable)
                 m_tmp.GetComponent<Renderer>().material.color = Color.green;

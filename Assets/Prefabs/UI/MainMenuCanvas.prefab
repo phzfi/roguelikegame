@@ -266,7 +266,7 @@ GameObject:
   - 222: {fileID: 22265848}
   - 114: {fileID: 11423420}
   m_Layer: 5
-  m_Name: Placeholder
+  m_Name: IPplaceholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -564,7 +564,7 @@ GameObject:
   - 114: {fileID: 11475480}
   - 114: {fileID: 11405912}
   m_Layer: 5
-  m_Name: SomeOtherInput
+  m_Name: IPaddressInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1491,7 +1491,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 11499532}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: JoinGameFromServerlist
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &11414582
@@ -1677,7 +1688,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: OpenServerlist
+        m_MethodName: ShowJoinMenuFromMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1729,7 +1740,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: BackFromServers
+        m_MethodName: ShowMainMenuFromJoinMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1826,7 +1837,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Something else...
+  m_Text: localhost
 --- !u!114 &11425362
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2106,6 +2117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_serverPanel: {fileID: 149176}
   m_mainMenuPanel: {fileID: 105978}
+  m_networkManager: {fileID: 0}
 --- !u!114 &11435436
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2235,7 +2247,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: RefreshServerlist
+        m_MethodName: RefreshServerList
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2332,9 +2344,10 @@ MonoBehaviour:
   m_mainMenuPanel: {fileID: 105978}
   m_hostGamePanel: {fileID: 178540}
   m_serverName: {fileID: 11412478}
-  m_otherInput: {fileID: 11405912}
+  m_IPaddress: {fileID: 11405912}
   m_playercount: {fileID: 11454518}
   m_rankedMatch: {fileID: 11426354}
+  networkManager: {fileID: 0}
 --- !u!114 &11448534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2878,7 +2891,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: HostGame
+        m_MethodName: HostGameFromHostMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3168,7 +3181,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: BackFromHosting
+        m_MethodName: ShowMainMenuFromHostMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3220,7 +3233,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: OpenHostMenu
+        m_MethodName: ShowHostMenuFromMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

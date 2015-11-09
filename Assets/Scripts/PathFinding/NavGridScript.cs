@@ -173,6 +173,21 @@ public class NavGridScript : Singleton<NavGridScript> {
             return _grid._navigationGrid[index_x, index_y]._accessible; 
     }
 
+
+    public Vector2i GetGridPosition(Vector3 worldPosition)
+    {
+        return new Vector2i
+        {
+            x = Mathf.FloorToInt((worldPosition.x + ((float)_currentWidth * _currentCellSize) * .5f) / _currentCellSize),
+            y = Mathf.FloorToInt((worldPosition.y + ((float)_currentHeight * _currentCellSize) * .5f) / _currentCellSize)
+        };
+    }
+
+    public Vector3 GetWorldPos(Vector2i gridPos)
+    {
+        return _grid._navigationGrid[gridPos.x, gridPos.y]._worldPos;
+    }
+
     private void UpdateEnviromentMasks()
     {
         _AccessibleLayer = LayerMask.NameToLayer("EnviromentAccessible");

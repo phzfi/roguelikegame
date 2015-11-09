@@ -1,88 +1,194 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 
 public class SimpleCharacterMovement : MonoBehaviour {
+    
+    public int ID;
 
-    public float speed = 1.0f;
-    public float rotationSpeed = 1.0f;
+    public NavPath m_pathScript;
 
-    public NavPath pathScript;
-
-    public NavPath.GridPosition pos;
-    private NavGridScript navGrid;
+    public Vector2i m_gridPos;
+    public Vector3 m_worldPos;
+    public PlayerSync m_syncer;
+    private NavGridScript m_navGrid;
     private MovementEvalFuncDelegate m_del;
     private AudioSource m_audioSource;
 
+    bool m_onGoingMovement = false;
+    float m_distanceOnStep = .0f;
+    float m_visualizationSpeed = 4.0f;
+    float m_visualizationRotationSpeed = 6.0f;
+    int m_gridSpeed = 6;
+    int m_step = 0;
+
     void Start ()
     {
-        navGrid = NavGridScript.Instance;
+        m_navGrid = NavGridScript.Instance;
 
-        pathScript = new NavPath();
-        pathScript.Initialize(navGrid);
-        pathScript._characterSize = .5f;
+        m_pathScript = new NavPath();
+        m_pathScript.Initialize(m_navGrid);
+        m_pathScript._characterSize = .5f;
         m_audioSource = GetComponent<AudioSource>();
+        m_syncer = GetComponent<PlayerSync>();
 
         m_del = new MovementEvalFuncDelegate(EvalPathMovementFunc);
 
         float x = transform.position.x;
         float y = transform.position.y;
         if (!NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y))
-            Debug.LogError("Character " + gameObject.name + "is in unaccessable location");
+            Debug.LogError("Character " + gameObject.name + ", ID: " + ID + " is in unaccessable location");
 
         transform.position = new Vector3(x, y, transform.position.z);
 
-        MovementManager.sm_movingObjects.Add(gameObject);
+        MovementManager.Register(this, out ID);
     }
     float EvalPathMovementFunc(NavMovementEvalData d) { return d.f; }
-
-    public void Update()
-    {
-        transform.position = pathScript.GetWorldPos(pos);
-    }
-
+    
     public void OnDestroy()
     {
-        MovementManager.sm_movingObjects.Remove(gameObject);
+        MovementManager.Unregister(ID);
     }
 
-    public void MoveTo(Vector3 to)
+    public void MoveCommand(Vector3 to)
     {
-        pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
+        m_pathScript._path = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
+    }
+
+    public void VisualizeMove(Vector3 to)
+    {
+        List<Vector3> tempPath = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
+        if (tempPath.Count == 0)
+            return;
+
+        List<Vector3> currentPath = new List<Vector3>();
+        for (int i = 0; i < m_gridSpeed; ++i)
+        {
+            if (i == tempPath.Count)
+                break;
+            currentPath.Add(tempPath[i]);
+        }
+
+        m_distanceOnStep = .0f;
+        m_step = 0;
+        m_onGoingMovement = true;
+
+        StopAllCoroutines(); // kill previous interpolations if they're still going
+
+        if (CatmullRomSpline.EditPathToFitCatmullRomSpline(ref currentPath))
+        {
+            CatmullRomSpline spline = new CatmullRomSpline(currentPath);
+            StartCoroutine(InterpolateCurveMovementCoroutine(spline, currentPath));
+        }
+        else
+        {
+            StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(m_pathScript._startWorldPos, m_pathScript._endWorldPos, true));
+        }
+    }
+
+    IEnumerator InterpolateCurveMovementCoroutine(CatmullRomSpline spline, List<Vector3> currentPath)
+    {
+        while (m_onGoingMovement)
+        {
+            float d = m_visualizationSpeed * Time.deltaTime;
+            m_distanceOnStep += d;
+            while (m_distanceOnStep > NavGridScript.Instance._currentCellSize)
+            {
+                m_distanceOnStep -= NavGridScript.Instance._currentCellSize;
+                spline.NextSection();
+                m_step++;
+            }
+
+            if (m_step < (currentPath.Count - 4))
+            {
+                Vector3 p = spline.Interpolate(m_distanceOnStep / NavGridScript.Instance._currentCellSize);
+                Quaternion look = Quaternion.LookRotation(Vector3.forward, (spline.NextPoint() - transform.position).normalized);
+                transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * m_visualizationRotationSpeed);
+                transform.position = p;
+            }
+            else
+            {
+                StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(transform.position, spline.GetLastPoint(), true));
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    IEnumerator InterpolateTwoPointsLerpMovementCoroutine(Vector3 start, Vector3 end, bool rotation)
+    {
+        while (m_onGoingMovement)
+        {
+            Quaternion look = Quaternion.LookRotation(Vector3.forward, (end - start).normalized);
+            float dist = Vector3.Distance(start, end);
+            float d = m_visualizationSpeed * Time.deltaTime;
+            if (rotation)
+                transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * m_visualizationRotationSpeed);
+            m_distanceOnStep += d;
+            if (m_distanceOnStep >= dist)
+            {
+                transform.position = end;
+                m_onGoingMovement = false;
+                yield break;
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(start, end, m_distanceOnStep / dist);
+            }
+            yield return null;
+        }
     }
 
     public bool TakeStep()
     {
-        if (pathScript._path.Count == 0)
+        if (m_pathScript._path.Count == 0)
             return false;
 
-        var nextPos = pathScript._path[0];
+        bool moved = false;
+        Debug.Log("Taking step");
 
-        bool movementBlocked = false;
-        
-        for(int i = 0; i < MovementManager.sm_movingObjects.Count; ++i) // loop over objects to check next path step is not blocked
+        for (int step = 0; step < m_gridSpeed; step++)
         {
-            var obj = MovementManager.sm_movingObjects[i];
-            var mover = obj.GetComponent<SimpleCharacterMovement>();
-            if (mover == null || mover == this)
-                continue;
+            if (m_pathScript._path.Count == 0)
+                return moved;
 
-            if(mover.pos == nextPos)
+            var nextPos = m_pathScript._path[0];
+
+            bool movementBlocked = false;
+            for (int i = 0; i < MovementManager.Objects.Count; ++i) // loop over objects to check next path step is not blocked
             {
-                movementBlocked = true;
-                break;
+                var mover = MovementManager.Objects[i];
+                if (mover == this)
+                    continue;
+
+                if (mover.m_gridPos == m_pathScript.GetGridPosition(nextPos))
+                {
+                    // TODO: do something smart here, don't just stop?
+                    movementBlocked = true;
+                    break;
+                }
             }
+
+            if (!movementBlocked) // if nextPos was not blocked, move there and remove one segment from path
+            {
+                m_gridPos = m_pathScript.GetGridPosition(nextPos);
+                m_worldPos = nextPos;
+                m_pathScript._path.RemoveAt(0);
+                moved = true;
+
+                for(int i = 0; i < ItemManager.ItemsOnMap.Count; ++i)
+                {
+                    var item = ItemManager.ItemsOnMap[i];
+                    if(item.m_pos == m_gridPos && item.CanPickup(gameObject))
+                        SyncManager.AddPickupOrder(ID, item.ID);
+                }
+            }
+            else
+                return moved;
         }
 
-        if (!movementBlocked) // if nextPos was not blocked, move there and remove one segment from path
-        {
-            pos = nextPos;
-            pathScript._path.RemoveAt(0);
-            m_audioSource.Play();
-            return true;
-        }
-
-        return false;
+        m_audioSource.Play();
+        return moved;
     }
 
  }

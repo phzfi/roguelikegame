@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-
+    public static bool sm_menuOpen = true;
     public GameObject m_mainMenu;
     public GameObject m_hostMenu;
     public GameObject m_joinMenu;
@@ -39,11 +39,13 @@ public class MenuManager : MonoBehaviour
     public void JoinGameFromServerlist()
     {
         m_joinMenu.GetComponent<JoinMenuScreen>().JoinGame();
+        sm_menuOpen = false;
     }
 
     public void HostGameFromHostMenu()
     {
         m_hostMenu.GetComponent<HostMenuScreen>().HostGame();
+        sm_menuOpen = false;
     }
 
     public void ExitGame()
