@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public enum MapTile
 {
@@ -25,20 +26,98 @@ public class LevelMap : MonoBehaviour
     public int Width { get { return m_width; } }
     private int m_height = 1;
     public int Height { get { return m_height; } }
-
+    public bool m_useRandomSeed;
+    public string m_seed = System.DateTime.Now.ToString();
+    [Range(0, 100)]
+    public int randomFillPercent;
+    
     private LevelMapItem[,] m_map;
-
-    private LevelMap() { }
-    public LevelMap(int w, int h)
-    {
-        m_width = w;
-        m_height = h;
-        m_map = new LevelMapItem[w, h];
-    }
 
     public void Generate()
     {
-        //TODO
+        LevelMapManager manager = GetComponent<LevelMapManager>();
+        m_width = manager.m_width;
+        m_height = manager.m_height;
+        m_map = new LevelMapItem[m_width, m_height];
+
+        RandomFillMap();
+
+        for (int i = 0; i < 4; i++)
+            SmoothMap();
+    }
+
+    void RandomFillMap()
+    {
+        if (m_useRandomSeed)
+        {
+            m_seed = System.DateTime.Now.ToString();
+        }
+        System.Random pseudoRandom = new System.Random(m_seed.GetHashCode());
+
+        for (int x = 0; x < m_width; x++)
+        {
+            for (int y = 0; y < m_height; y++)
+            {
+                LevelMapItem mapItem = new LevelMapItem();
+
+                if (x == 0 || x == m_width - 1 || y == 0 || y == m_height - 1)
+                {
+                    mapItem.m_tile = MapTile.Wall;
+                } else
+                {
+                    mapItem.m_tile = (pseudoRandom.Next(0, 100) < randomFillPercent) ? MapTile.Wall : MapTile.Floor;
+                }
+                m_map[x, y] = mapItem;
+            }
+        }
+    }
+
+    void SmoothMap()
+    {
+        for (int x = 0; x < m_width; x++)
+        {
+            for (int y = 0; y < m_height; y++)
+            {
+                int neighbourWallTiles = GetSurroundingWallCount(x, y);
+
+                if (neighbourWallTiles > 4)
+                {
+                    LevelMapItem mapItem = new LevelMapItem();
+                    mapItem.m_tile = MapTile.Wall;
+                    m_map[x, y] = mapItem;
+                }
+                else if (neighbourWallTiles < 4)
+                {
+                    LevelMapItem mapItem = new LevelMapItem();
+                    mapItem.m_tile = MapTile.Floor;
+                    m_map[x, y] = mapItem;
+                }
+                
+            }
+        }
+    }
+
+    int GetSurroundingWallCount(int gridX, int gridY)
+    {
+        int wallCount = 0;
+        for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
+        {
+            for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
+            {
+                if (neighbourX >= 0 && neighbourX < m_width && neighbourY >= 0 && neighbourY < m_height)
+                {
+                    if (neighbourX != gridX || neighbourY != gridY)
+                    {
+                        wallCount += (m_map[neighbourX, neighbourY].m_tile == MapTile.Wall) ? 1 : 0;
+                    }
+                }
+                else
+                {
+                    wallCount++;
+                }
+            }
+        }
+        return wallCount;
     }
 
     // For precalculated NavGrid used for development
@@ -66,4 +145,6 @@ public class LevelMap : MonoBehaviour
     {
         return m_map[x, y].m_tile;
     }
+
+    
 }

@@ -54,8 +54,51 @@ public class NavGridScript : MonoBehaviour
         var tom_leftm_bottomm_x = m_width + .5f * m_cellSize;
         var tom_leftm_bottomm_y = m_height + .5f * m_cellSize;
         m_BottomCornerWorldPosition = new Vector2(tom_leftm_bottomm_x, tom_leftm_bottomm_y) * -1.0f;
-        m_grid = new NavGrid(m_currentWidth, m_currentHeight);
-        RunRayCastingLoop(ref m_grid, Camera.main.transform.position.z);
+        //m_grid = new NavGrid(m_currentWidth, m_currentHeight);
+        //RunRayCastingLoop(ref m_grid, Camera.main.transform.position.z);
+        //RunPostProcessSpiral(ref m_grid);
+
+        // Generointi tapahtuu LevelMapManagerissa
+    }
+
+    public void GenerateFromMap(LevelMap map)
+    {
+        //m_width = map.Width;
+        //m_height = map.Height;
+        //m_currentWidth = Mathf.CeilToInt(m_width / m_cellSize) * 2 + 1;
+        //m_currentHeight = Mathf.CeilToInt(m_height / m_cellSize) * 2 + 1;
+        NavGrid g = new NavGrid(m_currentWidth, m_currentHeight);
+
+        // Vika on varmaan tässä loopissa tai currentPositionissa
+        for (int x = 0; x < m_currentWidth; x++)
+        {
+            for (int y = 0; y < m_currentHeight; y++)
+            {
+                Vector3 currentPosition = new Vector3(-1.0f * m_width / 2 + x * m_currentCellSize, -1.0f * m_height / 2 + y * m_currentCellSize, 0);
+                NavGridCell cell = new NavGridCell();
+                if (x < map.Height && y < map.Width) {
+                    cell.m_outOfTheScene = false;
+                    if (map.GetTileType(x, y) == MapTile.Wall)
+                    {
+                        cell.m_worldPos = currentPosition;
+                        cell.m_accessible = false;
+                    }
+                    else if (map.GetTileType(x, y) == MapTile.Floor)
+                    {
+                        cell.m_worldPos = currentPosition;
+                        cell.m_accessible = true;
+                    }
+                } else
+                {
+                    cell.m_outOfTheScene = true;
+                    cell.m_worldPos = currentPosition;
+                    cell.m_accessible = false;
+                }
+                
+                g.m_navigationGrid[x, y] = cell;
+                m_grid = g;
+            }
+        }
         RunPostProcessSpiral(ref m_grid);
     }
 
