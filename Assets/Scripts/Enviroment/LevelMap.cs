@@ -54,7 +54,7 @@ public class LevelMap : MonoBehaviour
         }
         System.Random pseudoRandom = new System.Random(m_seed.GetHashCode());
 
-        for (int x = 0; x < m_width; x++)
+		for (int x = 0; x < m_width; x++)
         {
             for (int y = 0; y < m_height; y++)
             {

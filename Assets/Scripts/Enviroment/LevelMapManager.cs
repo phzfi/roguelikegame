@@ -60,7 +60,7 @@ public class LevelMapManager : MonoBehaviour {
 
                     // Create walls
                     Vector3 heightVector = new Vector3(0, 0, -m_meshHeight);
-                    if (i + 1 < m_width && m_map.GetTileType(i + 1, j) != MapTile.Wall)
+					if (i + 1 < m_width && m_map.GetTileType(i + 1, j) != MapTile.Wall)
                     {
                         CreateTriangle(botRight + pos, topRight + pos + heightVector, topRight + pos);
                         CreateTriangle(botRight + pos, botRight + pos + heightVector, topRight + pos + heightVector);
