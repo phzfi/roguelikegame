@@ -51,8 +51,8 @@ public class NavGridScript : MonoBehaviour
         m_currentCellSize = m_cellSize;
         //m_currentWidth = Mathf.CeilToInt(m_width / m_cellSize) * 2 + 1;
         //m_currentHeight = Mathf.CeilToInt(m_height / m_cellSize) * 2 + 1;
-        var tom_leftm_bottomm_x = m_width + .5f * m_cellSize;
-        var tom_leftm_bottomm_y = m_height + .5f * m_cellSize;
+		var tom_leftm_bottomm_x = m_width; // + .5f * m_cellSize;
+		var tom_leftm_bottomm_y = m_height; //.5f * m_cellSize;
         m_BottomCornerWorldPosition = new Vector2(tom_leftm_bottomm_x, tom_leftm_bottomm_y) * -1.0f;
         //m_grid = new NavGrid(m_currentWidth, m_currentHeight);
         //RunRayCastingLoop(ref m_grid, Camera.main.transform.position.z);
@@ -75,7 +75,7 @@ public class NavGridScript : MonoBehaviour
         {
             for (int y = 0; y < m_currentHeight; y++)
             {
-                Vector3 currentPosition = new Vector3(-1.0f * m_width + x * m_currentCellSize, -1.0f * m_height + y * m_currentCellSize, 0);
+                Vector3 currentPosition = new Vector3(-1.0f * m_width + x * m_currentCellSize + m_currentCellSize / 2, -1.0f * m_height + y * m_currentCellSize + m_currentCellSize / 2, 0);
                 NavGridCell cell = new NavGridCell();
                 if (x < map.Height && y < map.Width) {
                     cell.m_outOfTheScene = false;
@@ -207,8 +207,8 @@ public class NavGridScript : MonoBehaviour
         var ym_fromm_bottomm_ofm_grid = (y + m_height) / m_cellSize + .5f;
         var index_x = Mathf.FloorToInt(xm_fromm_bottomm_ofm_grid);
         var index_y = Mathf.FloorToInt(ym_fromm_bottomm_ofm_grid);
-        x = m_BottomCornerWorldPosition.x + ((float)index_x + .5f) * m_cellSize;
-        y = m_BottomCornerWorldPosition.y + ((float)index_y + .5f) * m_cellSize;
+        x = m_BottomCornerWorldPosition.x + ((float)index_x) * m_cellSize;
+        y = m_BottomCornerWorldPosition.y + ((float)index_y) * m_cellSize;
 
         if (index_x < 0 || index_x >= m_grid.m_navigationGrid.GetLength(0))
             return false;

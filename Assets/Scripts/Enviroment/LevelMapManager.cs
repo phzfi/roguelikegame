@@ -52,7 +52,7 @@ public class LevelMapManager : MonoBehaviour {
             {
                 if (m_map.GetTileType(i, j) == MapTile.Wall)
                 {
-                    Vector3 pos = new Vector3(-m_width / 2 + i * m_squareSize + m_squareSize / 2, -m_height / 2 + j * m_squareSize + m_squareSize / 2, m_depth);
+                    Vector3 pos = new Vector3(-m_width / 2 + i * m_squareSize, -m_height / 2 + j * m_squareSize, m_depth);
                     Vector3 topLeft = new Vector3(-m_squareSize / 2, m_squareSize / 2, 0);
                     Vector3 topRight = new Vector3(m_squareSize / 2, m_squareSize / 2, 0);
                     Vector3 botLeft = new Vector3(-m_squareSize / 2, -m_squareSize / 2, 0);
