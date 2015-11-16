@@ -102,13 +102,7 @@ public class InputHandler : Singleton<InputHandler> {
             bool accessable = NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y);
             if (move && accessable)
             {
-                var players = GameObject.FindGameObjectsWithTag("Player");
-                foreach (var p in players)
-                {
-                    var mover = p.GetComponent<SimpleCharacterMovement>();
-                    if(mover.enabled)
-                        mover.MoveTo(new Vector3(x, y, 1.0f));
-                }
+                MovementManager.InputMoveOrder(new Vector3(x, y, 1.0f));
             }
             else if (accessable)
                 m_tmp.GetComponent<Renderer>().material.color = Color.green;
