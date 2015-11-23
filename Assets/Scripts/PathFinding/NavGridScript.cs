@@ -70,7 +70,6 @@ public class NavGridScript : MonoBehaviour
         NavGrid g = new NavGrid(m_currentWidth, m_currentHeight);
 		GenerateNavGrid();
 
-        // Vika on varmaan tässä loopissa tai currentPositionissa
         for (int x = 0; x < m_currentWidth; x++)
         {
             for (int y = 0; y < m_currentHeight; y++)
