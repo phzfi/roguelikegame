@@ -15,7 +15,7 @@ public class MovementManager : MonoBehaviour {
 
     public void Start()
     {
-        sm_grid = NavGridScript.Instance;
+        sm_grid = GameObject.FindObjectOfType<NavGridScript>();
     }
 
     public void OnLevelWasLoaded(int level) // Reset all containers and sm_curID when loading new scene

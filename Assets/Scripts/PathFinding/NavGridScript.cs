@@ -2,7 +2,8 @@
 using System.Collections;
 using System;
 
-public class NavGridScript : Singleton<NavGridScript> {
+public class NavGridScript : MonoBehaviour
+{
 
     protected NavGridScript() { }
 
@@ -37,7 +38,7 @@ public class NavGridScript : Singleton<NavGridScript> {
 
     void Awake()
     {
-        GenerateNavGrid();
+        //GenerateNavGrid();
     }
 
     void OnDisable()
@@ -48,13 +49,56 @@ public class NavGridScript : Singleton<NavGridScript> {
     {
         UpdateEnviromentMasks();
         m_currentCellSize = m_cellSize;
-        m_currentWidth = Mathf.CeilToInt(m_width / m_cellSize) * 2 + 1;
-        m_currentHeight = Mathf.CeilToInt(m_height / m_cellSize) * 2 + 1;
-        var tom_leftm_bottomm_x = m_width + .5f * m_cellSize;
-        var tom_leftm_bottomm_y = m_height + .5f * m_cellSize;
+        //m_currentWidth = Mathf.CeilToInt(m_width / m_cellSize) * 2 + 1;
+        //m_currentHeight = Mathf.CeilToInt(m_height / m_cellSize) * 2 + 1;
+		var tom_leftm_bottomm_x = m_width; // + .5f * m_cellSize;
+		var tom_leftm_bottomm_y = m_height; //.5f * m_cellSize;
         m_BottomCornerWorldPosition = new Vector2(tom_leftm_bottomm_x, tom_leftm_bottomm_y) * -1.0f;
-        m_grid = new NavGrid(m_currentWidth, m_currentHeight);
-        RunRayCastingLoop(ref m_grid, Camera.main.transform.position.z);
+        //m_grid = new NavGrid(m_currentWidth, m_currentHeight);
+        //RunRayCastingLoop(ref m_grid, Camera.main.transform.position.z);
+        //RunPostProcessSpiral(ref m_grid);
+
+        // Generointi tapahtuu LevelMapManagerissa
+    }
+
+    public void GenerateFromMap(LevelMap map)
+    {
+        m_width = map.Width / 2;
+        m_height = map.Height / 2;
+        m_currentWidth = map.Width;
+        m_currentHeight = map.Height;
+        NavGrid g = new NavGrid(m_currentWidth, m_currentHeight);
+		GenerateNavGrid();
+
+        for (int x = 0; x < m_currentWidth; x++)
+        {
+            for (int y = 0; y < m_currentHeight; y++)
+            {
+                Vector3 currentPosition = new Vector3(-1.0f * m_width + x * m_currentCellSize + m_currentCellSize / 2, -1.0f * m_height + y * m_currentCellSize + m_currentCellSize / 2, 0);
+                NavGridCell cell = new NavGridCell();
+                if (x < map.Height && y < map.Width) {
+                    cell.m_outOfTheScene = false;
+                    if (map.GetTileType(x, y) == MapTile.Wall)
+                    {
+                        cell.m_worldPos = currentPosition;
+                        cell.m_accessible = false;
+                    }
+                    else if (map.GetTileType(x, y) == MapTile.Floor)
+                    {
+                        cell.m_worldPos = currentPosition;
+                        cell.m_accessible = true;
+                    }
+                } else
+                {
+                    cell.m_outOfTheScene = true;
+                    cell.m_worldPos = currentPosition;
+                    cell.m_accessible = false;
+                }
+                
+                g.m_navigationGrid[x, y] = cell;
+            }
+        }
+		m_grid = g;
         RunPostProcessSpiral(ref m_grid);
     }
 
@@ -162,8 +206,8 @@ public class NavGridScript : Singleton<NavGridScript> {
         var ym_fromm_bottomm_ofm_grid = (y + m_height) / m_cellSize + .5f;
         var index_x = Mathf.FloorToInt(xm_fromm_bottomm_ofm_grid);
         var index_y = Mathf.FloorToInt(ym_fromm_bottomm_ofm_grid);
-        x = m_BottomCornerWorldPosition.x + ((float)index_x + .5f) * m_cellSize;
-        y = m_BottomCornerWorldPosition.y + ((float)index_y + .5f) * m_cellSize;
+        x = m_BottomCornerWorldPosition.x + ((float)index_x) * m_cellSize;
+        y = m_BottomCornerWorldPosition.y + ((float)index_y) * m_cellSize;
 
         if (index_x < 0 || index_x >= m_grid.m_navigationGrid.GetLength(0))
             return false;
@@ -176,11 +220,10 @@ public class NavGridScript : Singleton<NavGridScript> {
 
     public Vector2i GetGridPosition(Vector3 worldPosition)
     {
-        return new Vector2i
-        {
-            x = Mathf.FloorToInt((worldPosition.x + ((float)m_currentWidth * m_currentCellSize) * .5f) / m_currentCellSize),
-            y = Mathf.FloorToInt((worldPosition.y + ((float)m_currentHeight * m_currentCellSize) * .5f) / m_currentCellSize)
-        };
+		Vector2i result = new Vector2i (Mathf.FloorToInt ((worldPosition.x + ((float)m_currentWidth * m_currentCellSize) * .5f) / m_currentCellSize), 
+		                               Mathf.FloorToInt ((worldPosition.y + ((float)m_currentHeight * m_currentCellSize) * .5f) / m_currentCellSize));
+		//Debug.Log ("Grid Position input: " + worldPosition + " output is:  "  + result);
+		return result;
     }
 
     public Vector3 GetWorldPos(Vector2i gridPos)

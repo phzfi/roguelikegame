@@ -18,10 +18,16 @@ public class NavGridCell
 
 public class NavGrid {
 
-    public NavGridCell[,] m_navigationGrid; 
+    public NavGridCell[,] m_navigationGrid;
+    private int m_width = 1;
+    public int Width { get { return m_width; } }
+    private int m_height = 1;
+    public int Height { get { return m_height; } }
 
     public NavGrid(int w, int h)
     {
+        m_width = w;
+        m_height = h;
         m_navigationGrid = new NavGridCell[w, h];
     }
 }

@@ -18,6 +18,8 @@ public class InputHandler : Singleton<InputHandler> {
     private LinkedList<SelectionState> m_selection_queue = new LinkedList<SelectionState>();
     public bool m_waiting_for_mouse_to_move = false;
 
+    private NavGridScript m_navGrid;
+
     private GameObject m_tmp;
     private GameObject m_tmp2;
 
@@ -28,6 +30,8 @@ public class InputHandler : Singleton<InputHandler> {
 
     void Awake()
     {
+        m_navGrid = GameObject.FindObjectOfType<NavGridScript>();
+
         m_tmp = GameObject.CreatePrimitive(PrimitiveType.Cube);
         m_tmp2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
         m_tmp2.transform.localScale = new Vector3(1.0f, 1.0f, .25f);
@@ -89,7 +93,7 @@ public class InputHandler : Singleton<InputHandler> {
         var t = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
         Ray r = Camera.main.ScreenPointToRay(t);
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(r, out hit, 1000.0f, NavGridScript.Instance.invertAccesbileEnviromentMask))
+        if (Physics.Raycast(r, out hit, 1000.0f, m_navGrid.invertAccesbileEnviromentMask))
         { 
             if (Input.GetMouseButtonDown(0))
             {
@@ -99,7 +103,7 @@ public class InputHandler : Singleton<InputHandler> {
             }
             float x = hit.point[0];
             float y = hit.point[1];
-            bool accessable = NavGridScript.Instance.IsWorldPositionAccessable(ref x, ref y);
+            bool accessable = m_navGrid.IsWorldPositionAccessable(ref x, ref y);
             if (move && accessable)
             {
                 MovementManager.InputMoveOrder(new Vector3(x, y, 1.0f));
