@@ -16,6 +16,7 @@ GameObject:
   - 114: {fileID: 11415356}
   - 82: {fileID: 8294360}
   - 114: {fileID: 11457766}
+  - 114: {fileID: 11401298}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -148,6 +149,21 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+--- !u!114 &11401298
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eabba29f0c98c934ab7d1e58648e567a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_currentHp: 0
+  m_maxHp: 3
+  m_damage: 1
+  m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
 --- !u!114 &11415356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -203,6 +219,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31350f0aab4fb5e44bd875820e14aafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_orderType: 0
+  m_moveOrderTarget: {x: 0, y: 0, z: 0}
+  m_attackOrderTarget: 0
   ID: 0
   m_worldPos: {x: 0, y: 0, z: 0}
   m_syncer: {fileID: 0}
@@ -275,6 +294,11 @@ Prefab:
       propertyPath: m_coinPickupAudio
       value: 
       objectReference: {fileID: 8300000, guid: 8075a1247fb557c4abe9d7f16db83de2, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_textPrefab
+      value: 
+      objectReference: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180150}

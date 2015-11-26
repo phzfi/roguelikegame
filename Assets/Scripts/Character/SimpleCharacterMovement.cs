@@ -21,6 +21,7 @@ public class SimpleCharacterMovement : NetworkBehaviour {
     private MovementEvalFuncDelegate m_del;
     private AudioSource m_audioSource;
 	private List<Vector3> m_moveOrderPath = new List<Vector3>();
+	private CombatSystem m_combatSystem;
 
     bool m_onGoingMovement = false;
     float m_distanceOnStep = .0f;
@@ -38,6 +39,7 @@ public class SimpleCharacterMovement : NetworkBehaviour {
         m_pathScript.m_characterSize = .5f;
         m_audioSource = GetComponent<AudioSource>();
         m_syncer = GetComponent<PlayerSync>();
+		m_combatSystem = GetComponent<CombatSystem>();
 
         m_del = new MovementEvalFuncDelegate(EvalPathMovementFunc);
 
@@ -215,7 +217,12 @@ public class SimpleCharacterMovement : NetworkBehaviour {
 
                 if (mover.m_gridPos == m_pathScript.GetGridPosition(nextPos))
                 {
-                    // TODO: do something smart here, don't just stop?
+					// TODO: do something smart here, don't just stop?
+					var combatSystem = mover.GetComponent<CombatSystem>();
+					if(combatSystem != null)
+					{
+						m_combatSystem.Attack(mover.ID);
+					}
                     movementBlocked = true;
                     break;
                 }
