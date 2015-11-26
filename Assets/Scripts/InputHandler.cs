@@ -106,7 +106,19 @@ public class InputHandler : Singleton<InputHandler> {
             bool accessable = m_navGrid.IsWorldPositionAccessable(ref x, ref y);
             if (move && accessable)
             {
-                MovementManager.InputMoveOrder(new Vector3(x, y, 1.0f));
+				bool attack = false;
+				for(int i = 0; i < MovementManager.Objects.Count; ++i)
+				{
+					var target = MovementManager.Objects[i];
+					if(m_navGrid.GetGridPosition(new Vector3(x,y)) == target.m_gridPos)
+					{
+						attack = true;
+						MovementManager.InputAttackOrder(target.ID);
+						break;
+					}
+				}
+				if(!attack)
+					MovementManager.InputMoveOrder(new Vector3(x, y, 1.0f));
             }
             else if (accessable)
                 m_tmp.GetComponent<Renderer>().material.color = Color.green;

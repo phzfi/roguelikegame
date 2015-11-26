@@ -10,6 +10,7 @@ public class SyncManager : NetworkBehaviour
     private static List<MoveOrder> sm_moveOrders = new List<MoveOrder>();
     private static List<MoveOrder> sm_visualizeMoveOrders = new List<MoveOrder>();
     private static List<PickupOrder> sm_pickupOrders = new List<PickupOrder>();
+	private static List<AttackOrder> sm_attackOrders = new List<AttackOrder>();
     public float m_syncRate = .5f;
     public float m_timeOutTurn = 1.0f;
     public static int sm_currentTurn = 0;
@@ -45,6 +46,7 @@ public class SyncManager : NetworkBehaviour
         NetworkServer.RegisterHandler((short)msgType.connected, OnServerReceiveConnection);
         NetworkServer.RegisterHandler((short)msgType.visualize, OnServerReceiveVisualizationOrders);
         NetworkServer.RegisterHandler((short)msgType.pickupOrder, OnServerReceivePickupOrders);
+		NetworkServer.RegisterHandler((short)msgType.attackOrder, OnServerReceiveAttackOrders);
         sm_serverData = new ServerData();
         enabled = true;
         sm_isServer = true;
@@ -59,6 +61,7 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.RegisterHandler((short)msgType.connected, OnClientReceiveConnection);
         sm_clientData.m_connection.RegisterHandler((short)msgType.visualize, OnClientReceiveVisualizationOrders);
         sm_clientData.m_connection.RegisterHandler((short)msgType.pickupOrder, OnClientReceivePickupOrders);
+		sm_clientData.m_connection.RegisterHandler((short)msgType.attackOrder, OnClientReceiveAttackOrders);
         enabled = true;
         
         var msg = new ConnectionMessage();
@@ -72,7 +75,8 @@ public class SyncManager : NetworkBehaviour
         NetworkServer.UnregisterHandler((short)msgType.connected);
         NetworkServer.UnregisterHandler((short)msgType.visualize);
         NetworkServer.UnregisterHandler((short)msgType.pickupOrder);
-        sm_serverData = null;
+		NetworkServer.UnregisterHandler((short)msgType.attackOrder);
+		sm_serverData = null;
         enabled = false;
         sm_isServer = false;
     }
@@ -83,7 +87,8 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.UnregisterHandler((short)msgType.connected);
         sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
         sm_clientData.m_connection.UnregisterHandler((short)msgType.pickupOrder);
-        sm_clientData = null;
+		sm_clientData.m_connection.UnregisterHandler((short)msgType.attackOrder);
+		sm_clientData = null;
         enabled = false;
     }
     
@@ -130,6 +135,26 @@ public class SyncManager : NetworkBehaviour
         sm_pickupOrders.Clear();
     }
 	
+	void handleAttackOrdersOnClient()
+	{
+		for(int i = 0; i < sm_attackOrders.Count; ++i)
+		{
+			var order = sm_attackOrders[i];
+			//TODO: do things
+		}
+		sm_attackOrders.Clear();
+	}
+
+	void handleAttackOrdersOnServer()
+	{
+		for(int i = 0; i < sm_attackOrders.Count; ++i)
+		{
+			var order = sm_attackOrders[i];
+			MovementManager.OrderAttack(order);
+		}
+		sm_attackOrders.Clear();
+	}
+
 	void StartServerTurn() // advances the game state by one turn, runs all the server-side game logic
 	{
         sm_serverData.m_turnInProgress = true;
@@ -148,7 +173,7 @@ public class SyncManager : NetworkBehaviour
             for(int i = 0; i < sm_serverData.m_playerData.Count; ++i)
             {
                 var playerData = sm_serverData.m_playerData[i];
-                if(!playerData.m_receivedInput)
+                if(!playerData.m_receivedInput) // TODO: need to check other input types as well here
                 {
                     receivedAllInput = false;
                     break;
@@ -173,6 +198,7 @@ public class SyncManager : NetworkBehaviour
     void EndServerTurn() // finishes the server side turn
 	{
         handleMoveOrdersOnServer();
+		handleAttackOrdersOnServer();
         MovementManager.RunServerTurn();
         SendVisualizeOrdersToClients();
         SendPickupOrdersToClients();
@@ -189,6 +215,13 @@ public class SyncManager : NetworkBehaviour
 
         sm_clientData.m_turnInProgress = true;
         sm_clientData.m_receivedInput = false;
+
+		var attackMsg = new AttackOrderMessage();
+		AttackOrder[] attackOrders = sm_attackOrders.ToArray();
+		sm_attackOrders.Clear();
+		attackMsg.m_orders = attackOrders;
+		attackMsg.m_clientID = sm_clientData.m_clientID;
+		sm_clientData.m_connection.Send((short)msgType.attackOrder, attackMsg);
 
         var msg = new MoveOrderMessage();
         MoveOrder[] orders = sm_moveOrders.ToArray();
@@ -276,7 +309,20 @@ public class SyncManager : NetworkBehaviour
 	void OnServerReceivePickupOrders(NetworkMessage msg) //placeholder
 	{
     }
+
+	void OnServerReceiveAttackOrders(NetworkMessage msg)
+    {
+		var attackMsg = msg.ReadMessage<AttackOrderMessage>();
+		sm_attackOrders.AddRange(attackMsg.m_orders);
+	}
 	
+	void OnClientReceiveAttackOrders(NetworkMessage msg)
+	{
+		var attackMsg = msg.ReadMessage<AttackOrderMessage>();
+		sm_attackOrders.AddRange(attackMsg.m_orders);
+		handleAttackOrdersOnClient();
+	}
+
 	void OnClientReceivePickupOrders(NetworkMessage msg) // handle received item pickup orders on client
 	{
         var pickupMsg = msg.ReadMessage<PickupOrderMessage>();
@@ -293,6 +339,14 @@ public class SyncManager : NetworkBehaviour
         sm_moveOrders.Add(order);
     }
 
+	public static void AddAttackOrder(int targetID, int moverID)
+	{
+		if (sm_clientData.m_turnInProgress) // block input when turn processing is in progress. TODO: visualize this somehow
+			return;
+
+		var order = new AttackOrder(moverID, targetID);
+		sm_attackOrders.Add(order);
+	}
 	
     public static void AddMoveVisualizationOrder(Vector3 target, int moverID)
 	{

@@ -61,6 +61,20 @@ public class MovementManager : MonoBehaviour {
         }
     }
 
+	public static void InputAttackOrder(int targetID)
+	{
+		for(int i = 0; i < sm_objects.Count; ++i)
+		{
+			var mover = sm_objects[i];
+			if (mover.m_syncer.IsLocalPlayer())
+			{
+				SyncManager.AddAttackOrder(targetID, mover.ID);
+				mover.m_orderType = SimpleCharacterMovement.OrderType.attack;
+				return;
+			}
+		}
+	}
+
     public static void OrderMove(MoveOrder order) // pass move order to the mover it is associated with by ID
     {
         var mover = GetObject(order.m_moverID);
@@ -72,6 +86,12 @@ public class MovementManager : MonoBehaviour {
         var mover = GetObject(order.m_moverID);
         mover.VisualizeMove(order.m_target);
     }
+
+	public static void OrderAttack(AttackOrder order)
+	{
+		var mover = GetObject(order.m_moverID);
+		mover.AttackCommand(order.m_targetID);
+	}
 
     public static void RunServerTurn() // run server side game logic for all movers, eg. walk along the path determined by path finding
     {

@@ -5,6 +5,11 @@ using UnityEngine.Networking;
 
 public class SimpleCharacterMovement : NetworkBehaviour {
     
+	public enum OrderType { none, move, attack}
+	public OrderType m_orderType;
+	public Vector3 m_moveOrderTarget;
+	public int m_attackOrderTarget;
+
     public int ID;
 
     public NavPath m_pathScript;
@@ -55,15 +60,20 @@ public class SimpleCharacterMovement : NetworkBehaviour {
 	public void InputMoveOrder(ref Vector3 to) // Update the move order. Run pathfinding to move target. 
 	{
 		m_moveOrderPath = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
+		m_orderType = OrderType.move;
 	}
 
 	public bool GetNextMoveSegment(ref Vector3 target) // Get the next move segment containing one turn's movement. This will get sent to the server as a move order.
 	{
+		if (m_orderType != OrderType.move) // if the object doesn't currently have a move order, return
+			return false;
+
 		int currentMoveIndex = Mathf.Min(m_moveOrderPath.Count, m_gridSpeed) - 1;
 		if (currentMoveIndex < 0)
 		{
 			return false;
 		}
+
 		target = m_moveOrderPath[currentMoveIndex];
 		m_moveOrderPath.RemoveRange(0, currentMoveIndex + 1);
 		return true;
@@ -71,8 +81,18 @@ public class SimpleCharacterMovement : NetworkBehaviour {
 
     public void MoveCommand(Vector3 to) // Tell this object to start moving towards new target
     {
-        m_pathScript.m_path = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
+		//m_pathScript.m_path = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
+		m_orderType = OrderType.move;
+		m_moveOrderTarget = to;
     }
+
+	public void AttackCommand(int targetID)
+	{
+		//var target = MovementManager.GetObject(targetID);
+		//m_pathScript.m_path = m_pathScript.SeekPath(m_del, transform.position, m_pathScript.GetWorldPos(target.m_gridPos));
+		m_orderType = OrderType.attack;
+		m_attackOrderTarget = targetID;
+	}
 
     public void VisualizeMove(Vector3 to) // Start movement visualization towards given point
     {
@@ -160,6 +180,19 @@ public class SimpleCharacterMovement : NetworkBehaviour {
 
     public bool TakeStep() // Move this object towards the current target, move m_gridSpeed steps
     {
+		switch (m_orderType)
+		{
+			case OrderType.none:
+				return false;
+			case OrderType.move:
+				m_pathScript.m_path = m_pathScript.SeekPath(m_del, transform.position, m_moveOrderTarget);
+				break;
+			case OrderType.attack:
+				var target = MovementManager.GetObject(m_attackOrderTarget);
+				var targetPos = m_pathScript.GetWorldPos(target.m_gridPos);
+				m_pathScript.m_path = m_pathScript.SeekPath(m_del, transform.position, targetPos);
+				break;
+		}
         if (m_pathScript.m_path.Count == 0)
             return false;
 

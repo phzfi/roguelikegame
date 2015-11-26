@@ -3,7 +3,9 @@ using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
-public enum msgType : short { moveOrder = 100, pickupOrder, connected, visualize, spawnItem } // start higher since unity reserves some message types
+public enum msgType : short { moveOrder = 100, pickupOrder, connected, visualize, spawnItem,
+	attackOrder
+} // start higher since unity reserves some message types
 
 public struct MoveOrder
 {
@@ -17,6 +19,26 @@ public struct MoveOrder
         m_moverID = moverID;
         m_target = target;
     }
+}
+
+public struct AttackOrder
+{
+	public int m_moverID;
+	public int m_targetID;
+	public int m_turnNumber;
+
+	public AttackOrder(int moverID, int targetID)
+	{
+		m_moverID = moverID;
+		m_targetID = targetID;
+		m_turnNumber = SyncManager.sm_currentTurn;
+	}
+}
+
+public class AttackOrderMessage : MessageBase
+{
+	public AttackOrder[] m_orders;
+	public uint m_clientID;
 }
 
 public class ConnectionMessage : MessageBase
