@@ -53,8 +53,11 @@ public class MovementManager : MonoBehaviour {
         for(int i = 0; i < sm_objects.Count; ++i)
         {
             var mover = sm_objects[i];
-            if(mover.m_syncer.IsLocalPlayer())
-                SyncManager.AddMoveOrder(target, mover.ID);
+			if (mover.m_syncer.IsLocalPlayer())
+			{
+				mover.InputMoveOrder(ref target);
+				//SyncManager.AddMoveOrder(target, mover.ID);
+			}
         }
     }
 
@@ -84,6 +87,19 @@ public class MovementManager : MonoBehaviour {
             }
         }
     }
+
+	public static void RunClientTurn() // run client side logic for all movers. sends the next segment of move order for all player-controlled objects
+	{
+		for(int i = 0; i < sm_objects.Count; ++i)
+		{
+			var mover = sm_objects[i];
+			if (mover.isLocalPlayer)
+			{
+				var nextTarget = mover.GetNextMoveSegment();
+				SyncManager.AddMoveOrder(nextTarget, mover.ID);
+			}
+		}
+	}
 
     private static void Reset()
     {

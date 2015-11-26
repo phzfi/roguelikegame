@@ -15,6 +15,7 @@ public class SimpleCharacterMovement : NetworkBehaviour {
     private NavGridScript m_navGrid;
     private MovementEvalFuncDelegate m_del;
     private AudioSource m_audioSource;
+	private List<Vector3> m_moveOrderPath = new List<Vector3>();
 
     bool m_onGoingMovement = false;
     float m_distanceOnStep = .0f;
@@ -50,6 +51,17 @@ public class SimpleCharacterMovement : NetworkBehaviour {
     {
         MovementManager.Unregister(ID);
     }
+
+	public void InputMoveOrder(ref Vector3 to) // Update the move order. Run pathfinding to move target. 
+	{
+		m_moveOrderPath = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
+	}
+
+	public Vector3 GetNextMoveSegment() // Get the next move segment containing one turn's movement. This will get sent to the server as a move order.
+	{
+		int currentMoveIndex = Mathf.Min(m_moveOrderPath.Count, m_gridSpeed);
+		return m_moveOrderPath[currentMoveIndex];
+	}
 
     public void MoveCommand(Vector3 to) // Tell this object to start moving towards new target
     {
@@ -172,9 +184,14 @@ public class SimpleCharacterMovement : NetworkBehaviour {
 
             if (!movementBlocked) // if nextPos was not blocked, move there and remove one segment from path
             {
+				if(m_pathScript.m_path[0] != m_moveOrderPath[0])
+				{
+					Debug.LogError("Mismatch in visualization path and actual path");
+				}
                 m_gridPos = m_pathScript.GetGridPosition(nextPos);
                 m_worldPos = nextPos;
                 m_pathScript.m_path.RemoveAt(0);
+				m_moveOrderPath.RemoveAt(0);
                 moved = true;
 
                 for(int i = 0; i < ItemManager.ItemsOnMap.Count; ++i)

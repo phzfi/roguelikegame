@@ -185,6 +185,8 @@ public class SyncManager : NetworkBehaviour
     [ClientRpc]
 	void RpcRunClientTurn() // advances client state by one turn, sends input to server
 	{
+		MovementManager.RunClientTurn();
+
         sm_clientData.m_turnInProgress = true;
         sm_clientData.m_receivedInput = false;
 
