@@ -95,8 +95,10 @@ public class MovementManager : MonoBehaviour {
 			var mover = sm_objects[i];
 			if (mover.isLocalPlayer)
 			{
-				var nextTarget = mover.GetNextMoveSegment();
-				SyncManager.AddMoveOrder(nextTarget, mover.ID);
+				Vector3 nextTarget = new Vector3();
+				bool moved = mover.GetNextMoveSegment(ref nextTarget);
+				if(moved)
+					SyncManager.AddMoveOrder(nextTarget, mover.ID);
 			}
 		}
 	}

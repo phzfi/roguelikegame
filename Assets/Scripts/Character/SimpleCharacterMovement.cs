@@ -57,10 +57,16 @@ public class SimpleCharacterMovement : NetworkBehaviour {
 		m_moveOrderPath = m_pathScript.SeekPath(m_del, transform.position, to - new Vector3(.5f, .5f, .5f));
 	}
 
-	public Vector3 GetNextMoveSegment() // Get the next move segment containing one turn's movement. This will get sent to the server as a move order.
+	public bool GetNextMoveSegment(ref Vector3 target) // Get the next move segment containing one turn's movement. This will get sent to the server as a move order.
 	{
-		int currentMoveIndex = Mathf.Min(m_moveOrderPath.Count, m_gridSpeed);
-		return m_moveOrderPath[currentMoveIndex];
+		int currentMoveIndex = Mathf.Min(m_moveOrderPath.Count, m_gridSpeed) - 1;
+		if (currentMoveIndex < 0)
+		{
+			return false;
+		}
+		target = m_moveOrderPath[currentMoveIndex];
+		m_moveOrderPath.RemoveRange(0, currentMoveIndex + 1);
+		return true;
 	}
 
     public void MoveCommand(Vector3 to) // Tell this object to start moving towards new target
@@ -184,14 +190,9 @@ public class SimpleCharacterMovement : NetworkBehaviour {
 
             if (!movementBlocked) // if nextPos was not blocked, move there and remove one segment from path
             {
-				if(m_pathScript.m_path[0] != m_moveOrderPath[0])
-				{
-					Debug.LogError("Mismatch in visualization path and actual path");
-				}
                 m_gridPos = m_pathScript.GetGridPosition(nextPos);
                 m_worldPos = nextPos;
                 m_pathScript.m_path.RemoveAt(0);
-				m_moveOrderPath.RemoveAt(0);
                 moved = true;
 
                 for(int i = 0; i < ItemManager.ItemsOnMap.Count; ++i)

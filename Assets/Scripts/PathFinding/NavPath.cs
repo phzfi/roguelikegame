@@ -54,6 +54,9 @@ public class NavPath {
         m_startWorldPos = startWorldPos;
         Vector2i start = GetGridPosition(startWorldPos);
         Vector2i end = GetGridPosition(endWorldPos);
+		if (start == end)
+			return path;
+
         FindClosetAccessableWithSpiral(ref end);
         
         var closedSet = new Dictionary<Vector2i, Node>(); 
