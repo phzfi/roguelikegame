@@ -46,11 +46,13 @@ public class CombatSystem : NetworkBehaviour {
 	{
 		m_currentHp -= dmg;
 		if (m_currentHp <= 0)
-			Die();
+			SyncManager.AddDeathOrder(GetComponent<SimpleCharacterMovement>().ID);
 	}
 
 	public void Die()
 	{
-		//gameObject.SetActive(false);
+		GetComponent<SimpleCharacterMovement>().Unregister();
+		gameObject.SetActive(false);
+		Debug.Log("ded as stone");
 	}
 }

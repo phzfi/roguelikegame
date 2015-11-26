@@ -56,8 +56,13 @@ public class SimpleCharacterMovement : NetworkBehaviour {
     
     public void OnDestroy()
     {
-        MovementManager.Unregister(ID);
+		Unregister();
     }
+
+	public void Unregister()
+	{
+		MovementManager.Unregister(ID);
+	}
 
 	public void InputMoveOrder(ref Vector3 to) // Update the move order. Run pathfinding to move target. 
 	{
@@ -191,6 +196,11 @@ public class SimpleCharacterMovement : NetworkBehaviour {
 				break;
 			case OrderType.attack:
 				var target = MovementManager.GetObject(m_attackOrderTarget);
+				if(target == null)
+				{
+					m_orderType = OrderType.none;
+					return false;
+				}
 				var targetPos = m_pathScript.GetWorldPos(target.m_gridPos);
 				m_pathScript.m_path = m_pathScript.SeekPath(m_del, transform.position, targetPos);
 				break;
@@ -199,7 +209,6 @@ public class SimpleCharacterMovement : NetworkBehaviour {
             return false;
 
         bool moved = false;
-        Debug.Log("Taking step");
 
         for (int step = 0; step < m_gridSpeed; step++)
         {

@@ -4,7 +4,8 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 public enum msgType : short { moveOrder = 100, pickupOrder, connected, visualize, spawnItem,
-	attackOrder
+	attackOrder,
+	death
 } // start higher since unity reserves some message types
 
 public struct MoveOrder
@@ -35,9 +36,27 @@ public struct AttackOrder
 	}
 }
 
+public struct DeathOrder
+{
+	public int m_targetID;
+	public int m_turnNumber;
+
+	public DeathOrder(int targetID)
+	{
+		m_targetID = targetID;
+		m_turnNumber = SyncManager.sm_currentTurn;
+	}
+}
+
 public class AttackOrderMessage : MessageBase
 {
 	public AttackOrder[] m_orders;
+	public uint m_clientID;
+}
+
+public class DeathMessage : MessageBase
+{
+	public DeathOrder[] m_orders;
 	public uint m_clientID;
 }
 

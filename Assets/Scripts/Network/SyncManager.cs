@@ -11,6 +11,7 @@ public class SyncManager : NetworkBehaviour
     private static List<MoveOrder> sm_visualizeMoveOrders = new List<MoveOrder>();
     private static List<PickupOrder> sm_pickupOrders = new List<PickupOrder>();
 	private static List<AttackOrder> sm_attackOrders = new List<AttackOrder>();
+	private static List<DeathOrder> sm_deathOrders = new List<DeathOrder>();
     public float m_syncRate = .5f;
     public float m_timeOutTurn = 1.0f;
     public static int sm_currentTurn = 0;
@@ -44,10 +45,11 @@ public class SyncManager : NetworkBehaviour
 	{
         NetworkServer.RegisterHandler((short)msgType.moveOrder, OnServerReceiveMoveOrders);
         NetworkServer.RegisterHandler((short)msgType.connected, OnServerReceiveConnection);
-        NetworkServer.RegisterHandler((short)msgType.visualize, OnServerReceiveVisualizationOrders);
-        NetworkServer.RegisterHandler((short)msgType.pickupOrder, OnServerReceivePickupOrders);
+        NetworkServer.RegisterHandler((short)msgType.visualize, PlaceHolderMessageHandler);
+        NetworkServer.RegisterHandler((short)msgType.pickupOrder, PlaceHolderMessageHandler);
 		NetworkServer.RegisterHandler((short)msgType.attackOrder, OnServerReceiveAttackOrders);
-        sm_serverData = new ServerData();
+		NetworkServer.RegisterHandler((short)msgType.death, PlaceHolderMessageHandler);
+		sm_serverData = new ServerData();
         enabled = true;
         sm_isServer = true;
     }
@@ -57,12 +59,13 @@ public class SyncManager : NetworkBehaviour
         sm_clientData = new ClientData();
         sm_clientData.m_connection = connection;
         sm_clientData.m_clientID = netId.Value;
-        sm_clientData.m_connection.RegisterHandler((short)msgType.moveOrder, OnClientReceiveMoveOrders);
-        sm_clientData.m_connection.RegisterHandler((short)msgType.connected, OnClientReceiveConnection);
+        sm_clientData.m_connection.RegisterHandler((short)msgType.moveOrder, PlaceHolderMessageHandler);
+        sm_clientData.m_connection.RegisterHandler((short)msgType.connected, PlaceHolderMessageHandler);
         sm_clientData.m_connection.RegisterHandler((short)msgType.visualize, OnClientReceiveVisualizationOrders);
         sm_clientData.m_connection.RegisterHandler((short)msgType.pickupOrder, OnClientReceivePickupOrders);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.attackOrder, OnClientReceiveAttackOrders);
-        enabled = true;
+		sm_clientData.m_connection.RegisterHandler((short)msgType.death, OnClientReceiveDeath);
+		enabled = true;
         
         var msg = new ConnectionMessage();
         msg.m_clientID = netId.Value;
@@ -114,6 +117,7 @@ public class SyncManager : NetworkBehaviour
         }
         sm_moveOrders.Clear();
     }
+	
     
     void handleVisualizeMoveOrdersOnClient()
     {
@@ -202,6 +206,7 @@ public class SyncManager : NetworkBehaviour
         MovementManager.RunServerTurn();
         SendVisualizeOrdersToClients();
         SendPickupOrdersToClients();
+		SendDeathOrdersToClients();
 
         sm_currentTurn++;
         m_lastSync = Time.realtimeSinceStartup;
@@ -249,6 +254,14 @@ public class SyncManager : NetworkBehaviour
         NetworkServer.SendToAll((short)msgType.pickupOrder, msg);
     }
     
+	void SendDeathOrdersToClients()
+	{
+		var msg = new DeathMessage();
+		msg.m_orders = sm_deathOrders.ToArray();
+		sm_deathOrders.Clear();
+		NetworkServer.SendToAll((short)msgType.death, msg);
+	}
+
     PlayerData GetPlayerDataFromID(uint ID) // gets the player data container associated with given ID
 	{
         for(int i = 0; i < sm_serverData.m_playerData.Count; ++i)
@@ -260,6 +273,11 @@ public class SyncManager : NetworkBehaviour
         return null;
     }
     
+	void PlaceHolderMessageHandler(NetworkMessage msg)  // placeholder, since must have handler on sender's side too
+    {
+
+	}
+
     void OnServerReceiveMoveOrders(NetworkMessage msg) // handles move order data received from client
 	{
         var moveOrderMessage = msg.ReadMessage<MoveOrderMessage>();
@@ -272,13 +290,6 @@ public class SyncManager : NetworkBehaviour
             Debug.Log("Can't find player data for client ID: " + moveOrderMessage.m_clientID);
     }
     
-    void OnClientReceiveMoveOrders(NetworkMessage msg) // placeholder
-	{
-    }
-	
-	void OnServerReceiveVisualizationOrders(NetworkMessage msg) // placeholder
-    {
-    }
     
     void OnClientReceiveVisualizationOrders(NetworkMessage msg) // handles received move visualization order data on client
 	{
@@ -289,7 +300,14 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_receivedInput = true;
         sm_clientData.m_turnInProgress = false;
     }
-    
+
+	void OnClientReceiveDeath(NetworkMessage msg)
+	{
+		var deathMsg = msg.ReadMessage<DeathMessage>();
+		for(int i = 0; i < deathMsg.m_orders.Length; ++i)
+			MovementManager.KillObject(deathMsg.m_orders[i].m_targetID);
+	}
+		    
     void OnServerReceiveConnection(NetworkMessage msg) // creates new server data entry for connected client so that they can be tracked when changing turns
 	{
         var connectMsg = msg.ReadMessage<ConnectionMessage>(); // when receiving connection message from client, generate server data for the client
@@ -300,14 +318,6 @@ public class SyncManager : NetworkBehaviour
         playerData.m_connectionID = msg.conn.connectionId;
         playerData.m_connection = msg.conn;
         sm_serverData.m_playerData.Add(playerData);
-    }
-	
-	void OnClientReceiveConnection(NetworkMessage msg) //placeholder
-	{
-    }
-	
-	void OnServerReceivePickupOrders(NetworkMessage msg) //placeholder
-	{
     }
 
 	void OnServerReceiveAttackOrders(NetworkMessage msg)
@@ -347,8 +357,14 @@ public class SyncManager : NetworkBehaviour
 		var order = new AttackOrder(moverID, targetID);
 		sm_attackOrders.Add(order);
 	}
-	
-    public static void AddMoveVisualizationOrder(Vector3 target, int moverID)
+
+	public static void AddDeathOrder(int targetID)
+	{
+		var order = new DeathOrder(targetID);
+		sm_deathOrders.Add(order);
+	}
+
+	public static void AddMoveVisualizationOrder(Vector3 target, int moverID)
 	{
         var order = new MoveOrder(target, moverID);
         sm_visualizeMoveOrders.Add(order);

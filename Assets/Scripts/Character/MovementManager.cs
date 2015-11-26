@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System;
 
 public class MovementManager : MonoBehaviour {
 
@@ -128,4 +129,11 @@ public class MovementManager : MonoBehaviour {
         sm_objectDictionary = new Dictionary<int, SimpleCharacterMovement>();
         sm_objects = new List<SimpleCharacterMovement>();
     }
+
+	public static void KillObject(int m_targetID)
+	{
+		var mover = GetObject(m_targetID);
+		var combatSystem = mover.GetComponent<CombatSystem>();
+		combatSystem.Die();
+	}
 }
