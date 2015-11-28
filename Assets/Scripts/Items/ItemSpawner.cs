@@ -3,8 +3,8 @@ using System.Collections;
 using UnityEngine.Networking;
 
 // Class that spawns a single instance of item prefab determined by editor, then self destructs. Handles spawn syncing.
-public class ItemSpawner : NetworkBehaviour {
-
+public class ItemSpawner : NetworkBehaviour
+{
 	public GameObject m_item;
 
 	public void Start()
@@ -14,8 +14,8 @@ public class ItemSpawner : NetworkBehaviour {
 
 		ItemManager.GetID(out item.ID);
 		item.m_name = "Palikka" + item.ID;
-		item.m_pos = MovementManager.sm_grid.GetGridPosition(transform.position);
-		
+		item.m_pos = MapGrid.WorldToGridPoint(transform.position);
+
 		NetworkServer.Spawn(obj);
 		Destroy(gameObject);
 	}

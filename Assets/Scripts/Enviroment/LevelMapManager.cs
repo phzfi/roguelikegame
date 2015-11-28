@@ -1,106 +1,53 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public class LevelMapManager : MonoBehaviour {
+public class LevelMapManager : MonoBehaviour
+{
+	public int m_width;
+	public int m_height;
+	public LevelMapVisualization m_mapVisualization;
 
-    private LevelMap m_map;
-    public bool m_debug;
-    public int m_width;
-    public int m_height;
-    public float m_squareSize = 1.0f;
-    public float m_meshHeight = 3.0f;
-    public float m_depth = 1.0f;
+	private LevelMap m_map = null;
 
-    List<Vector3> vertices;
-    List<int> triangles;
-    
-
-	void Start ()
-    {
-        m_map = GetComponent<LevelMap>();
-        m_map.Generate();
-        NavGridScript nav = GameObject.FindObjectOfType<NavGridScript>();
-        nav.GenerateFromMap(m_map);
-        GenerateMesh();
-    }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        
+	void Start()
+	{
+		m_map = GetComponent<LevelMap>();
+		m_map.Generate(m_width, m_height);
+		m_mapVisualization.GenerateMesh(m_map);
+		GeneratePlayerStartPositions();
 	}
-    
-    void GenerateMesh()
-    {
-        vertices = new List<Vector3>();
-        triangles = new List<int>();
 
-        Vector3 floorTopLeft = new Vector3(-m_width / 2, -m_height / 2, m_depth);
-        Vector3 floorTopRight = new Vector3(m_width / 2, -m_height / 2, m_depth);
-        Vector3 floorBotLeft = new Vector3(-m_width / 2, m_height / 2, m_depth);
-        Vector3 floorBotRight = new Vector3(m_width / 2, m_height / 2, m_depth);
-        // Create floor
-        CreateTriangle(floorBotRight, floorTopRight, floorTopLeft);
-        CreateTriangle(floorBotRight, floorTopLeft, floorBotLeft);
+	public LevelMap GetMap()
+	{
+		Debug.Assert(m_map, "Trying to use map before it's created");
+		return m_map;
+	}
 
+	private void GeneratePlayerStartPositions()
+	{
+		// TODO get actual player count from somewhere
+		const int playerPositionCount = 4;
 
-        for (int i = 0; i < m_width; i++)
-        {
-            for (int j = 0; j < m_height; j++)
-            {
-                if (m_map.GetTileType(i, j) == MapTile.Wall)
-                {
-                    Vector3 pos = new Vector3(-m_width / 2 + i * m_squareSize, -m_height / 2 + j * m_squareSize, m_depth);
-                    Vector3 topLeft = new Vector3(-m_squareSize / 2, m_squareSize / 2, 0);
-                    Vector3 topRight = new Vector3(m_squareSize / 2, m_squareSize / 2, 0);
-                    Vector3 botLeft = new Vector3(-m_squareSize / 2, -m_squareSize / 2, 0);
-                    Vector3 botRight = new Vector3(m_squareSize / 2, -m_squareSize / 2, 0);
+		float distanceToCenter = 0.2f * Mathf.Min(m_map.Width, m_map.Height);
+		float angleBetweenPositions = 360.0f / playerPositionCount;
+		Vector2 center = new Vector2(m_map.Width, m_map.Height) / 2.0f;
 
-                    // Create walls
-                    Vector3 heightVector = new Vector3(0, 0, -m_meshHeight);
-					if (i + 1 < m_width && m_map.GetTileType(i + 1, j) != MapTile.Wall)
-                    {
-                        CreateTriangle(botRight + pos, topRight + pos + heightVector, topRight + pos);
-                        CreateTriangle(botRight + pos, botRight + pos + heightVector, topRight + pos + heightVector);
-                    }
-                    if (j - 1 > 0 && m_map.GetTileType(i, j - 1) != MapTile.Wall)
-                    {
-                        CreateTriangle(botLeft + pos, botRight + pos + heightVector, botRight + pos);
-                        CreateTriangle(botLeft + pos, botLeft + pos + heightVector, botRight + pos + heightVector);
-                    }
-                    if (i - 1 > 0 && m_map.GetTileType(i - 1, j) != MapTile.Wall)
-                    {
-                        CreateTriangle(topLeft + pos, botLeft + pos + heightVector, botLeft + pos);
-                        CreateTriangle(topLeft + pos, topLeft + pos + heightVector, botLeft + pos + heightVector);
-                    }
-                    if (j + 1 < m_height && m_map.GetTileType(i, j + 1) != MapTile.Wall)
-                    {
-                        CreateTriangle(topRight + pos, topLeft + pos + heightVector, topLeft + pos);
-                        CreateTriangle(topRight + pos, topRight + pos + heightVector, topLeft + pos + heightVector);
-                    }
+		for (int i = 0; i < playerPositionCount; ++i)
+		{
+			float angleRadians = i * angleBetweenPositions * Mathf.Deg2Rad;
+			Vector2 direction = new Vector2(Mathf.Cos(angleRadians), Mathf.Sin(angleRadians));
+			Vector2i gridPos = new Vector2i(center + direction * distanceToCenter);
 
-                    // Create tops of walls
-                    CreateTriangle(topLeft + pos + heightVector, topRight + pos + heightVector, botRight + pos + heightVector);
-                    CreateTriangle(topLeft + pos + heightVector, botRight + pos + heightVector, botLeft + pos + heightVector);
+			gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
 
-                }
-            }
-        }
-        Mesh mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.RecalculateNormals();
-    }
+			GameObject playerStartPosGo = new GameObject();
+			playerStartPosGo.name = "PlayerStartPosition" + i;
+			playerStartPosGo.AddComponent<NetworkStartPosition>();
+			playerStartPosGo.transform.parent = m_mapVisualization.transform;
+			playerStartPosGo.transform.position = MapGrid.GridToWorldPoint(gridPos);
+		}
+	}
 
-    void CreateTriangle(Vector3 a, Vector3 b, Vector3 c)
-    {
-        vertices.Add(a);
-        triangles.Add(vertices.Count - 1);
-        vertices.Add(b);
-        triangles.Add(vertices.Count - 1);
-        vertices.Add(c);
-        triangles.Add(vertices.Count - 1);
-    }
 }

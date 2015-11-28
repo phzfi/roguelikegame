@@ -3,8 +3,8 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class CombatSystem : NetworkBehaviour {
-
+public class CombatSystem : NetworkBehaviour
+{
 	[SyncVar]
 	public int m_currentHp;
 	public int m_maxHp = 3;
@@ -28,7 +28,7 @@ public class CombatSystem : NetworkBehaviour {
 	public void Update()
 	{
 		m_label.text = m_currentHp + "/" + m_maxHp;
-		
+
 		m_label.transform.position = m_camera.WorldToScreenPoint(gameObject.transform.position);
 	}
 

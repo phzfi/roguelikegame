@@ -2,149 +2,133 @@
 using System.Collections;
 using System;
 
-public enum MapTile
+public enum MapTileType
 {
-    Empty = 0,
-    Wall = 1,
-    Floor = 2,
-    Count = 3
+	Empty = 0,
+	Wall = 1,
+	Floor = 2,
+	Count = 3
 }
 
-/*
-For now holds only type of the map and the index of to certain visualization model for that tyle.
-*/
-
-    public struct LevelMapItem
+public struct MapTile
 {
-    public MapTile m_tile;
-    public int m_visualization_index;
+	public MapTileType m_tileType;
+	public int m_visualizationIndex;
 }
 
 public class LevelMap : MonoBehaviour
 {
-    private int m_width = 1;
-    public int Width { get { return m_width; } }
-    private int m_height = 1;
-    public int Height { get { return m_height; } }
-    public bool m_useRandomSeed;
-    public string m_seed = System.DateTime.Now.ToString();
-    [Range(0, 100)]
-    public int randomFillPercent;
-    
-    private LevelMapItem[,] m_map;
+	public bool m_useRandomSeed;
+	public string m_seed = System.DateTime.Now.ToString();
+	[Range(0, 100)]
+	public int randomFillPercent;
 
-    public void Generate()
-    {
-        LevelMapManager manager = GetComponent<LevelMapManager>();
-        m_width = manager.m_width;
-        m_height = manager.m_height;
-        m_map = new LevelMapItem[m_width, m_height];
+	private Vector2i m_size = new Vector2i(0, 0);
+	private MapTile[,] m_map;
+	private NavGrid m_navGrid = null;
 
-        RandomFillMap();
+	public int Width { get { return m_size.x; } }
+	public int Height { get { return m_size.y; } }
+	public Vector2i Size { get { return m_size; } }
 
-        for (int i = 0; i < 4; i++)
-            SmoothMap();
-    }
+	public MapTileType GetTileType(int x, int y)
+	{
+		Debug.Assert(m_map != null, "Trying to access map data before its created!");
+		return m_map[x, y].m_tileType;
+	}
 
-    void RandomFillMap()
-    {
-        if (m_useRandomSeed)
-        {
-            m_seed = System.DateTime.Now.ToString();
-        }
-        System.Random pseudoRandom = new System.Random(m_seed.GetHashCode());
+	public NavGrid GetNavGrid()
+	{
+		Debug.Assert(m_navGrid != null, "Trying to access map nav data before its created!");
+		return m_navGrid;
+	}
 
-		for (int x = 0; x < m_width; x++)
-        {
-            for (int y = 0; y < m_height; y++)
-            {
-                LevelMapItem mapItem = new LevelMapItem();
+	public void Generate(int width, int height)
+	{
+		m_size.x = width;
+		m_size.y = height;
+		m_map = new MapTile[m_size.x, m_size.y];
 
-                if (x == 0 || x == m_width - 1 || y == 0 || y == m_height - 1)
-                {
-                    mapItem.m_tile = MapTile.Wall;
-                } else
-                {
-                    mapItem.m_tile = (pseudoRandom.Next(0, 100) < randomFillPercent) ? MapTile.Wall : MapTile.Floor;
-                }
-                m_map[x, y] = mapItem;
-            }
-        }
-    }
+		RandomFillMap();
 
-    void SmoothMap()
-    {
-        for (int x = 0; x < m_width; x++)
-        {
-            for (int y = 0; y < m_height; y++)
-            {
-                int neighbourWallTiles = GetSurroundingWallCount(x, y);
+		for (int i = 0; i < 4; i++)
+			SmoothMap();
 
-                if (neighbourWallTiles > 4)
-                {
-                    LevelMapItem mapItem = new LevelMapItem();
-                    mapItem.m_tile = MapTile.Wall;
-                    m_map[x, y] = mapItem;
-                }
-                else if (neighbourWallTiles < 4)
-                {
-                    LevelMapItem mapItem = new LevelMapItem();
-                    mapItem.m_tile = MapTile.Floor;
-                    m_map[x, y] = mapItem;
-                }
-                
-            }
-        }
-    }
+		m_navGrid = new NavGrid(this);
+	}
 
-    int GetSurroundingWallCount(int gridX, int gridY)
-    {
-        int wallCount = 0;
-        for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
-        {
-            for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
-            {
-                if (neighbourX >= 0 && neighbourX < m_width && neighbourY >= 0 && neighbourY < m_height)
-                {
-                    if (neighbourX != gridX || neighbourY != gridY)
-                    {
-                        wallCount += (m_map[neighbourX, neighbourY].m_tile == MapTile.Wall) ? 1 : 0;
-                    }
-                }
-                else
-                {
-                    wallCount++;
-                }
-            }
-        }
-        return wallCount;
-    }
+	private void RandomFillMap()
+	{
+		if (m_useRandomSeed)
+		{
+			m_seed = System.DateTime.Now.ToString();
+		}
+		System.Random pseudoRandom = new System.Random(m_seed.GetHashCode());
 
-    // For precalculated NavGrid used for development
-    public void Generate(NavGrid precalculated_grid)
-    {
-        for (int y = 0; y < m_height; y++)
-        {
-            for (int x = 0; x < m_width; y++)
-            {
-                LevelMapItem mapItem = new LevelMapItem();
-                NavGridCell navCell = precalculated_grid.m_navigationGrid[x, y];
-                if (navCell.m_outOfTheScene)
-                    mapItem.m_tile = MapTile.Empty;
-                else if (navCell.m_accessible)
-                    mapItem.m_tile = MapTile.Floor;
-                else
-                    mapItem.m_tile = MapTile.Wall;
+		for (int x = 0; x < m_size.x; x++)
+		{
+			for (int y = 0; y < m_size.y; y++)
+			{
+				MapTile mapItem = new MapTile();
 
-                m_map[x, y] = mapItem;
-            }
-        }
-    }
+				if (x == 0 || x == m_size.x - 1 || y == 0 || y == m_size.y - 1)
+				{
+					mapItem.m_tileType = MapTileType.Wall;
+				}
+				else
+				{
+					mapItem.m_tileType = (pseudoRandom.Next(0, 100) < randomFillPercent) ? MapTileType.Wall : MapTileType.Floor;
+				}
+				m_map[x, y] = mapItem;
+			}
+		}
+	}
 
-    public MapTile GetTileType(int x, int y)
-    {
-        return m_map[x, y].m_tile;
-    }
+	private void SmoothMap()
+	{
+		for (int x = 0; x < m_size.x; x++)
+		{
+			for (int y = 0; y < m_size.y; y++)
+			{
+				int neighbourWallTiles = GetSurroundingWallCount(x, y);
 
-    
+				if (neighbourWallTiles > 4)
+				{
+					MapTile mapItem = new MapTile();
+					mapItem.m_tileType = MapTileType.Wall;
+					m_map[x, y] = mapItem;
+				}
+				else if (neighbourWallTiles < 4)
+				{
+					MapTile mapItem = new MapTile();
+					mapItem.m_tileType = MapTileType.Floor;
+					m_map[x, y] = mapItem;
+				}
+
+			}
+		}
+	}
+
+	private int GetSurroundingWallCount(int gridX, int gridY)
+	{
+		int wallCount = 0;
+		for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
+		{
+			for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
+			{
+				if (neighbourX >= 0 && neighbourX < m_size.x && neighbourY >= 0 && neighbourY < m_size.y)
+				{
+					if (neighbourX != gridX || neighbourY != gridY)
+					{
+						wallCount += (m_map[neighbourX, neighbourY].m_tileType == MapTileType.Wall) ? 1 : 0;
+					}
+				}
+				else
+				{
+					wallCount++;
+				}
+			}
+		}
+		return wallCount;
+	}
 }

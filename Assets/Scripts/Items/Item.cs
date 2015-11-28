@@ -4,54 +4,48 @@ using UnityEngine.Networking;
 
 public class Item : NetworkBehaviour
 {
-
 	[SyncVar]
 	public string m_name = "Palikka"; // placeholder
 	[SyncVar]
 	public Vector2i m_pos;
 	[SyncVar]
-    public int ID = -1;
+	public int ID = -1;
 
 	[SyncVar]
 	private bool m_onMap = true;
 
-    void Start()
-    {
+	void Start()
+	{
 		ItemManager.Register(this, m_onMap);
-		transform.position = MovementManager.sm_grid.GetWorldPos(m_pos);
+		transform.position = MapGrid.GridToWorldPoint(m_pos);
 
-		if(!m_onMap) // if item has been picked up already
+		if (!m_onMap) // if item has been picked up already
 		{
 			gameObject.SetActive(false);
 		}
 	}
 
-    void Update()
-    {
+	public void Pickup(GameObject obj) // Adds this item to given object's inventory, if it has room
+	{
+		var inventory = obj.GetComponent<Inventory>();
+		if (inventory == null || !inventory.AddItem(gameObject))
+			return;
 
-    }
+		gameObject.SetActive(false);
+		ItemManager.UnregisterFromMap(ID);
+		m_onMap = false;
+	}
 
-    public void Pickup(GameObject obj) // Adds this item to given object's inventory, if it has room
-    {
-        var inventory = obj.GetComponent<Inventory>();
-        if (inventory == null || !inventory.AddItem(gameObject))
-            return;
+	public bool CanPickup(GameObject obj) // Finds out if this item will fit into given object's inventory
+	{
+		var inventory = obj.GetComponent<Inventory>();
+		if (inventory == null || !inventory.CanAddItem(gameObject))
+			return false;
+		return true;
+	}
 
-        gameObject.SetActive(false);
-        ItemManager.UnregisterFromMap(ID);
-        m_onMap = false;
-    }
-
-    public bool CanPickup(GameObject obj) // Finds out if this item will fit into given object's inventory
-    {
-        var inventory = obj.GetComponent<Inventory>();
-        if (inventory == null || !inventory.CanAddItem(gameObject))
-            return false;
-        return true;
-    }
-
-    void OnDestroy()
-    {
-        ItemManager.Unregister(ID);
-    }
+	void OnDestroy()
+	{
+		ItemManager.Unregister(ID);
+	}
 }

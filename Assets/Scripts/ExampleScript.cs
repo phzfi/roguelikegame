@@ -5,7 +5,7 @@ using System.Collections;
 // Class names start with capital letter
 // All curly brackets are placed on their own line
 public class ExampleScript : MonoBehaviour
-{                                              
+{
 	// First all public member variables											
 	public float m_publicMemberVariable;        // Variable names start with lower case
 	public AnimationCurve m_anotherPublic;      // Member variables start with m_
@@ -15,9 +15,9 @@ public class ExampleScript : MonoBehaviour
 	private float m_secondVariable;             // e.g. use testVariable instead of test_variable
 	private static float sm_someStatic = 0.1f;  // Prefix static member variables with sm_
 
-	public float PrivateVectorX					// Property names start with capital letter
+	public float PrivateVectorX                 // Property names start with capital letter
 	{
-		get { return m_privateVector.x; }		// With properties it's ok to place braces to the same line
+		get { return m_privateVector.x; }       // With properties it's ok to place braces to the same line
 	}
 
 	// Then all functions, preferably starting with Awake(), Start() and Update()
@@ -25,7 +25,7 @@ public class ExampleScript : MonoBehaviour
 	{
 		m_privateVector = transform.localPosition;
 	}
-	
+
 	// Please don't write as many comments as in this file :)
 	void Update()
 	{
@@ -35,7 +35,7 @@ public class ExampleScript : MonoBehaviour
 		someLocalVariable = SomePrivateFunctionThatDoesSomeThing(someLocalVariable);
 		someLocalVariable *= sm_someStatic;
 
-        transform.localPosition = m_privateVector;
+		transform.localPosition = m_privateVector;
 	}
 
 	// All function names start with capital letter
