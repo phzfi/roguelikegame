@@ -3,23 +3,54 @@ using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
-public enum msgType : short { moveOrder = 100, pickupOrder, connected, visualize, spawnItem,
+public enum msgType : short
+{
+	moveOrder = 100,
+	pickupOrder,
+	connected,
+	visualize,
+	spawnItem,
 	attackOrder,
-	death
+	death,
+	turnSync
 } // start higher since unity reserves some message types
 
 public struct MoveOrder
 {
-    public Vector3 m_target;
-    public int m_moverID;
-    public int m_turnNumber;
+	public Vector2i m_targetGridPos;
+	public int m_moverID;
+	public int m_turnNumber;
 
-    public MoveOrder(Vector3 target, int moverID)
-    {
-        m_turnNumber = SyncManager.sm_currentTurn;
-        m_moverID = moverID;
-        m_target = target;
-    }
+	public MoveOrder(Vector2i targetGridPos, int moverID)
+	{
+		m_turnNumber = SyncManager.sm_currentTurn;
+		m_moverID = moverID;
+		m_targetGridPos = targetGridPos;
+	}
+
+	public bool IsValid() // Check the validity of incoming move order
+	{
+		if (m_turnNumber != SyncManager.sm_currentTurn)
+		{
+			Debug.Log("invalid move order: turn number wrong!");
+			return false;
+		}
+
+		var mover = MovementManager.GetObject(m_moverID);
+		if (mover == null)
+		{
+			Debug.Log("invalid move order: mover not found!");
+			return false;
+		}
+
+		var path = mover.m_navAgent.SeekPath(mover.m_gridPos, m_targetGridPos);
+		if (path.Count > mover.m_gridSpeed)
+		{
+			Debug.Log("invalid move order: invalid move target!");
+			return false;
+		}
+		return true;
+	}
 }
 
 public struct AttackOrder
@@ -34,6 +65,50 @@ public struct AttackOrder
 		m_targetID = targetID;
 		m_turnNumber = SyncManager.sm_currentTurn;
 	}
+
+	public bool IsValid() // Check the validity of incoming attack order
+	{
+		if (m_turnNumber == SyncManager.sm_currentTurn)
+			return true;
+		else
+		{
+			Debug.Log("invalid attack order: turn number wrong!");
+			return false;
+		}
+	}
+}
+
+public class AttackOrderMessage : MessageBase
+{
+	public AttackOrder[] m_orders;
+	public uint m_clientID;
+}
+
+public class ConnectionMessage : MessageBase
+{
+	public uint m_clientID;
+}
+
+public class MoveOrderMessage : MessageBase
+{
+	public MoveOrder[] m_orders;
+	public uint m_clientID;
+}
+
+public struct PickupOrder
+{
+	public int m_playerID, m_itemID, m_turnNumber;
+	public PickupOrder(int playerID, int itemID)
+	{
+		m_playerID = playerID;
+		m_itemID = itemID;
+		m_turnNumber = SyncManager.sm_currentTurn;
+	}
+}
+
+public class PickupOrderMessage : MessageBase
+{
+	public PickupOrder[] m_orders;
 }
 
 public struct DeathOrder
@@ -48,63 +123,47 @@ public struct DeathOrder
 	}
 }
 
-public class AttackOrderMessage : MessageBase
-{
-	public AttackOrder[] m_orders;
-	public uint m_clientID;
-}
-
 public class DeathMessage : MessageBase
 {
 	public DeathOrder[] m_orders;
 	public uint m_clientID;
 }
 
-public class ConnectionMessage : MessageBase
+public class TurnSyncMessage : MessageBase
 {
-    public uint m_clientID;
-}
-
-public class MoveOrderMessage : MessageBase
-{
-    public MoveOrder[] m_orders;
-    public uint m_clientID;
-}
-
-public struct PickupOrder
-{
-    public int m_playerID, m_itemID, m_turnNumber;
-    public PickupOrder(int playerID, int itemID)
-    {
-        m_playerID = playerID;
-        m_itemID = itemID;
-        m_turnNumber = SyncManager.sm_currentTurn;
-    }
-}
-
-public class PickupOrderMessage : MessageBase
-{
-    public PickupOrder[] m_orders;
+	public int m_turnNumber;
 }
 
 public class ClientData
 {
-    public bool m_turnInProgress;
-    public bool m_receivedInput;
-    public uint m_clientID;
-    public NetworkConnection m_connection;
+	public bool m_turnInProgress;
+	public bool m_receivedInput;
+	public uint m_clientID;
+	public NetworkConnection m_connection;
 }
 
 public class PlayerData
 {
-    public uint m_clientID;
-    public int m_connectionID;
-    public NetworkConnection m_connection;
-    public bool m_receivedInput;
+	public uint m_clientID;
+	public int m_connectionID;
+	public NetworkConnection m_connection;
+	public bool m_receivedMoveInput;
+	public bool m_receivedAttackInput;
 }
 
 public class ServerData
 {
-    public List<PlayerData> m_playerData = new List<PlayerData>(); 
-    public bool m_turnInProgress;
+	public List<PlayerData> m_playerData = new List<PlayerData>();
+	public bool m_turnInProgress;
+
+	public bool ReceivedAllInput()
+	{
+		for(int i = 0; i < m_playerData.Count; ++i)
+		{
+			var data = m_playerData[i];
+			if (!data.m_receivedAttackInput || !data.m_receivedMoveInput)
+				return false;
+		}
+		return true;
+	}
 }

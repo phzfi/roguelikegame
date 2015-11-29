@@ -2,43 +2,44 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public class CustomNetworkManager : NetworkManager {
-    [SerializeField]
-    private SyncManager m_syncManager;
+public class CustomNetworkManager : NetworkManager
+{
+	[SerializeField]
+	private SyncManager m_syncManager;
 
-    public void Start()
-    {
-        m_syncManager.enabled = false;
-    }
-	
-    public override void OnClientConnect(NetworkConnection conn) // called when connected to a server
+	public void Start()
 	{
-        base.OnClientConnect(conn);
-        m_syncManager.InitOnClient(conn);
-    }
-	
-    public override void OnStartServer() // called when starting server or host
+		m_syncManager.enabled = false;
+	}
+
+	public override void OnClientConnect(NetworkConnection conn) // called when connected to a server
 	{
-        base.OnStartServer();
-        m_syncManager.InitOnServer();
-        m_syncManager.enabled = true;
-    }
-	
-    public override void OnServerDisconnect(NetworkConnection conn) // called on server (or host) when client disconnects
+		base.OnClientConnect(conn);
+		m_syncManager.InitOnClient(conn);
+	}
+
+	public override void OnStartServer() // called when starting server or host
 	{
-        base.OnServerDisconnect(conn);
-        m_syncManager.DisconnectClient(conn);
-    }
-	
-    public override void OnClientDisconnect(NetworkConnection conn) // called on client when disconnected from a server
+		base.OnStartServer();
+		m_syncManager.InitOnServer();
+		m_syncManager.enabled = true;
+	}
+
+	public override void OnServerDisconnect(NetworkConnection conn) // called on server (or host) when client disconnects
 	{
-        base.OnClientDisconnect(conn);
-        m_syncManager.StopOnClient();
-    }
-	
-    public override void OnStopServer() // called on server when server (or host) is stopped
+		base.OnServerDisconnect(conn);
+		m_syncManager.DisconnectClient(conn);
+	}
+
+	public override void OnClientDisconnect(NetworkConnection conn) // called on client when disconnected from a server
 	{
-        base.OnStopServer();
-        m_syncManager.StopOnServer();
-    }
+		base.OnClientDisconnect(conn);
+		m_syncManager.StopOnClient();
+	}
+
+	public override void OnStopServer() // called on server when server (or host) is stopped
+	{
+		base.OnStopServer();
+		m_syncManager.StopOnServer();
+	}
 }

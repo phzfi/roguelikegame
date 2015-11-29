@@ -3,8 +3,8 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class CombatSystem : NetworkBehaviour {
-
+public class CombatSystem : NetworkBehaviour
+{
 	[SyncVar]
 	public int m_currentHp;
 	public int m_maxHp = 3;
@@ -14,6 +14,7 @@ public class CombatSystem : NetworkBehaviour {
 	private Canvas m_textCanvas;
 	private Text m_label;
 	private Camera m_camera;
+	private Inventory m_inventory;
 
 	public void Start()
 	{
@@ -22,29 +23,39 @@ public class CombatSystem : NetworkBehaviour {
 		m_camera = FindObjectOfType<Camera>();
 		m_label = Instantiate(m_textPrefab);
 		m_label.transform.SetParent(m_textCanvas.transform, true);
-		//m_label.transform.parent = m_textCanvas.transform;
+		m_inventory = GetComponent<Inventory>(); // store inventory reference for use in damage modifiers
 	}
 
 	public void Update()
 	{
 		m_label.text = m_currentHp + "/" + m_maxHp;
-		
 		m_label.transform.position = m_camera.WorldToScreenPoint(gameObject.transform.position);
 	}
 
-	public void Attack(int targetID)
+	private int GetDamage() // Get the attack damage of this object, modified by weapons etc.
+	{
+		return m_damage; // TODO: damage modifiers
+	}
+
+	private int GetReducedDamage(int incomingDamage) // Modify incoming attack damage by damage reduction from armor
+	{
+		return incomingDamage; // TODO: damage reduction
+	}
+
+	public void Attack(int targetID) // Deal damage to object, identified by ID.
 	{
 		var target = MovementManager.GetObject(targetID);
 		var targetSystem = target.GetComponent<CombatSystem>();
 		if (targetSystem == null)
 			return;
 
-		targetSystem.GetHit(m_damage);
+		targetSystem.GetHit(GetDamage());
 	}
 
 	public void GetHit(int dmg)
 	{
-		m_currentHp -= dmg;
+		int takenDamage = GetReducedDamage(dmg);
+		m_currentHp -= takenDamage;
 		if (m_currentHp <= 0)
 			SyncManager.AddDeathOrder(GetComponent<SimpleCharacterMovement>().ID);
 	}
@@ -52,7 +63,8 @@ public class CombatSystem : NetworkBehaviour {
 	public void Die()
 	{
 		GetComponent<SimpleCharacterMovement>().Unregister();
+		m_label.enabled = false;
 		gameObject.SetActive(false);
-		Debug.Log("ded as stone");
+		Debug.Log("player killed");
 	}
 }
