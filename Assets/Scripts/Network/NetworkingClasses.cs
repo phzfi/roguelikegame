@@ -44,7 +44,7 @@ public struct MoveOrder
 		}
 
 		var path = mover.m_navAgent.SeekPath(mover.m_gridPos, m_targetGridPos);
-		if (path.Count > mover.m_gridSpeed)
+		if (path.Count > mover.m_gridSpeed || path[path.Count-1] != m_targetGridPos)
 		{
 			Debug.Log("invalid move order: invalid move target!");
 			return false;

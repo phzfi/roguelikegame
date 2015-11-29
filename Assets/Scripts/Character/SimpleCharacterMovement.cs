@@ -212,7 +212,6 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			return false;
 
 		bool moved = false;
-		Debug.Log("Taking step");
 
 		for (int step = 0; step < m_gridSpeed; step++)
 		{
