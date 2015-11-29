@@ -6,6 +6,8 @@ public class LevelMapVisualization : MonoBehaviour
 {
 	public float m_depth = 1.0f;
 	public float m_meshHeight = 3.0f;
+	public Material gridMaterial;
+	public Transform gridTransform;
 
 	private List<Vector3> vertices;
 	private List<int> triangles;
@@ -17,17 +19,36 @@ public class LevelMapVisualization : MonoBehaviour
 
 		int width = map.Width;
 		int height = map.Height;
+		float tileSize = MapGrid.tileSize;
+		Vector3 heightVector = new Vector3(0, 0, -m_meshHeight);
 
-		Vector3 floorTopLeft = MapGrid.GridToWorldPoint(0, height, m_depth);
-		Vector3 floorTopRight = MapGrid.GridToWorldPoint(width, height, m_depth);
+		Vector3 floorTopLeft = MapGrid.GridToWorldPoint(0, height - 1, m_depth);
+		floorTopLeft.x -= tileSize / 2;
+		floorTopLeft.y += tileSize / 2;
+		Vector3 floorTopRight = MapGrid.GridToWorldPoint(width - 1, height - 1, m_depth);
+		floorTopRight.x += tileSize / 2;
+		floorTopRight.y += tileSize / 2;
 		Vector3 floorBotLeft = MapGrid.GridToWorldPoint(0, 0, m_depth);
-		Vector3 floorBotRight = MapGrid.GridToWorldPoint(width, 0, m_depth);
+		floorBotLeft.x -= tileSize / 2;
+		floorBotLeft.y -= tileSize / 2;
+		Vector3 floorBotRight = MapGrid.GridToWorldPoint(width - 1, 0, m_depth);
+		floorBotRight.x += tileSize / 2;
+		floorBotRight.y -= tileSize / 2;
 
 		// Create floor
 		CreateTriangle(floorBotRight, floorTopLeft, floorTopRight);
 		CreateTriangle(floorBotRight, floorBotLeft, floorTopLeft);
 
-		float tileSize = MapGrid.tileSize;
+		// Create top edge (to fix shadows)
+		Vector3 floorTopLeft2 = floorTopLeft + heightVector;
+        Vector3 floorTopRight2 = floorTopRight + heightVector;
+		CreateTriangle(floorTopLeft2, floorTopLeft, floorTopRight);
+		CreateTriangle(floorTopLeft2, floorTopRight, floorTopRight2);
+
+		// Create right edge (to fix shadows)
+		Vector3 floorBotRight2 = floorBotRight + heightVector;
+		CreateTriangle(floorBotRight, floorBotRight2, floorTopRight);
+		CreateTriangle(floorTopRight, floorBotRight2, floorTopRight2);
 
 		for (int i = 0; i < width; i++)
 		{
@@ -42,7 +63,7 @@ public class LevelMapVisualization : MonoBehaviour
 					Vector3 botRight = new Vector3(tileSize / 2, -tileSize / 2, 0);
 
 					// Create walls
-					Vector3 heightVector = new Vector3(0, 0, -m_meshHeight);
+					
 					if (i + 1 < width && map.GetTileType(i + 1, j) != MapTileType.Wall)
 					{
 						CreateTriangle(botRight + pos, topRight + pos + heightVector, topRight + pos);
@@ -78,9 +99,11 @@ public class LevelMapVisualization : MonoBehaviour
 		mesh.vertices = vertices.ToArray();
 		mesh.triangles = triangles.ToArray();
 		mesh.RecalculateNormals();
-	}
 
-	void CreateTriangle(Vector3 a, Vector3 b, Vector3 c)
+		UpdateGrid(map.Size);
+    }
+
+	private void CreateTriangle(Vector3 a, Vector3 b, Vector3 c)
 	{
 		vertices.Add(a);
 		triangles.Add(vertices.Count - 1);
@@ -88,5 +111,25 @@ public class LevelMapVisualization : MonoBehaviour
 		triangles.Add(vertices.Count - 1);
 		vertices.Add(c);
 		triangles.Add(vertices.Count - 1);
+	}
+
+	private void UpdateGrid(Vector2i mapSize)
+	{
+		if (gridMaterial)
+		{
+			gridMaterial.SetTextureScale("_MainTex", new Vector2(mapSize.x, mapSize.y));
+		}
+
+		if (gridTransform)
+		{
+			Vector2 size = MapGrid.tileSize * new Vector2(mapSize.x, mapSize.y);
+			gridTransform.localScale = new Vector3(size.x, size.y, 1.0f);
+
+			Vector2 offset = 0.5f * size;
+			Vector3 position = gridTransform.position;
+			position.x = offset.x;
+			position.y = offset.y;
+            gridTransform.position = position;
+        }
 	}
 }

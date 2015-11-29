@@ -15,8 +15,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 	public Vector2i m_gridPos;
 	public PlayerSync m_syncer;
 	private AudioSource m_audioSource;
-
-	// TODO why navpath AND moveorder path?
+	
 	public NavPathAgent m_navAgent;
 	public NavPath m_navPath = new NavPath();
 	private NavPath m_moveOrderPath = new NavPath();
@@ -44,9 +43,8 @@ public class SimpleCharacterMovement : NetworkBehaviour
 
 		m_gridPos = MapGrid.WorldToGridPoint(transform.position);
 		Debug.Assert(m_navAgent.CanAccess(m_gridPos), "Character " + gameObject.name + ", ID: " + ID + " is in unaccessable location");
-
-		Vector3 gridWorldPos = MapGrid.GridToWorldPoint(m_gridPos);
-		transform.position = new Vector3(gridWorldPos.x, gridWorldPos.y, transform.position.z);
+		
+		transform.position = MapGrid.GridToWorldPoint(m_gridPos, transform.position.z);
 
 		ID = (int)netId.Value;
 		MovementManager.Register(this);
@@ -119,7 +117,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			List<Vector3> worldSpacePath = new List<Vector3>(currentPath.Count);
 			for (int i = 0; i < currentPath.Count; ++i)
 			{
-				worldSpacePath.Add(MapGrid.GridToWorldPoint(currentPath[i]));
+				worldSpacePath.Add(MapGrid.GridToWorldPoint(currentPath[i], transform.position.z));
 			}
 
 			CatmullRomSpline spline = new CatmullRomSpline(worldSpacePath);
@@ -127,8 +125,8 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		}
 		else
 		{
-			Vector3 startWorldPos = MapGrid.GridToWorldPoint(startGridPos);
-			Vector3 endWorldPos = MapGrid.GridToWorldPoint(targetGridPos);
+			Vector3 startWorldPos = MapGrid.GridToWorldPoint(startGridPos, transform.position.z);
+			Vector3 endWorldPos = MapGrid.GridToWorldPoint(targetGridPos, transform.position.z);
 			StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(startWorldPos, endWorldPos, true));
 		}
 	}
@@ -262,14 +260,6 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		{
 			Vector3 start = MapGrid.GridToWorldPoint(m_moveOrderPath[i - 1]);
 			Vector3 end = MapGrid.GridToWorldPoint(m_moveOrderPath[i]);
-			Gizmos.DrawLine(start, end);
-		}
-
-		Gizmos.color = Color.yellow;
-		for (int i = 1; i < m_navPath.Count; ++i)
-		{
-			Vector3 start = MapGrid.GridToWorldPoint(m_navPath[i - 1]);
-			Vector3 end = MapGrid.GridToWorldPoint(m_navPath[i]);
 			Gizmos.DrawLine(start, end);
 		}
 	}

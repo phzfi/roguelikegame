@@ -46,7 +46,7 @@ public class LevelMapManager : MonoBehaviour
 			playerStartPosGo.name = "PlayerStartPosition" + i;
 			playerStartPosGo.AddComponent<NetworkStartPosition>();
 			playerStartPosGo.transform.parent = m_mapVisualization.transform;
-			playerStartPosGo.transform.position = MapGrid.GridToWorldPoint(gridPos);
+			playerStartPosGo.transform.position = MapGrid.GridToWorldPoint(gridPos, -0.5f);
 		}
 	}
 
