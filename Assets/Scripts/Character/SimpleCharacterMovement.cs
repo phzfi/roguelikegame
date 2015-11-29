@@ -114,14 +114,9 @@ public class SimpleCharacterMovement : NetworkBehaviour
 
 		if (currentPath.Count >= 2)
 		{
-			List<Vector3> worldSpacePath = new List<Vector3>(currentPath.Count);
-			for (int i = 0; i < currentPath.Count; ++i)
-			{
-				worldSpacePath.Add(MapGrid.GridToWorldPoint(currentPath[i], transform.position.z));
-			}
-
+			List<Vector3> worldSpacePath = MapGrid.NavPathToWorldSpacePath(currentPath, transform.position.z);
 			CatmullRomSpline spline = new CatmullRomSpline(worldSpacePath);
-			StartCoroutine(InterpolateCurveMovementCoroutine(spline, currentPath.Count));
+			StartCoroutine(InterpolateCurveMovementCoroutine(spline, spline.ControlPointCount));
 		}
 		else
 		{

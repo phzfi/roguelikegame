@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class CatmullRomSpline
 {
 	public int ControlPointCount { get { return m_controlPoints.Count; } }
+	public int SectionCount { get { return Mathf.Max(m_controlPoints.Count - 3, 0); } }
 
 	private List<Vector3> m_controlPoints = null;
 	private int m_currentSection = 0;
@@ -25,15 +26,37 @@ public class CatmullRomSpline
 		p = firstControlPoint + (firstControlPoint - secondControlPoint);
 		m_controlPoints.Insert(0, p);
 	}
+	
+	public void StartInterpolation()
+	{
+		m_currentSection = 0;
+	}
+
+	public float GetSectionLength()
+	{
+		return GetSectionLength(m_currentSection);
+    }
+
+	public float GetSectionLength(int section)
+	{
+		Vector3 b = m_controlPoints[section + 1];
+		Vector3 c = m_controlPoints[section + 2];
+		return Vector3.Distance(b, c);
+	}
 
 	public Vector3 Interpolate(float t)
 	{
-		Debug.Assert(m_currentSection >= 0 && m_currentSection + 3 < m_controlPoints.Count, "Current section out of bounds!");
+		return Interpolate(t, m_currentSection);
+    }
 
-		Vector3 a = m_controlPoints[m_currentSection];
-		Vector3 b = m_controlPoints[m_currentSection + 1];
-		Vector3 c = m_controlPoints[m_currentSection + 2];
-		Vector3 d = m_controlPoints[m_currentSection + 3];
+	public Vector3 Interpolate(float t, int section)
+	{
+		Debug.Assert(section >= 0 && section + 3 < m_controlPoints.Count, "Current section out of bounds!");
+
+		Vector3 a = m_controlPoints[section];
+		Vector3 b = m_controlPoints[section + 1];
+		Vector3 c = m_controlPoints[section + 2];
+		Vector3 d = m_controlPoints[section + 3];
 
 		return .5f * (
 			(-a + 3f * b - 3f * c + d) * (t * t * t)

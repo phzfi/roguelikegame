@@ -38,11 +38,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: 9ff7b24795508af4498c762b575f6c21, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   Priority: 128
@@ -110,9 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c893a81310e874647af873800f062414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_musicList:
-  - {fileID: 8300000, guid: 0cb7103f028795f4e9820d2295b75e6c, type: 3}
-  - {fileID: 8300000, guid: 494c3dbfa2a711a46a79c2937198a3f5, type: 3}
+  m_menuMusic: {fileID: 8300000, guid: 9ff7b24795508af4498c762b575f6c21, type: 3}
+  m_ambientSounds: {fileID: 8300000, guid: 6d68fb69bbf130345ae8ad9b1a093468, type: 3}
   m_source: {fileID: 8286978}
 --- !u!1001 &100100000
 Prefab:

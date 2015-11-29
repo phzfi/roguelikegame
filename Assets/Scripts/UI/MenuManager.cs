@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class MenuManager : MonoBehaviour
 {
@@ -10,6 +11,19 @@ public class MenuManager : MonoBehaviour
 	public GameObject m_joinMenu;
 	public AudioClip m_hoverAudio;
 	public AudioClip m_clickAudio;
+
+	public void Start()
+	{
+		// Debug option to host game automatically
+		if (!m_mainMenu.activeInHierarchy)
+		{
+			var manager = FindObjectOfType<NetworkManager>();
+			if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
+			{
+				manager.StartHost();
+			}
+		}
+	}
 
 	public void ShowJoinMenuFromMainMenu()
 	{

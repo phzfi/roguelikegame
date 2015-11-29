@@ -113,8 +113,8 @@ MonoBehaviour:
   m_mainMenu: {fileID: 0}
   m_hostMenu: {fileID: 0}
   m_joinMenu: {fileID: 0}
-  m_hoverAudio: {fileID: 0}
-  m_clickAudio: {fileID: 0}
+  m_hoverAudio: {fileID: 8300000, guid: 6d6f99a055a54314285502760387cba3, type: 3}
+  m_clickAudio: {fileID: 8300000, guid: d88261776dfbb97419bb8aa807a47bc7, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
