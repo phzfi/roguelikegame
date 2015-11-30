@@ -15,7 +15,7 @@ public class MovementManager : MonoBehaviour
 		Reset();
 	}
 
-	public static void Register(SimpleCharacterMovement item) // Add new object, return object ID.
+	public static void Register(SimpleCharacterMovement item) // Add new object to objects list
 	{
 		sm_objects.Add(item);
 		sm_objectDictionary.Add(item.ID, item);
@@ -69,19 +69,33 @@ public class MovementManager : MonoBehaviour
 	public static void OrderMove(MoveOrder order) // pass move order to the mover it is associated with by ID
 	{
 		var mover = GetObject(order.m_moverID);
+		if (mover == null)
+			return;
 		mover.MoveCommand(order.m_targetGridPos);
 	}
 
 	public static void OrderMoveVisualize(MoveOrder order) // pass move visualization order to the mover it is associated with by ID
 	{
 		var mover = GetObject(order.m_moverID);
+		if (mover == null)
+			return;
 		mover.VisualizeMove(order.m_targetGridPos);
 	}
 
 	public static void OrderAttack(AttackOrder order)
 	{
 		var mover = GetObject(order.m_moverID);
+		if (mover == null)
+			return;
 		mover.AttackCommand(order.m_targetID);
+	}
+	public static void KillObject(int m_targetID)
+	{
+		var mover = GetObject(m_targetID);
+		if (mover == null)
+			return;
+		var combatSystem = mover.GetComponent<CombatSystem>();
+		combatSystem.Die();
 	}
 
 	public static void RunServerTurn() // run server side game logic for all movers, eg. walk along the path determined by path finding

@@ -11,6 +11,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 	public int m_attackOrderTarget;
 
 	public int ID;
+	public int m_gridSpeed = 6;
 
 	public Vector2i m_gridPos;
 	public PlayerSync m_syncer;
@@ -26,7 +27,6 @@ public class SimpleCharacterMovement : NetworkBehaviour
 	float m_distanceOnStep = 0.0f;
 	float m_visualizationSpeed = 4.0f;
 	float m_visualizationRotationSpeed = 6.0f;
-	int m_gridSpeed = 6;
 	int m_step = 0;
 
 	void Start()
@@ -51,6 +51,11 @@ public class SimpleCharacterMovement : NetworkBehaviour
 	}
 
 	public void OnDestroy()
+	{
+		Unregister();
+	}
+
+	public void Unregister()
 	{
 		MovementManager.Unregister(ID);
 	}
@@ -190,6 +195,11 @@ public class SimpleCharacterMovement : NetworkBehaviour
 				break;
 			case OrderType.attack:
 				var target = MovementManager.GetObject(m_attackOrderTarget);
+				if (target == null) // if target not found, it must be dead and we can cancel attack order
+				{
+					m_orderType = OrderType.none;
+					return false;
+				}
 				m_navPath = m_navAgent.SeekPath(m_gridPos, target.m_gridPos);
 				break;
 		}
@@ -197,7 +207,6 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			return false;
 
 		bool moved = false;
-		Debug.Log("Taking step");
 
 		for (int step = 0; step < m_gridSpeed; step++)
 		{

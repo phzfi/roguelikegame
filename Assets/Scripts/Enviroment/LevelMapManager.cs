@@ -7,7 +7,7 @@ public class LevelMapManager : MonoBehaviour
 {
 	public int m_width;
 	public int m_height;
-	public LevelMapVisualization m_mapVisualization;
+	public LevelMapVisualization m_mapVisualization; 
 
 	private LevelMap m_map = null;
 
