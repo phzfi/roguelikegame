@@ -71,7 +71,10 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		if (m_orderType != OrderType.move) // if the object doesn't currently have a move order, return
 			return false;
 
-		int currentMoveIndex = Mathf.Min(m_moveOrderPath.Count, m_gridSpeed) - 1;
+        int offset = 0;
+        if (m_moveOrderPath.Count > 0 && m_gridPos != m_moveOrderPath[0]) // adjust movement for difference in path speed (first segment of pathfinding result is always starting square)
+            offset = -1;
+		int currentMoveIndex = Mathf.Min(m_moveOrderPath.Count, m_gridSpeed + offset) - 1;
 		if (currentMoveIndex < 0)
 		{
 			return false;
