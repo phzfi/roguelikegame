@@ -1,56 +1,70 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class MenuManager : MonoBehaviour
 {
-    public static bool sm_menuOpen = true;
-    public GameObject m_mainMenu;
-    public GameObject m_hostMenu;
-    public GameObject m_joinMenu;
-    public AudioClip m_hoverAudio;
-    public AudioClip m_clickAudio;
+	public static bool sm_menuOpen = true;
+	public GameObject m_mainMenu;
+	public GameObject m_hostMenu;
+	public GameObject m_joinMenu;
+	public AudioClip m_hoverAudio;
+	public AudioClip m_clickAudio;
 
-    public void ShowJoinMenuFromMainMenu()
-    {
-        m_mainMenu.GetComponent<MainMenuScreen>().OpenJoinMenu();
-    }
+	public void Start()
+	{
+		// Debug option to host game automatically
+		if (!m_mainMenu.activeInHierarchy)
+		{
+			var manager = FindObjectOfType<NetworkManager>();
+			if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
+			{
+				manager.StartHost();
+			}
+		}
+	}
 
-    public void ShowHostMenuFromMainMenu()
-    {
-        m_mainMenu.GetComponent<MainMenuScreen>().OpenHostMenu();
-    }
+	public void ShowJoinMenuFromMainMenu()
+	{
+		m_mainMenu.GetComponent<MainMenuScreen>().OpenJoinMenu();
+	}
 
-    public void ShowMainMenuFromJoinMenu()
-    {
-        m_joinMenu.GetComponent<JoinMenuScreen>().CloseJoinMenu();
-    }
+	public void ShowHostMenuFromMainMenu()
+	{
+		m_mainMenu.GetComponent<MainMenuScreen>().OpenHostMenu();
+	}
 
-    public void ShowMainMenuFromHostMenu()
-    {
-        m_hostMenu.GetComponent<HostMenuScreen>().CloseHostMenu();
-    }
+	public void ShowMainMenuFromJoinMenu()
+	{
+		m_joinMenu.GetComponent<JoinMenuScreen>().CloseJoinMenu();
+	}
 
-    public void RefreshServerList()
-    {
-        m_joinMenu.GetComponent<JoinMenuScreen>().RefreshGameList();
-    }
+	public void ShowMainMenuFromHostMenu()
+	{
+		m_hostMenu.GetComponent<HostMenuScreen>().CloseHostMenu();
+	}
 
-    public void JoinGameFromServerlist()
-    {
-        m_joinMenu.GetComponent<JoinMenuScreen>().JoinGame();
-        sm_menuOpen = false;
-    }
+	public void RefreshServerList()
+	{
+		m_joinMenu.GetComponent<JoinMenuScreen>().RefreshGameList();
+	}
 
-    public void HostGameFromHostMenu()
-    {
-        m_hostMenu.GetComponent<HostMenuScreen>().HostGame();
-        sm_menuOpen = false;
-    }
+	public void JoinGameFromServerlist()
+	{
+		m_joinMenu.GetComponent<JoinMenuScreen>().JoinGame();
+		sm_menuOpen = false;
+	}
 
-    public void ExitGame()
-    {
-        Application.Quit();
-    }
+	public void HostGameFromHostMenu()
+	{
+		m_hostMenu.GetComponent<HostMenuScreen>().HostGame();
+		sm_menuOpen = false;
+	}
+
+	public void ExitGame()
+	{
+		Application.Quit();
+	}
 
 }
