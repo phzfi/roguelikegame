@@ -473,6 +473,38 @@ Prefab:
       propertyPath: m_mapVisualization
       value: 
       objectReference: {fileID: 261761855}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_randomFillPercent
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_smoothingIterations
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_frequency
+      value: .150000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_roomCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_maxRoomSize
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_minRoomSize
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_meanRoomSize
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_standardDeviation
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
   m_IsPrefabParent: 0
