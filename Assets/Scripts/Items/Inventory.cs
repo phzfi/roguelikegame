@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -8,8 +9,11 @@ public class Inventory : MonoBehaviour
 	public AudioClip m_coinPickupAudio;
 	public int m_maxItems = 5;
 	public static int sm_amountOfCoins = 0;
+    public GameObject m_inventoryPanel;
+    public GameObject m_itemUIComponent;
+    
 
-	private List<GameObject> m_items;
+    private List<GameObject> m_items;
 	private AudioSource m_audioSource;
 
 	// Use this for initialization
@@ -19,7 +23,7 @@ public class Inventory : MonoBehaviour
 		m_audioSource = GetComponent<AudioSource>();
 	}
 
-	public bool CanAddItem(GameObject item)
+    public bool CanAddItem(GameObject item)
 	{
 		return m_items.Count < m_maxItems;
 	}
@@ -27,11 +31,16 @@ public class Inventory : MonoBehaviour
 	public bool AddItem(GameObject item)
 	{
 		var itemName = item.GetComponent<Item>().m_name;
-		if (m_items.Count < m_maxItems && itemName != "Coins")
+		if (CanAddItem(item) && itemName != "Coins")
 		{
 			m_items.Add(item);
 			m_audioSource.PlayOneShot(m_itemPickupAudio);
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
+            Image image = item.GetComponent<Image>();
+            var a = Instantiate(m_itemUIComponent)as GameObject;
+            a.GetComponent<Image>().sprite = image.sprite;
+            var parent = GameObject.FindGameObjectWithTag("Inventory");
+            a.transform.SetParent(parent.transform);
 			return true;
 		}
 		if (itemName == "Coins")

@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 422388}
   - 114: {fileID: 11439710}
   - 82: {fileID: 8226566}
+  - 114: {fileID: 11408440}
   m_Layer: 0
   m_Name: MenuManager
   m_TagString: Untagged
@@ -99,6 +100,37 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+--- !u!114 &11408440
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc02b675b0d7ccc4487d270ee41d77e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_names:
+  - Joonas Peuralinna
+  - Johanna Haara
+  - Esa Koskinen
+  - Ville Ollikainen
+  - Jonathan Granskog
+  - Niklas Smal
+  - Daniel Forsberg
+  - Jussi Toivonen
+  - "Ville V\xE4lim\xE4ki"
+  m_creditTexts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &11439710
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -115,6 +147,8 @@ MonoBehaviour:
   m_joinMenu: {fileID: 0}
   m_hoverAudio: {fileID: 8300000, guid: 6d6f99a055a54314285502760387cba3, type: 3}
   m_clickAudio: {fileID: 8300000, guid: d88261776dfbb97419bb8aa807a47bc7, type: 3}
+  m_settings: {fileID: 0}
+  m_volume: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

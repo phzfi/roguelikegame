@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
+
 public class MenuManager : MonoBehaviour
 {
 	public static bool sm_menuOpen = true;
@@ -11,8 +12,11 @@ public class MenuManager : MonoBehaviour
 	public GameObject m_joinMenu;
 	public AudioClip m_hoverAudio;
 	public AudioClip m_clickAudio;
+    public GameObject m_settings;
+    public Slider m_volume;
+    public GameObject m_characterButtons;
 
-	public void Start()
+    public void Start()
 	{
 		// Debug option to host game automatically
 		if (!m_mainMenu.activeInHierarchy)
@@ -21,6 +25,7 @@ public class MenuManager : MonoBehaviour
 			if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
 			{
 				manager.StartHost();
+                sm_menuOpen = false;
 			}
 		}
 	}
@@ -54,17 +59,44 @@ public class MenuManager : MonoBehaviour
 	{
 		m_joinMenu.GetComponent<JoinMenuScreen>().JoinGame();
 		sm_menuOpen = false;
+        m_characterButtons.SetActive(true);
 	}
 
 	public void HostGameFromHostMenu()
 	{
 		m_hostMenu.GetComponent<HostMenuScreen>().HostGame();
 		sm_menuOpen = false;
-	}
+        m_characterButtons.SetActive(true);
+    }
 
 	public void ExitGame()
 	{
 		Application.Quit();
 	}
+
+    public void ShowSettingsFromMainMenu()
+    {
+        m_mainMenu.GetComponent<MainMenuScreen>().OpenSettings();
+    }
+
+    public void ShowMainMenuFromSettings()
+    {
+        m_settings.GetComponent<SettingsMenuScreen>().CloseSettings();
+    }
+
+    public void ChangeVolume()
+    {
+        AudioListener.volume = m_volume.value;
+    }
+
+    public void OpenCredits()
+    {
+        m_settings.GetComponent<SettingsMenuScreen>().OpenCredits();
+    }
+
+    public void CloseCredits()
+    {
+        m_settings.GetComponent<SettingsMenuScreen>().CloseCredits();
+    }
 
 }

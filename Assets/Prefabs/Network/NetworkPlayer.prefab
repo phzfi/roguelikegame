@@ -220,10 +220,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_orderType: 0
-  m_moveOrderTarget: {x: 0, y: 0, z: 0}
   m_attackOrderTarget: 0
   ID: 0
-  m_worldPos: {x: 0, y: 0, z: 0}
+  m_gridSpeed: 6
   m_syncer: {fileID: 0}
 --- !u!114 &11457766
 MonoBehaviour:
@@ -239,6 +238,8 @@ MonoBehaviour:
   m_itemPickupAudio: {fileID: 8300000, guid: 4ce5bd5507f54f943915100a6659cb3f, type: 3}
   m_coinPickupAudio: {fileID: 8300000, guid: 8075a1247fb557c4abe9d7f16db83de2, type: 3}
   m_maxItems: 5
+  m_inventoryPanel: {fileID: 147840, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+  m_itemUIComponent: {fileID: 144798, guid: dc353d684fde10e4fa788792d429f414, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -299,6 +300,18 @@ Prefab:
       value: 
       objectReference: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd,
         type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_inventoryCanvas
+      value: 
+      objectReference: {fileID: 173806, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_itemUIComponent
+      value: 
+      objectReference: {fileID: 144798, guid: dc353d684fde10e4fa788792d429f414, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_inventoryPanel
+      value: 
+      objectReference: {fileID: 147840, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180150}
