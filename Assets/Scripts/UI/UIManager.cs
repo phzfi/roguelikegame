@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject m_inventoryPanel;
     public GameObject m_equipmentPanel;
+    public GameObject m_wrongSlotWarningSign;
     public Text m_coinsText;
 
     private bool m_inventoryOpen = false;
@@ -68,4 +69,8 @@ public class UIManager : MonoBehaviour
         ToggleInventory();
     }
 
+    public void CloseWarningSign()
+    {
+        m_wrongSlotWarningSign.SetActive(false);
+    }
 }
