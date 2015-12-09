@@ -10,11 +10,11 @@ public class JoinMenuScreen : NetworkBehaviour
 	public GameObject m_mainMenuPanel;
 	public GameObject m_networkManager;
 
-	private NetworkManager m_manager;
+	private CustomNetworkManager m_manager;
 
 	void Awake()
 	{
-		m_manager = m_networkManager.GetComponent<NetworkManager>();
+		m_manager = m_networkManager.GetComponent<CustomNetworkManager>();
 	}
 
 	public void JoinGame()

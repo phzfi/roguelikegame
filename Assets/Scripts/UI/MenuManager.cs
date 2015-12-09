@@ -10,6 +10,8 @@ public class MenuManager : MonoBehaviour
 	public GameObject m_mainMenu;
 	public GameObject m_hostMenu;
 	public GameObject m_joinMenu;
+    public GameObject m_exitMenu;
+    public GameObject m_exitMenuSettings;
 	public AudioClip m_hoverAudio;
 	public AudioClip m_clickAudio;
     public GameObject m_settings;
@@ -99,4 +101,28 @@ public class MenuManager : MonoBehaviour
         m_settings.GetComponent<SettingsMenuScreen>().CloseCredits();
     }
 
+    public void OpenExitGame()
+    {
+        m_exitMenu.GetComponent<ExitGameScreen>().OpenExitGamePanel();
+    }
+
+    public void CloseExitGame()
+    {
+        m_exitMenu.GetComponent<ExitGameScreen>().ContinueGame();
+    }
+
+    public void OpenExitSettings()
+    {
+        m_exitMenu.GetComponent<ExitGameScreen>().OpenSettings();
+    }
+
+    public void CloseExitSettings()
+    {
+        m_exitMenuSettings.GetComponent<ExitSettingsScreen>().CloseExitSettings();
+    }
+
+    public void ReturnToMainMenu()
+    {
+        m_exitMenu.GetComponent<ExitGameScreen>().ExitGame();
+    }
 }
