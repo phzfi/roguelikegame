@@ -1,7 +1,16 @@
 29.10.2015 - Audio version 0.1
 Preliminary versions. Some Loops might have cracks at beginning of audio file (directly just cropped them out of mix). Some samples include mastering and some do not. This week (2.-8.11.2015) more mature versions and possible alternatives will be provided. Missing still some audio files, trying to complete library asap.
 
+08.12.2015 - Audio Version 0.2
+Action sounds. Including two energy action sounds which are just tests (will provide actual ones with more variety this week).
+
 Actions:
+- attack_bow.mp3 (Bow shot)
+- attack_energylong.mp3 ()
+- attack_energyrepeating.mp3 ()
+- attack_throwingknife.mp3 (Throwing knife)
+- sword_dagger.mp3 (Dagger)
+- sword_twohand.mp3 (Two hand sword)
 - chest_open.mp3 (Open up a chest)
 - door_open.mp3 (Open a door)
 - item_pickup_gold.mp3 (Pick up gold / coins)
