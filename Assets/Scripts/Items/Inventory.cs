@@ -36,11 +36,16 @@ public class Inventory : MonoBehaviour
 			m_items.Add(item);
 			m_audioSource.PlayOneShot(m_itemPickupAudio);
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
-            Image image = item.GetComponent<Image>();
-            var a = Instantiate(m_itemUIComponent)as GameObject;
-            a.GetComponent<Image>().sprite = image.sprite;
-            var parent = GameObject.FindGameObjectWithTag("Inventory");
-            a.transform.SetParent(parent.transform);
+            //Image image = item.GetComponent<Image>();
+            //Debug.Log("image " + image);
+            //var a = Instantiate(m_itemUIComponent)as GameObject;
+            //Debug.Log("a " + a);
+            //Debug.Log(a.GetComponent<Image>().sprite + " sprite " + image.sprite);
+            //Debug.Log("a image " + a.GetComponent<Image>());
+            //var imageSprite = a.GetComponent<Image>().sprite;
+            //imageSprite = image.sprite;
+            //var parent = GameObject.FindGameObjectWithTag("Inventory");
+            //a.transform.SetParent(parent.transform);
 			return true;
 		}
 		if (itemName == "Coins")

@@ -20,36 +20,20 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
     public GameObject m_slots;
 
-    public enum ItemType { WEAPON, HEAD, BODY, LEGS, RING, OTHER, INVENTORY }; //possible types of items, inventory as well to drag items back from equipment
-
-    public ItemType m_itemType = ItemType.OTHER;
+    [HideInInspector]
+    public Item.Type m_itemType;
 
     private int m_oldIndex;
 
     void Start()
     {
         m_oldIndex = transform.GetSiblingIndex();
+        m_itemType = GetComponent<Item>().m_typeOfItem;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         transform.position = eventData.position;
-        var pointer = eventData.pointerEnter;
-        if (pointer != null)
-        {
-            if (pointer.GetComponent<Draggable>() != null)
-            {
-                m_changeIndex = pointer.GetComponent<Draggable>().transform.GetSiblingIndex();
-                //m_oldIndex = m_changeIndex;
-                //Debug.Log(m_changeIndex);
-            }
-
-            if (pointer.GetComponent<Draggable>() == null)
-            {
-                m_changeIndex = m_oldIndex;
-            }
-        }
-
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -86,33 +70,15 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                         outline.enabled = true;
                     }
                 }
-
             }
-
         }
-
         GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        //Debug.Log(m_returnTo);
-        //Debug.Log("change " + m_changeIndex);
-        //Debug.Log(transform + " siblin1 " + transform.GetSiblingIndex());
         transform.SetParent(m_returnTo);
-        ////does not work properly yet,
-        ////idea is to change positions when dragged and released on top of another item
-        //Debug.Log(transform + " siblin2 " + transform.GetSiblingIndex());
-        //if (transform.GetSiblingIndex() < m_changeIndex)
-        //{
-        //    transform.SetSiblingIndex(m_changeIndex - 1);
-        //}
-        //else if (transform.GetSiblingIndex() >= m_changeIndex)
-        //{
-        //    transform.SetSiblingIndex(m_changeIndex + 1);
-        //}
-        //transform.SetSiblingIndex(m_changeIndex + 1);
-
+        
         for (int i = 0; i < m_slots.transform.childCount; i++)
         {
             var child = m_slots.transform.GetChild(i);

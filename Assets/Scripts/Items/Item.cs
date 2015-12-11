@@ -10,11 +10,21 @@ public class Item : NetworkBehaviour
 	public Vector2i m_pos;
 	[SyncVar]
 	public int ID = -1;
+    [SyncVar]
+    public int m_strength = 0;
+    [SyncVar]
+    public int m_agility = 0;
+    [SyncVar]
+    public int m_intelligence = 0;
 
-	[SyncVar]
+    [SyncVar]
 	private bool m_onMap = true;
 
-	void Start()
+    public enum Type { WEAPON, HEAD, BODY, LEGS, RING, OTHER, INVENTORY }; //possible types of items, inventory as well to drag items back from equipment
+
+    public Type m_typeOfItem = Type.OTHER;
+
+    void Start()
 	{
 		ItemManager.Register(this, m_onMap);
 		transform.position = MapGrid.GridToWorldPoint(m_pos);
