@@ -20,7 +20,7 @@ public class Item : NetworkBehaviour
     [SyncVar]
 	private bool m_onMap = true;
 
-    public enum Type { WEAPON, HEAD, BODY, LEGS, RING, OTHER, INVENTORY }; //possible types of items, inventory as well to drag items back from equipment
+    public enum Type { WEAPON, HEAD, BODY, LEGS, RING, SHIELD, OTHER, INVENTORY }; //possible types of items, inventory as well to drag items back from equipment
 
     public Type m_typeOfItem = Type.OTHER;
 

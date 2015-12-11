@@ -21,7 +21,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
     public void UnequipItem(GameObject item)
     {
         Equipment.sm_equipment.Remove(item);
-        //m_inventory.GetComponent<Inventory>().AddItem(item);
+        //m_inventory.GetComponent<Inventory>().AddItem(item); //TODO: Items to be returned back to inventory
     }
 
     public void OnDrop(PointerEventData eventData)
