@@ -41,7 +41,7 @@ public class Item : NetworkBehaviour
 		if (inventory == null || !inventory.AddItem(gameObject))
 			return;
 
-		gameObject.SetActive(false);
+		//gameObject.SetActive(false);
 		ItemManager.UnregisterFromMap(ID);
 		m_onMap = false;
 	}

@@ -9,14 +9,12 @@ public class Inventory : MonoBehaviour
 	public AudioClip m_coinPickupAudio;
 	public int m_maxItems = 5;
 	public static int sm_amountOfCoins = 0;
-    public GameObject m_inventoryPanel;
-    public GameObject m_itemUIComponent;
-    
 
+    [SerializeField]
+    private GameObject m_inventoryPanel;    
     private List<GameObject> m_items;
 	private AudioSource m_audioSource;
 
-	// Use this for initialization
 	void Start()
 	{
 		m_items = new List<GameObject>();
@@ -36,16 +34,7 @@ public class Inventory : MonoBehaviour
 			m_items.Add(item);
 			m_audioSource.PlayOneShot(m_itemPickupAudio);
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
-            //Image image = item.GetComponent<Image>();
-            //Debug.Log("image " + image);
-            //var a = Instantiate(m_itemUIComponent)as GameObject;
-            //Debug.Log("a " + a);
-            //Debug.Log(a.GetComponent<Image>().sprite + " sprite " + image.sprite);
-            //Debug.Log("a image " + a.GetComponent<Image>());
-            //var imageSprite = a.GetComponent<Image>().sprite;
-            //imageSprite = image.sprite;
-            //var parent = GameObject.FindGameObjectWithTag("Inventory");
-            //a.transform.SetParent(parent.transform);
+            AddToUIInventory(item);
 			return true;
 		}
 		if (itemName == "Coins")
@@ -57,4 +46,20 @@ public class Inventory : MonoBehaviour
 		}
 		return false;
 	}
+
+    //Moves the item to be a child of InventoryPanel UI component. The item's Image component's sprite is 
+    //then rendered to the panel.
+    public void AddToUIInventory(GameObject item)
+    {
+        var parent = GameObject.FindGameObjectWithTag("InventoryCanvas");
+        for(int i = 0; i < parent.transform.childCount; ++i)
+        {
+            var child = parent.transform.GetChild(i);
+            if (child.tag == "Inventory")
+            {
+                item.transform.SetParent(child.GetChild(0));
+                break;
+            }
+        }        
+    }
 }
