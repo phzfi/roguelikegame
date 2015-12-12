@@ -7,6 +7,8 @@ TagManager:
   - SyncManager
   - TextCanvas
   - Inventory
+  - InventoryCanvas
+  - Equipment
   layers:
   - Default
   - TransparentFX
