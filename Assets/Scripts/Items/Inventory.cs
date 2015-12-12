@@ -2,16 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class Inventory : MonoBehaviour
+public class Inventory : MonoBehaviour, IDropHandler
 {
 	public AudioClip m_itemPickupAudio;
 	public AudioClip m_coinPickupAudio;
 	public int m_maxItems = 5;
 	public static int sm_amountOfCoins = 0;
 
-    [SerializeField]
-    private GameObject m_inventoryPanel;    
     private List<GameObject> m_items;
 	private AudioSource m_audioSource;
 
@@ -20,6 +19,11 @@ public class Inventory : MonoBehaviour
 		m_items = new List<GameObject>();
 		m_audioSource = GetComponent<AudioSource>();
 	}
+
+    public void OnDrop(PointerEventData eventData)
+    {
+
+    }
 
     public bool CanAddItem(GameObject item)
 	{
