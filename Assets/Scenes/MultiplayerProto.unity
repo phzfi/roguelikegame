@@ -505,6 +505,14 @@ Prefab:
       propertyPath: m_standardDeviation
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_useRandomSeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_seed
+      value: 11/11/2015 4:05:59 PM
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
   m_IsPrefabParent: 0

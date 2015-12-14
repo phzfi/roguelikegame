@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public enum MapTileType
@@ -64,6 +64,8 @@ public class LevelMap : MonoBehaviour
 
 		for (int i = 0; i < m_smoothingIterations; i++)
 			SmoothMap();
+
+        ProcessMap();
 
         PlaceRooms();
         RemoveThinWalls();
@@ -165,6 +167,90 @@ public class LevelMap : MonoBehaviour
 		}
 	}
 
+    private void ProcessMap()
+    {
+        // REMOVE TINY ROOMS
+        List<List<Vector2i>> roomRegions = GetRegions(MapTileType.Floor);
+        int roomThresholdSize = 30;
+        for (int i = 0; i < roomRegions.Count; i++)
+        {
+            if (roomRegions[i].Count < roomThresholdSize)
+            {
+                for (int j = 0; j < roomRegions[i].Count; j++)
+                {
+                    m_map[roomRegions[i][j].x, roomRegions[i][j].y].m_tileType = MapTileType.Wall;
+                }
+            }
+        }
+    }
+
+    private List<List<Vector2i>> GetRegions(MapTileType type)
+    {
+        List<List<Vector2i>> regions = new List<List<Vector2i>>();
+        bool[,] visited = new bool[Width, Height];
+
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                if (!visited[x, y] && m_map[x, y].m_tileType == type)
+                {
+                    List<Vector2i> region = GetRegionTiles(x, y);
+                    regions.Add(region);
+
+                    for (int i = 0; i < region.Count; i++)
+                    {
+                        visited[region[i].x, region[i].y] = true;
+                    }
+
+                }
+            }
+        }
+
+        return regions;
+    }
+
+    private List<Vector2i> GetRegionTiles(int startX, int startY)
+    {
+        List<Vector2i> tiles = new List<Vector2i>();
+        bool[,] visited = new bool[Width, Height];
+        MapTileType type = m_map[startX, startY].m_tileType;
+        Queue<Vector2i> queue = new Queue<Vector2i> ();
+        queue.Enqueue(new Vector2i(startX, startY));
+        visited[startX, startY] = true;
+
+        while (queue.Count > 0)
+        {
+            Vector2i tile = queue.Dequeue();
+            tiles.Add(tile);
+
+            if (IsInRange(tile.x - 1, tile.y) && !visited[tile.x - 1, tile.y] && m_map[tile.x - 1, tile.y].m_tileType == type)
+            {
+                visited[tile.x - 1, tile.y] = true;
+                queue.Enqueue(new Vector2i(tile.x - 1, tile.y));
+            }
+
+            if (IsInRange(tile.x + 1, tile.y) && !visited[tile.x + 1, tile.y] && m_map[tile.x + 1, tile.y].m_tileType == type)
+            {
+                visited[tile.x + 1, tile.y] = true;
+                queue.Enqueue(new Vector2i(tile.x + 1, tile.y));
+            }
+
+            if (IsInRange(tile.x, tile.y - 1) && !visited[tile.x, tile.y - 1] && m_map[tile.x, tile.y - 1].m_tileType == type)
+            {
+                visited[tile.x, tile.y - 1] = true;
+                queue.Enqueue(new Vector2i(tile.x, tile.y - 1));
+            }
+
+            if (IsInRange(tile.x, tile.y + 1) && !visited[tile.x, tile.y + 1] && m_map[tile.x, tile.y + 1].m_tileType == type)
+            {
+                visited[tile.x, tile.y + 1] = true;
+                queue.Enqueue(new Vector2i(tile.x, tile.y + 1));
+            }
+        }
+        return tiles;
+    }
+
     private void RemoveThinWalls()
     {
         for (int x = 1; x < m_size.x - 1; x++)
@@ -181,14 +267,19 @@ public class LevelMap : MonoBehaviour
         }
     }
 
-	private int GetSurroundingWallCount(int gridX, int gridY)
+    private bool IsInRange(int x, int y)
+    {
+        return x >= 0 && x < Width && y >= 0 && y < Height;
+    }
+
+    private int GetSurroundingWallCount(int gridX, int gridY)
 	{
 		int wallCount = 0;
 		for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
 		{
 			for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
 			{
-				if (neighbourX >= 0 && neighbourX < m_size.x && neighbourY >= 0 && neighbourY < m_size.y)
+				if (IsInRange(neighbourX, neighbourY))
 				{
 					if (neighbourX != gridX || neighbourY != gridY)
 					{
