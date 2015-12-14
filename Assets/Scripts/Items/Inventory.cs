@@ -10,14 +10,21 @@ public class Inventory : MonoBehaviour, IDropHandler
 	public AudioClip m_coinPickupAudio;
 	public int m_maxItems = 5;
 	public static int sm_amountOfCoins = 0;
+    public GameObject m_UIElements;
 
     private List<GameObject> m_items;
 	private AudioSource m_audioSource;
+    private GameObject m_inventoryCanvas;
+    
 
 	void Start()
 	{
 		m_items = new List<GameObject>();
 		m_audioSource = GetComponent<AudioSource>();
+        m_inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas");
+        var playerElements = Instantiate(m_UIElements);
+        playerElements.transform.parent = m_inventoryCanvas.transform;
+        playerElements.name = "UI " + GetComponent<SimpleCharacterMovement>().ID;
 	}
 
     public void OnDrop(PointerEventData eventData)
