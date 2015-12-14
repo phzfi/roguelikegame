@@ -22,9 +22,9 @@ public class Inventory : MonoBehaviour, IDropHandler
 		m_items = new List<GameObject>();
 		m_audioSource = GetComponent<AudioSource>();
         m_inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas");
-        var playerElements = Instantiate(m_UIElements);
-        playerElements.transform.parent = m_inventoryCanvas.transform;
-        playerElements.name = "UI " + GetComponent<SimpleCharacterMovement>().ID;
+        //var playerElements = Instantiate(m_UIElements);
+        //playerElements.transform.parent = m_inventoryCanvas.transform;
+        //playerElements.name = "UI " + GetComponent<SimpleCharacterMovement>().ID;
 	}
 
     public void OnDrop(PointerEventData eventData)

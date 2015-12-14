@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 
 public class Equipment : NetworkBehaviour {
-
     
-    public static List<GameObject> sm_equipment;
+    public List<GameObject> m_equipment;
 
     [SyncVar]
     public int m_playerStrength = 0;
@@ -17,7 +16,7 @@ public class Equipment : NetworkBehaviour {
 
     void Start()
     {
-        sm_equipment = new List<GameObject>();
+        m_equipment = new List<GameObject>();
     }
 
 

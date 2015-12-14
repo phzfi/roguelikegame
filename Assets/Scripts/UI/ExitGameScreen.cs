@@ -46,7 +46,7 @@ public class ExitGameScreen : NetworkBehaviour {
     public void ExitGame()
     {
         m_manager.StopClient();
-        m_manager.StopHost();
+        m_manager.StopHost(); //TODO: Not working
         m_mainMenu.SetActive(true);
         m_exitGame.SetActive(false);
     }

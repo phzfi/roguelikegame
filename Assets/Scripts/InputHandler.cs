@@ -48,20 +48,15 @@ public class InputHandler : Singleton<InputHandler>
 			
 			if (Input.GetMouseButton(1))
 			{
-				// TODO why don't we have a GetLocalCharacter function?
-				for (int i = 0; i < MovementManager.Objects.Count; ++i)
-				{
-					var mover = MovementManager.Objects[i];
-					if (mover.m_syncer.IsLocalPlayer())
-					{
-						NavPath navPath = mover.m_navAgent.SeekPath(mover.m_gridPos, mouseGridPos);
-						worldSpacePath = MapGrid.NavPathToWorldSpacePath(navPath, -0.07f);
-						break;
-					}
-				}
-			}
-			
-			if (worldSpacePath.Count >= 2)
+                var mover = MovementManager.GetLocalPlayer();
+                if (mover == null)
+                    Debug.Log("Inputhandler could not find local player");
+                
+                NavPath navPath = mover.m_navAgent.SeekPath(mover.m_gridPos, mouseGridPos);
+                worldSpacePath = MapGrid.NavPathToWorldSpacePath(navPath, -0.07f);
+            }
+
+            if (worldSpacePath.Count >= 2)
 			{
 				pathVisualization.Create(worldSpacePath);
 			}

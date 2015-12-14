@@ -98,6 +98,17 @@ public class MovementManager : MonoBehaviour
 		combatSystem.Die();
 	}
 
+    public static SimpleCharacterMovement GetLocalPlayer()
+    {
+        for(int i = 0; i < sm_objects.Count; ++i)
+        {
+            var mover = sm_objects[i];
+            if (mover.isLocalPlayer)
+                return mover;
+        }
+        return null;
+    }
+
 	public static void RunServerTurn() // run server side game logic for all movers, eg. walk along the path determined by path finding
 	{
 		for (int i = 0; i < sm_objects.Count; ++i)

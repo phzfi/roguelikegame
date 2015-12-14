@@ -12,7 +12,8 @@ public enum msgType : short
 	spawnItem,
 	attackOrder,
 	death,
-	turnSync
+	turnSync,
+    equipOrder
 } // start higher since unity reserves some message types
 
 public struct MoveOrder
@@ -76,6 +77,26 @@ public struct AttackOrder
 			return false;
 		}
 	}
+}
+
+public struct EquipOrder
+{
+    public bool m_equipType;
+    public int m_itemID;
+    public int m_playerID;
+
+    public EquipOrder(bool equipType, int itemID, int playerID)
+    {
+        m_equipType = equipType;
+        m_itemID = itemID;
+        m_playerID = playerID;
+    }
+}
+
+public class EquipOrderMessage : MessageBase
+{
+    public EquipOrder[] m_orders;
+    public uint m_clientID;
 }
 
 public class AttackOrderMessage : MessageBase

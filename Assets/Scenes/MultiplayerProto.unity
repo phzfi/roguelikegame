@@ -125,6 +125,10 @@ AudioSource:
 Transform:
   m_PrefabParentObject: {fileID: 487638, guid: 843a040ec12b5884fbe864d48a1eb240, type: 2}
   m_PrefabInternal: {fileID: 2028416551}
+--- !u!1 &237375031 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 122674, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+  m_PrefabInternal: {fileID: 1724410171}
 --- !u!114 &258938888 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 11415838, guid: 476336784d4eb6d48bd0ac8d566ad193,
@@ -625,6 +629,10 @@ Prefab:
       propertyPath: m_mapVisualization
       value: 
       objectReference: {fileID: 261761855}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: randomFillPercent
+      value: 43
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
   m_IsPrefabParent: 0
@@ -1948,6 +1956,42 @@ Prefab:
       propertyPath: m_AssetId.i15
       value: 92
       objectReference: {fileID: 0}
+    - target: {fileID: 122674, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11426338, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2126150259}
+    - target: {fileID: 11426338, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OpenExitGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 11427564, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1828961125}
+    - target: {fileID: 11427564, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleInventory
+      objectReference: {fileID: 0}
+    - target: {fileID: 11454842, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1828961125}
+    - target: {fileID: 11454842, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleEquipment
+      objectReference: {fileID: 0}
+    - target: {fileID: 11429014, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1828961125}
+    - target: {fileID: 11429014, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CloseWarningSign
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
   m_IsPrefabParent: 0
@@ -1959,6 +2003,12 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 482818, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_PrefabInternal: {fileID: 718074208}
+--- !u!114 &1828961125 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11448696, guid: ca2f21b817b35d14f9668eb6cf63869d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1408154879}
+  m_Script: {fileID: 11500000, guid: 429d123880dfc3145a2a7ca7eacb0a2d, type: 3}
 --- !u!1 &1861845088 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 164274, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
@@ -2442,7 +2492,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 105978, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11492128, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_Transition
@@ -2653,7 +2703,7 @@ Prefab:
     - target: {fileID: 11439710, guid: e4c64027396b6e747934e6ac045ea929, type: 2}
       propertyPath: m_characterButtons
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 237375031}
     - target: {fileID: 11439710, guid: e4c64027396b6e747934e6ac045ea929, type: 2}
       propertyPath: m_exitMenu
       value: 
