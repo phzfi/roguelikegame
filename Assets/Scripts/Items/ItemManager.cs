@@ -82,7 +82,7 @@ public class ItemManager : MonoBehaviour
 
 	public static void OrderPickup(PickupOrder order) // Get mover and item associated with given order, tell mover to pick item up
 	{
-		var mover = MovementManager.GetObject(order.m_playerID);
+		var mover = CharManager.GetObject(order.m_playerID);
 		var item = GetItemOnMap(order.m_itemID);
 		item.Pickup(mover.gameObject);
 	}

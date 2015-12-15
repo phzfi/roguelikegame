@@ -19,8 +19,7 @@ public class SyncManager : NetworkBehaviour
 	private static List<AttackOrder> sm_attackOrders = new List<AttackOrder>();
 	private static List<DeathOrder> sm_deathOrders = new List<DeathOrder>();
     private static List<EquipOrder> sm_equipOrders = new List<EquipOrder>();
-
-    public static List<PlayerSync> sm_players = new List<PlayerSync>();
+	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
 	
@@ -135,7 +134,7 @@ public class SyncManager : NetworkBehaviour
 
 	void RunEquipOrder(EquipOrder order)
 	{
-		var player = MovementManager.GetObject(order.m_playerID);
+		var player = CharManager.GetObject(order.m_playerID);
 		var item = ItemManager.GetItem(order.m_itemID);
 		if (player == null)
 		{

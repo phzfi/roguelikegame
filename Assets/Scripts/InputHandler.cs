@@ -48,11 +48,11 @@ public class InputHandler : Singleton<InputHandler>
 			
 			if (Input.GetMouseButton(1))
 			{
-                var mover = MovementManager.GetLocalPlayer();
+                var mover = CharManager.GetLocalPlayer();
                 if (mover == null)
                     Debug.Log("Inputhandler could not find local player");
                 
-                NavPath navPath = mover.m_navAgent.SeekPath(mover.m_gridPos, mouseGridPos);
+                NavPath navPath = mover.m_mover.m_navAgent.SeekPath(mover.m_mover.m_gridPos, mouseGridPos);
                 worldSpacePath = MapGrid.NavPathToWorldSpacePath(navPath, -0.07f);
             }
 
@@ -69,10 +69,10 @@ public class InputHandler : Singleton<InputHandler>
 		if (Input.GetMouseButtonUp(1))
 		{
 			bool attack = false;
-			for (int i = 0; i < MovementManager.Objects.Count; ++i)
+			for (int i = 0; i < CharManager.Objects.Count; ++i)
 			{
-				var target = MovementManager.Objects[i];
-				if (mouseGridPos == target.m_gridPos)
+				var target = CharManager.Objects[i];
+				if (mouseGridPos == target.m_mover.m_gridPos)
 				{
 					attack = true;
 					MovementManager.InputAttackOrder(target.ID);

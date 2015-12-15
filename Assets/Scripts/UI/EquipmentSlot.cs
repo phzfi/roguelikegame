@@ -17,7 +17,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 
     public void Start()
     {
-        var player = MovementManager.GetLocalPlayer();
+        var player = CharManager.GetLocalPlayer();
         if (player == null)
             Debug.LogError("Could not find local player for equipmentslot");
         m_equipment = player.GetComponent<Equipment>();

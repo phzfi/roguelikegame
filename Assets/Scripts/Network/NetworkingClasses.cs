@@ -37,15 +37,15 @@ public struct MoveOrder
 			return false;
 		}
 
-		var mover = MovementManager.GetObject(m_moverID);
+		var mover = CharManager.GetObject(m_moverID);
 		if (mover == null)
 		{
 			Debug.Log("invalid move order: mover not found!");
 			return false;
 		}
 
-		var path = mover.m_navAgent.SeekPath(mover.m_gridPos, m_targetGridPos);
-		if (path.Count > mover.m_gridSpeed || path[path.Count-1] != m_targetGridPos)
+		var path = mover.m_mover.m_navAgent.SeekPath(mover.m_mover.m_gridPos, m_targetGridPos);
+		if (path.Count > mover.m_mover.m_gridSpeed || path[path.Count-1] != m_targetGridPos)
 		{
 			Debug.Log("invalid move order: invalid move target!");
 			return false;

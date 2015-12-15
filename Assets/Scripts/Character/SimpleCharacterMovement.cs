@@ -10,7 +10,6 @@ public class SimpleCharacterMovement : NetworkBehaviour
 	public Vector2i m_moveOrderTarget;
 	public int m_attackOrderTarget;
 
-	public int ID;
 	public int m_gridSpeed = 6;
 
 	public Vector2i m_gridPos;
@@ -22,6 +21,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 	private NavPath m_moveOrderPath = new NavPath();
 
 	private CombatSystem m_combatSystem;
+	private CharController m_controller;
 
 	bool m_onGoingMovement = false;
 	float m_distanceOnStep = 0.0f;
@@ -42,22 +42,12 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		m_navAgent = new NavPathAgent(0.5f, navGrid, new MovementEvalFuncDelegate(d => d.f));
 
 		m_gridPos = MapGrid.WorldToGridPoint(transform.position);
-		Debug.Assert(m_navAgent.CanAccess(m_gridPos), "Character " + gameObject.name + ", ID: " + ID + " is in unaccessable location");
+		Debug.Assert(m_navAgent.CanAccess(m_gridPos), "Character " + gameObject.name + " is in unaccessable location");
 		
 		transform.position = MapGrid.GridToWorldPoint(m_gridPos, transform.position.z);
 
-		ID = (int)netId.Value;
-		MovementManager.Register(this);
-	}
 
-	public void OnDestroy()
-	{
-		Unregister();
-	}
-
-	public void Unregister()
-	{
-		MovementManager.Unregister(ID);
+		m_controller = GetComponent<CharController>();
 	}
 
 	public void InputMoveOrder(Vector2i targetGridPos) // Update the move order. Run pathfinding to move target. 
@@ -197,13 +187,13 @@ public class SimpleCharacterMovement : NetworkBehaviour
 				m_navPath = m_navAgent.SeekPath(m_gridPos, m_moveOrderTarget);
 				break;
 			case OrderType.attack:
-				var target = MovementManager.GetObject(m_attackOrderTarget);
+				var target = CharManager.GetObject(m_attackOrderTarget);
 				if (target == null) // if target not found, it must be dead and we can cancel attack order
 				{
 					m_orderType = OrderType.none;
 					return false;
 				}
-				m_navPath = m_navAgent.SeekPath(m_gridPos, target.m_gridPos);
+				m_navPath = m_navAgent.SeekPath(m_gridPos, target.m_mover.m_gridPos);
 				break;
 		}
 		if (m_navPath.Count == 0)
@@ -219,19 +209,19 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			Vector2i nextGridPos = m_navPath[0];
 
 			bool movementBlocked = false;
-			for (int i = 0; i < MovementManager.Objects.Count; ++i) // loop over objects to check next path step is not blocked
+			for (int i = 0; i < CharManager.Objects.Count; ++i) // loop over objects to check next path step is not blocked
 			{
-				var mover = MovementManager.Objects[i];
-				if (mover == this)
+				var controller = CharManager.Objects[i];
+				if (controller == m_controller)
 					continue;
 
-				if (mover.m_gridPos == nextGridPos)
+				if (controller.m_mover.m_gridPos == nextGridPos)
 				{
 					// TODO: do something smart here, don't just stop?
-					var combatSystem = mover.GetComponent<CombatSystem>();
+					var combatSystem = controller.GetComponent<CombatSystem>();
 					if (combatSystem != null)
 					{
-						m_combatSystem.Attack(mover.ID);
+						m_combatSystem.Attack(controller.ID);
 					}
 					movementBlocked = true;
 					break;
@@ -248,7 +238,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 				{
 					var item = ItemManager.ItemsOnMap[i];
 					if (item.m_pos == m_gridPos && item.CanPickup(gameObject))
-						SyncManager.AddPickupOrder(ID, item.ID);
+						SyncManager.AddPickupOrder(m_controller.ID, item.ID);
 				}
 			}
 			else

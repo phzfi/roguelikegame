@@ -24,7 +24,6 @@ public class PlayerSync : NetworkBehaviour
 
 		m_syncPosition = MapGrid.WorldToGridPoint(transform.position);
 
-		SyncManager.sm_players.Add(this); // add this to list of player objects
 	}
 
 	void Update()
@@ -34,7 +33,6 @@ public class PlayerSync : NetworkBehaviour
 
 	void OnDestroy()
 	{
-		SyncManager.sm_players.Remove(this); // remove this from list of player objects
 	}
 
 	public void SyncPosition(Vector2i pos)

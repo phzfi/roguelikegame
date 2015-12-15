@@ -15,6 +15,7 @@ public class CombatSystem : NetworkBehaviour
 	private Text m_label;
 	private Camera m_camera;
 	private Inventory m_inventory;
+	private CharController m_controller;
 
 	public void Start()
 	{
@@ -24,6 +25,7 @@ public class CombatSystem : NetworkBehaviour
 		m_label = Instantiate(m_textPrefab);
 		m_label.transform.SetParent(m_textCanvas.transform, true);
 		m_inventory = GetComponent<Inventory>(); // store inventory reference for use in damage modifiers
+		m_controller = GetComponent<CharController>();
 	}
 
 	public void Update()
@@ -44,7 +46,7 @@ public class CombatSystem : NetworkBehaviour
 
 	public void Attack(int targetID) // Deal damage to object, identified by ID.
 	{
-		var target = MovementManager.GetObject(targetID);
+		var target = CharManager.GetObject(targetID);
 		var targetSystem = target.GetComponent<CombatSystem>();
 		if (targetSystem == null)
 			return;
@@ -57,12 +59,12 @@ public class CombatSystem : NetworkBehaviour
 		int takenDamage = GetReducedDamage(dmg);
 		m_currentHp -= takenDamage;
 		if (m_currentHp <= 0)
-			SyncManager.AddDeathOrder(GetComponent<SimpleCharacterMovement>().ID);
+			SyncManager.AddDeathOrder(m_controller.ID);
 	}
 
 	public void Die()
 	{
-		GetComponent<SimpleCharacterMovement>().Unregister();
+		m_controller.Unregister();
 		m_label.enabled = false;
 		gameObject.SetActive(false);
 		Debug.Log("player killed");
