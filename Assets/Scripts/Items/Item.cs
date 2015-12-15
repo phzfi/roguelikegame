@@ -27,7 +27,10 @@ public class Item : NetworkBehaviour
     void Start()
 	{
 		ItemManager.Register(this, m_onMap);
-		transform.position = MapGrid.GridToWorldPoint(m_pos);
+		float z = transform.position.z;
+		Vector3 vec = MapGrid.GridToWorldPoint(m_pos);
+		vec.z = z;
+		transform.position = vec;
 
 		if (!m_onMap) // if item has been picked up already
 		{

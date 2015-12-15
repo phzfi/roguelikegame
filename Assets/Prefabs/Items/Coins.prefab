@@ -27,6 +27,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 417188}
   - 114: {fileID: 11461798}
+  - 114: {fileID: 11480170}
   m_Layer: 0
   m_Name: Coins
   m_TagString: Untagged
@@ -115,7 +116,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 184250}
-  m_LocalRotation: {x: .812154472, y: -.100693583, z: .147378355, w: .555468857}
+  m_LocalRotation: {x: .812154353, y: -.100693569, z: .14737834, w: .555468798}
   m_LocalPosition: {x: .291000009, y: 0, z: .901000023}
   m_LocalScale: {x: .384709358, y: .0384709165, z: .384709388}
   m_Children: []
@@ -139,7 +140,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -163,7 +166,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -187,7 +192,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -227,6 +234,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_name: Coins
   ID: 0
+  m_strength: 0
+  m_agility: 0
+  m_intelligence: 0
+  m_typeOfItem: 6
+--- !u!114 &11480170
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 146226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 118
+    i1: 66
+    i2: 101
+    i3: 253
+    i4: 123
+    i5: 218
+    i6: 105
+    i7: 100
+    i8: 107
+    i9: 5
+    i10: 168
+    i11: 112
+    i12: 48
+    i13: 64
+    i14: 57
+    i15: 203
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!136 &13602708
 CapsuleCollider:
   m_ObjectHideFlags: 1
