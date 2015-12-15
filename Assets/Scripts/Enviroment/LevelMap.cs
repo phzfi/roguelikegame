@@ -67,7 +67,7 @@ public class LevelMap : MonoBehaviour
 
         ProcessMap();
 
-        PlaceRooms();
+        //PlaceRooms();
         RemoveThinWalls();
 
 		m_navGrid = new NavGrid(this);
@@ -188,11 +188,35 @@ public class LevelMap : MonoBehaviour
                 rooms.Add(new Room(roomRegions[i], m_map));
             }
         }
+        rooms.Sort();
+        rooms[0].isMain = true;
+        rooms[0].isAccessibleFromMain = true;
         ConnectClosestRooms(rooms);
     }
 
-    private void ConnectClosestRooms(List<Room> rooms)
+    private void ConnectClosestRooms(List<Room> rooms, bool forceAccessiblityFromMain = false)
     {
+        List<Room> firstRoomList = new List<Room>();
+        List<Room> secondRoomList = new List<Room>();
+
+        if (forceAccessiblityFromMain)
+        {
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                if (rooms[i].isAccessibleFromMain)
+                {
+                    secondRoomList.Add(rooms[i]);
+                } else
+                {
+                    firstRoomList.Add(rooms[i]);
+                }
+            }
+        } else
+        {
+            firstRoomList = rooms;
+            secondRoomList = rooms;
+        }
+
         int shortestDistance = 0;
         Vector2i bestTileA = new Vector2i();
         Vector2i bestTileB = new Vector2i();
@@ -200,24 +224,27 @@ public class LevelMap : MonoBehaviour
         Room bestRoomB = new Room();
         bool possibleConnection = false;
 
-        for (int i = 0; i < rooms.Count; i++)
+        for (int i = 0; i < firstRoomList.Count; i++)
         {
-            possibleConnection = false;
-
-            for (int j = 0; j < rooms.Count; j++)
+            if (!forceAccessiblityFromMain)
             {
-                if (rooms[i] == rooms[j]) continue;
-                if (rooms[i].IsConnected(rooms[j]))
+                possibleConnection = false;
+                if (firstRoomList[i].connectedRooms.Count > 0)
                 {
-                    possibleConnection = false;
-                    break;
+                    continue;
                 }
-                for (int k = 0; k < rooms[i].edgeTiles.Count; k++)
+            }
+
+            for (int j = 0; j < secondRoomList.Count; j++)
+            {
+                if (firstRoomList[i] == secondRoomList[j] || firstRoomList[i].IsConnected(secondRoomList[j])) continue;
+                
+                for (int k = 0; k < firstRoomList[i].edgeTiles.Count; k++)
                 {
-                    for (int l = 0; l < rooms[j].edgeTiles.Count; l++)
+                    for (int l = 0; l < secondRoomList[j].edgeTiles.Count; l++)
                     {
-                        Vector2i tileA = rooms[i].edgeTiles[k];
-                        Vector2i tileB = rooms[j].edgeTiles[l];
+                        Vector2i tileA = firstRoomList[i].edgeTiles[k];
+                        Vector2i tileB = secondRoomList[j].edgeTiles[l];
                         int distance = (int)(Mathf.Pow(tileA.x - tileB.x, 2) + Mathf.Pow(tileA.y - tileB.y, 2));
 
                         if (distance < shortestDistance || !possibleConnection)
@@ -226,16 +253,27 @@ public class LevelMap : MonoBehaviour
                             possibleConnection = true;
                             bestTileA = tileA;
                             bestTileB = tileB;
-                            bestRoomA = rooms[i];
-                            bestRoomB = rooms[j];
+                            bestRoomA = firstRoomList[i];
+                            bestRoomB = secondRoomList[j];
                         }
                     }
                 }
             }
-            if (possibleConnection)
+            if (possibleConnection && !forceAccessiblityFromMain)
             {
                 CreatePassage(bestRoomA, bestRoomB, bestTileA, bestTileB);
             }
+        }
+
+        if (possibleConnection && forceAccessiblityFromMain)
+        {
+            CreatePassage(bestRoomA, bestRoomB, bestTileA, bestTileB);
+            ConnectClosestRooms(rooms, true);
+        }
+
+        if (!forceAccessiblityFromMain)
+        {
+            ConnectClosestRooms(rooms, true);
         }
     }
 
@@ -243,6 +281,86 @@ public class LevelMap : MonoBehaviour
     {
         Room.ConnectRooms(roomA, roomB);
         Debug.DrawLine(GridToWorldPos(tileA), GridToWorldPos(tileB), Color.green, 100.0f);
+
+        List<Vector2i> line = GetLine(tileA, tileB);
+        for (int i = 0; i < line.Count; i++)
+        {
+            DrawCircle(line[i], 2);
+        }
+    }
+
+    private void DrawCircle(Vector2i c, int r)
+    {
+        for (int x = -r; x <= r; x++)
+        {
+            for (int y = -r; y <= r; y++)
+            {
+                if (x * x + y * y <= r * r)
+                {
+                    int drawX = c.x + x;
+                    int drawY = c.y + y;
+                    if (IsInRange(drawX, drawY) && drawY != 0 && drawX != 0 && drawX != Width - 1 && drawY != Height - 1)
+                    {
+                        m_map[drawX, drawY].m_tileType = MapTileType.Floor;
+                    }
+                }
+            }
+        }
+    }
+
+    private List<Vector2i> GetLine(Vector2i from, Vector2i to)
+    {
+        List<Vector2i> line = new List<Vector2i>();
+        int x = from.x;
+        int y = from.y;
+
+        int dx = to.x - from.x;
+        int dy = to.y - from.y;
+
+        bool inverted = false;
+
+        int step = Math.Sign(dx);
+        int gradientStep = Math.Sign(dy);
+
+        int longest = Mathf.Abs(dx);
+        int shortest = Mathf.Abs(dy);
+        if (longest < shortest)
+        {
+            inverted = true;
+            longest = Mathf.Abs(dy);
+            shortest = Mathf.Abs(dx);
+            step = Math.Sign(dy);
+            gradientStep = Math.Sign(dx);
+        }
+
+        int gradientAccumulation = longest / 2;
+        for (int i = 0; i < longest; i++)
+        {
+            line.Add(new Vector2i(x, y));
+
+            if (inverted)
+            {
+                y += step;
+            } else
+            {
+                x += step;
+            }
+
+            gradientAccumulation += shortest;
+            if (gradientAccumulation >= longest)
+            {
+                if (inverted)
+                {
+                    x += gradientStep;
+                } else
+                {
+                    y += gradientStep;
+                }
+                gradientAccumulation -= longest;
+            }
+        }
+
+        return line;
     }
 
     // temporary debug function
@@ -386,12 +504,14 @@ public class LevelMap : MonoBehaviour
         return val;
     }
     
-    class Room
+    class Room : IComparable<Room>
     {
         public List<Vector2i> tiles;
         public List<Vector2i> edgeTiles;
         public List<Room> connectedRooms;
         public int roomSize;
+        public bool isAccessibleFromMain;
+        public bool isMain;
         
         public Room() {}
 
@@ -418,8 +538,27 @@ public class LevelMap : MonoBehaviour
             }
         }
 
+        public void SetAccessibleFromMain()
+        {
+            if (!isAccessibleFromMain)
+            {
+                isAccessibleFromMain = true;
+                for (int i = 0; i < connectedRooms.Count; i++)
+                {
+                    connectedRooms[i].SetAccessibleFromMain();
+                }
+            }
+        }
+
         public static void ConnectRooms(Room first, Room second)
         {
+            if (first.isAccessibleFromMain)
+            {
+                second.SetAccessibleFromMain();
+            } else if (second.isAccessibleFromMain)
+            {
+                first.SetAccessibleFromMain();
+            }
             first.connectedRooms.Add(second);
             second.connectedRooms.Add(first);
         }
@@ -427,6 +566,11 @@ public class LevelMap : MonoBehaviour
         public bool IsConnected(Room other)
         {
             return connectedRooms.Contains(other);
+        }
+
+        public int CompareTo(Room other)
+        {
+            return other.roomSize.CompareTo(roomSize);
         }
 
     }
