@@ -64,9 +64,9 @@ public class SyncManager : NetworkBehaviour
 	{
 		sm_clientData = new ClientData();
 		sm_clientData.m_connection = connection;
-		sm_clientData.m_clientID = netId.Value;
+		sm_clientData.m_clientID = -1;
 		sm_clientData.m_connection.RegisterHandler((short)msgType.moveOrder, EmptyMessageHandler);
-		sm_clientData.m_connection.RegisterHandler((short)msgType.connected, EmptyMessageHandler);
+		sm_clientData.m_connection.RegisterHandler((short)msgType.connected, OnClientReceiveConnection);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.visualize, OnClientReceiveVisualizationOrders);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.pickupOrder, OnClientReceivePickupOrders);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.attackOrder, OnClientReceiveAttackOrders);
@@ -76,7 +76,7 @@ public class SyncManager : NetworkBehaviour
         enabled = true;
 
 		var msg = new ConnectionMessage();
-		msg.m_clientID = netId.Value;
+		msg.m_clientID = -1;
 		sm_clientData.m_connection.Send((short)msgType.connected, msg); // send netId of this object to server so that it can keep track of connections using it
 	}
 
@@ -237,7 +237,8 @@ public class SyncManager : NetworkBehaviour
 			if (Time.realtimeSinceStartup - m_lastSync > m_timeOutTurn)
 			{
 				Debug.Log("Not all clients responded in time, ending turn prematurely");
-				EndServerTurn();
+				sm_serverData.ReceivedAllInput();
+                EndServerTurn();
 				yield break;
 			}
 
@@ -334,12 +335,12 @@ public class SyncManager : NetworkBehaviour
         NetworkServer.SendToAll((short)msgType.equipOrder, msg);
     }
 
-    PlayerData GetPlayerDataFromID(uint ID) // gets the player data container associated with given ID
+    PlayerData GetPlayerDataFromID(int ID) // gets the player data container associated with given ID
 	{
 		for (int i = 0; i < sm_serverData.m_playerData.Count; ++i)
 		{
 			var playerData = sm_serverData.m_playerData[i];
-			if (playerData.m_clientID == ID)
+			if (playerData.m_connectionID == ID)
 				return playerData;
 		}
 		return null;
@@ -396,24 +397,39 @@ public class SyncManager : NetworkBehaviour
         handleEquipOrdersOnClient();
     }
 
-    void OnServerReceiveEquipOrders(NetworkMessage msg) //TODO: Add to different lists, coming and outgoing
-    {
-        var equipOrderMessage = msg.ReadMessage<EquipOrderMessage>();
-        sm_equipOrders.AddRange(equipOrderMessage.m_orders);
+	void OnServerReceiveEquipOrders(NetworkMessage msg) //TODO: Add to different lists, coming and outgoing
+	{
+		var equipOrderMessage = msg.ReadMessage<EquipOrderMessage>();
+		var playerData = GetPlayerDataFromID(equipOrderMessage.m_clientID);
+		if (playerData != null)
+		{
+			sm_equipOrders.AddRange(equipOrderMessage.m_orders);
+			playerData.m_receivedEquipInput = true;
+		}
+		else
+			Debug.Log("Couldn't find player data for equip order sender!");
     }
 
     void OnServerReceiveConnection(NetworkMessage msg) // creates new server data entry for connected client so that they can be tracked when changing turns
 	{
 		var connectMsg = msg.ReadMessage<ConnectionMessage>(); // when receiving connection message from client, generate server data for the client
-		uint clientID = connectMsg.m_clientID;
 
 		var playerData = new PlayerData();
-		playerData.m_clientID = clientID;
 		playerData.m_connectionID = msg.conn.connectionId;
 		playerData.m_connection = msg.conn;
 		sm_serverData.m_playerData.Add(playerData);
 
 		SyncTurnNumber(playerData.m_connection);
+
+		connectMsg.m_clientID = msg.conn.connectionId;
+		msg.conn.Send((short)msgType.connected, connectMsg);
+	}
+
+	void OnClientReceiveConnection(NetworkMessage msg)
+	{
+		var connectMsg = msg.ReadMessage<ConnectionMessage>(); // when receiving connection message from client, generate server data for the client
+		int clientID = connectMsg.m_clientID;
+		sm_clientData.m_clientID = clientID;
 	}
 	
 

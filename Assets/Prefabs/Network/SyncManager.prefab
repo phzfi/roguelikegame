@@ -40,8 +40,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992db0e2aa002c74a83a2c7f07aaea04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_syncRate: 2
-  m_timeOutTurn: 1
+  m_syncRate: 4
+  m_timeOutTurn: 2
 --- !u!114 &11456336
 MonoBehaviour:
   m_ObjectHideFlags: 1

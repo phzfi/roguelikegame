@@ -96,24 +96,24 @@ public struct EquipOrder
 public class EquipOrderMessage : MessageBase
 {
     public EquipOrder[] m_orders;
-    public uint m_clientID;
+    public int m_clientID;
 }
 
 public class AttackOrderMessage : MessageBase
 {
 	public AttackOrder[] m_orders;
-	public uint m_clientID;
+	public int m_clientID;
 }
 
 public class ConnectionMessage : MessageBase
 {
-	public uint m_clientID;
+	public int m_clientID;
 }
 
 public class MoveOrderMessage : MessageBase
 {
 	public MoveOrder[] m_orders;
-	public uint m_clientID;
+	public int m_clientID;
 }
 
 public struct PickupOrder
@@ -159,17 +159,17 @@ public class ClientData
 {
 	public bool m_turnInProgress;
 	public bool m_receivedInput;
-	public uint m_clientID;
+	public int m_clientID;
 	public NetworkConnection m_connection;
 }
 
 public class PlayerData
 {
-	public uint m_clientID;
 	public int m_connectionID;
 	public NetworkConnection m_connection;
 	public bool m_receivedMoveInput;
 	public bool m_receivedAttackInput;
+	public bool m_receivedEquipInput;
 }
 
 public class ServerData
@@ -182,7 +182,7 @@ public class ServerData
 		for(int i = 0; i < m_playerData.Count; ++i)
 		{
 			var data = m_playerData[i];
-			if (!data.m_receivedAttackInput || !data.m_receivedMoveInput)
+			if (!data.m_receivedAttackInput || !data.m_receivedMoveInput || !data.m_receivedEquipInput)
 				return false;
 		}
 		return true;
