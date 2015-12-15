@@ -55,8 +55,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_useRandomSeed: 1
-  m_seed: 11/11/2015 4:05:59 PM
-  randomFillPercent: 40
+  m_seed: 123
+  randomFillPercent: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -72,6 +72,8 @@ MonoBehaviour:
   m_OnlineScene: 
   m_SpawnPrefabs:
   - {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+  - {fileID: 122222, guid: 640b9288681bc8a4296e8ad218d2a8c6, type: 2}
+  - {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -96,7 +98,7 @@ MonoBehaviour:
   m_Channels: 
   m_UseWebSockets: 0
   m_UseSimulator: 0
-  m_SimulatedLatency: 1
+  m_SimulatedLatency: 235
   m_PacketLossPercentage: 0
   m_MatchHost: mm.unet.unity3d.com
   m_MatchPort: 443
