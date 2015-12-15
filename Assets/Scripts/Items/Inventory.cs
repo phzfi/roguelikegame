@@ -4,33 +4,21 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class Inventory : MonoBehaviour, IDropHandler
+public class Inventory : MonoBehaviour
 {
 	public AudioClip m_itemPickupAudio;
 	public AudioClip m_coinPickupAudio;
 	public int m_maxItems = 5;
-	public static int sm_amountOfCoins = 0;
-    public GameObject m_UIElements;
+	public int m_amountOfCoins = 0;
 
     private List<GameObject> m_items;
-	private AudioSource m_audioSource;
-    private GameObject m_inventoryCanvas;
-    
+	private AudioSource m_audioSource;    
 
 	void Start()
 	{
 		m_items = new List<GameObject>();
 		m_audioSource = GetComponent<AudioSource>();
-        m_inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas");
-        //var playerElements = Instantiate(m_UIElements);
-        //playerElements.transform.parent = m_inventoryCanvas.transform;
-        //playerElements.name = "UI " + GetComponent<SimpleCharacterMovement>().ID;
 	}
-
-    public void OnDrop(PointerEventData eventData)
-    {
-
-    }
 
     public bool CanAddItem(GameObject item)
 	{
@@ -50,8 +38,8 @@ public class Inventory : MonoBehaviour, IDropHandler
 		}
 		if (itemName == "Coins")
 		{
-			Inventory.sm_amountOfCoins += 1;
-			Debug.Log(Inventory.sm_amountOfCoins);
+			m_amountOfCoins += 1;
+			Debug.Log(m_amountOfCoins);
 			m_audioSource.PlayOneShot(m_coinPickupAudio);
 			return true;
 		}

@@ -39,8 +39,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 429d123880dfc3145a2a7ca7eacb0a2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_inventoryPanel: {fileID: 147840, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
-  m_equipmentPanel: {fileID: 113150, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+  m_inventoryPanel: {fileID: 0}
+  m_equipmentPanel: {fileID: 0}
+  m_wrongSlotWarningSign: {fileID: 0}
   m_coinsText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:

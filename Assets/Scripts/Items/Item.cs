@@ -44,7 +44,8 @@ public class Item : NetworkBehaviour
 		if (inventory == null || !inventory.AddItem(gameObject))
 			return;
 
-		//gameObject.SetActive(false);
+		if(m_name == "Coins")
+            gameObject.SetActive(false);
 		ItemManager.UnregisterFromMap(ID);
 		m_onMap = false;
 	}

@@ -13,7 +13,7 @@ public class ItemSpawner : NetworkBehaviour
 		var item = obj.GetComponent<Item>();
 
 		ItemManager.GetID(out item.ID);
-		item.m_name = "Palikka" + item.ID;
+		//item.m_name = "Palikka" + item.ID;
 		item.m_pos = MapGrid.WorldToGridPoint(transform.position);
 
 		NetworkServer.Spawn(obj);

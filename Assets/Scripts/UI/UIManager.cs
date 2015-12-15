@@ -12,15 +12,19 @@ public class UIManager : MonoBehaviour
 
     private bool m_inventoryOpen = false;
     private bool m_equipmentOpen = false;
-
-    void Start()
-    {
-        m_coinsText.text = Inventory.sm_amountOfCoins.ToString();
-    }
+    private CharController m_localPlayer;
+    private Inventory m_localInventory;
 
     void Update()
     {
-        m_coinsText.text = Inventory.sm_amountOfCoins.ToString();
+        if (m_localPlayer == null)
+            m_localPlayer = CharManager.GetLocalPlayer();
+        else if(m_localPlayer != null)
+        {
+            m_localInventory = m_localPlayer.GetComponent<Inventory>();
+            UpdateAmountOfCoins();
+        }
+
         if (Input.GetKeyDown(KeyCode.I))
         {
             ToggleInventory();
@@ -72,5 +76,10 @@ public class UIManager : MonoBehaviour
     public void CloseWarningSign()
     {
         m_wrongSlotWarningSign.SetActive(false);
+    }
+
+    public void UpdateAmountOfCoins()
+    {
+        m_coinsText.text = m_localInventory.m_amountOfCoins.ToString();
     }
 }
