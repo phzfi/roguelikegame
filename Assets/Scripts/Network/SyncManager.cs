@@ -141,13 +141,22 @@ public class SyncManager : NetworkBehaviour
             var player = MovementManager.GetObject(order.m_playerID);
             var item = ItemManager.GetItem(order.m_itemID);
             if (player == null)
-                Debug.Log("player not found for equip order");
-            if (item == null)
-                Debug.Log("item not found for equip order");
+			{
+				Debug.Log("player not found for equip order");
+				continue;
+			}
+			if (item == null)
+			{
+				Debug.Log("item not found for equip order");
+				continue;
+			}
             var equipment = player.GetComponent<Equipment>();
             if (equipment == null)
-                Debug.Log("equipment not found for equip order");
-            if (order.m_equipType)
+			{
+				Debug.Log("equipment not found for equip order");
+				continue;
+			}
+			if (order.m_equipType)
                 equipment.m_equipment.Add(item.gameObject); //TODO: Check validity
             else
                 equipment.m_equipment.Remove(item.gameObject);
@@ -171,14 +180,23 @@ public class SyncManager : NetworkBehaviour
             var order = sm_equipOrders[i];
             var player = MovementManager.GetObject(order.m_playerID);
             var item = ItemManager.GetItem(order.m_itemID);
-            if (player == null)
-                Debug.Log("player not found for equip order");
-            if (item == null)
-                Debug.Log("item not found for equip order");
-            var equipment = player.GetComponent<Equipment>();
-            if (equipment == null)
-                Debug.Log("equipment not found for equip order");
-            if(order.m_equipType)
+			if (player == null)
+			{
+				Debug.Log("player not found for equip order");
+				continue;
+			}
+			if (item == null)
+			{
+				Debug.Log("item not found for equip order");
+				continue;
+			}
+			var equipment = player.GetComponent<Equipment>();
+			if (equipment == null)
+			{
+				Debug.Log("equipment not found for equip order");
+				continue;
+			}
+			if (order.m_equipType)
                 equipment.m_equipment.Add(item.gameObject);
             else
                 equipment.m_equipment.Remove(item.gameObject);
@@ -288,12 +306,12 @@ public class SyncManager : NetworkBehaviour
 		msg.m_clientID = sm_clientData.m_clientID;
 		sm_clientData.m_connection.Send((short)msgType.moveOrder, msg);
 
-        var equipMsg = new MoveOrderMessage();
+        var equipMsg = new EquipOrderMessage();
         EquipOrder[] equipOrders = sm_equipOrders.ToArray();
-        sm_moveOrders.Clear();
-        msg.m_orders = orders;
-        msg.m_clientID = sm_clientData.m_clientID;
-        sm_clientData.m_connection.Send((short)msgType.equipOrder, msg);
+        sm_equipOrders.Clear();
+		equipMsg.m_orders = equipOrders;
+		equipMsg.m_clientID = sm_clientData.m_clientID;
+        sm_clientData.m_connection.Send((short)msgType.equipOrder, equipMsg);
     }
 
 	void SendVisualizeOrdersToClients()
@@ -393,7 +411,7 @@ public class SyncManager : NetworkBehaviour
 		handleVisualizeMoveOrdersOnClient();
 	}
 
-    void OnClientReceiveEquipOrders(NetworkMessage msg) // handles received move visualization order data on client
+    void OnClientReceiveEquipOrders(NetworkMessage msg)
     {
         var equipOrderMessage = msg.ReadMessage<EquipOrderMessage>();
         sm_equipOrders.AddRange(equipOrderMessage.m_orders);
