@@ -6,13 +6,17 @@ using UnityEngine.Networking;
 public class SimpleCharacterMovement : NetworkBehaviour
 {
 	public enum OrderType { none, move, attack }
+	[HideInInspector]
 	public OrderType m_orderType;
+	[HideInInspector]
 	public Vector2i m_moveOrderTarget;
+	[HideInInspector]
 	public int m_attackOrderTarget;
 
 	public int m_gridSpeed = 6;
 
 	public Vector2i m_gridPos;
+	[HideInInspector]
 	public PlayerSync m_syncer;
 	private AudioSource m_audioSource;
 	
@@ -234,12 +238,13 @@ public class SimpleCharacterMovement : NetworkBehaviour
 				m_navPath.RemoveAt(0);
 				moved = true;
 
-				for (int i = 0; i < ItemManager.ItemsOnMap.Count; ++i)
-				{
-					var item = ItemManager.ItemsOnMap[i];
-					if (item.m_pos == m_gridPos && item.CanPickup(gameObject))
-						SyncManager.AddPickupOrder(m_controller.ID, item.ID);
-				}
+				if(m_controller.m_isPlayer)
+					for (int i = 0; i < ItemManager.ItemsOnMap.Count; ++i) // pick up items from current grid square, but only if player character
+					{
+						var item = ItemManager.ItemsOnMap[i];
+						if (item.m_pos == m_gridPos && item.CanPickup(gameObject))
+							SyncManager.AddPickupOrder(m_controller.ID, item.ID);
+					}
 			}
 			else
 				return moved;

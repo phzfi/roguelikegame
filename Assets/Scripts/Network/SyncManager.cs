@@ -499,6 +499,12 @@ public class SyncManager : NetworkBehaviour
 		sm_attackOrders.Add(order);
 	}
 
+	public static void AddServerAttackOrder(int targetID, int moverID) // Version that ignores turn in progress
+	{
+		var order = new AttackOrder(moverID, targetID);
+		sm_attackOrders.Add(order);
+	}
+
 	public static void AddMoveVisualizationOrder(Vector2i targetGridPos, int moverID)
 	{
 		var order = new MoveOrder(targetGridPos, moverID);

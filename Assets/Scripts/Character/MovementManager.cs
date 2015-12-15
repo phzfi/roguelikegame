@@ -71,6 +71,10 @@ public class MovementManager : MonoBehaviour
 		{
 			var controller = CharManager.Objects[i];
             var mover = controller.m_mover;
+
+			if (!controller.m_isPlayer) // If this character is an NPC, run its turn decision logic
+				controller.m_enemyAI.TakeTurn();
+
 			bool moved = mover.TakeStep();
 
 			if (moved)
