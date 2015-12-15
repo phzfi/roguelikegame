@@ -19,7 +19,7 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
     public int m_changeIndex;
     
     [HideInInspector]
-    public Item.Type m_itemType;
+    public Item.ItemType m_itemType;
 
     private GameObject m_slots;
 

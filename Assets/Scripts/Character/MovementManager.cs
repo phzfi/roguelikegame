@@ -42,10 +42,14 @@ public class MovementManager : MonoBehaviour
 
 	public static void OrderMoveVisualize(MoveOrder order) // pass move visualization order to the mover it is associated with by ID
 	{
-		var mover = CharManager.GetObject(order.m_moverID).m_mover;
+		var controller = CharManager.GetObject(order.m_moverID);
+		var mover = controller.m_mover;
 		if (mover == null)
 			return;
 		mover.VisualizeMove(order.m_targetGridPos);
+
+		if(controller.isLocalPlayer && controller.m_isPlayer)
+			VisibilityManager.UpdateMoveRange();
 	}
 
 	public static void OrderAttack(AttackOrder order)
