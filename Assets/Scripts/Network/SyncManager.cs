@@ -133,34 +133,36 @@ public class SyncManager : NetworkBehaviour
 		sm_moveOrders.Clear();
 	}
 
+	void RunEquipOrder(EquipOrder order)
+	{
+		var player = MovementManager.GetObject(order.m_playerID);
+		var item = ItemManager.GetItem(order.m_itemID);
+		if (player == null)
+		{
+			Debug.Log("player not found for equip order");
+			return;
+		}
+		if (item == null)
+		{
+			Debug.Log("item not found for equip order");
+			return;
+		}
+		var equipment = player.GetComponent<Equipment>();
+		if (equipment == null)
+		{
+			Debug.Log("equipment not found for equip order");
+			return;
+		}
+		if (order.m_equipType && !equipment.m_equipment.Contains(item.gameObject)) // make sure we haven't already equipped this item (host will have run this in server-side code already)
+			equipment.m_equipment.Add(item.gameObject);
+		else if (!order.m_equipType)
+			equipment.m_equipment.Remove(item.gameObject);
+	}
+
     void handleEquipOrdersOnServer()
     {
         for (int i = 0; i < sm_equipOrders.Count; ++i)
-        {
-            var order = sm_equipOrders[i];
-            var player = MovementManager.GetObject(order.m_playerID);
-            var item = ItemManager.GetItem(order.m_itemID);
-            if (player == null)
-			{
-				Debug.Log("player not found for equip order");
-				continue;
-			}
-			if (item == null)
-			{
-				Debug.Log("item not found for equip order");
-				continue;
-			}
-            var equipment = player.GetComponent<Equipment>();
-            if (equipment == null)
-			{
-				Debug.Log("equipment not found for equip order");
-				continue;
-			}
-			if (order.m_equipType)
-                equipment.m_equipment.Add(item.gameObject); //TODO: Check validity
-            else
-                equipment.m_equipment.Remove(item.gameObject);
-        }
+			RunEquipOrder(sm_equipOrders[i]);
     }
 
     void handleVisualizeMoveOrdersOnClient()
@@ -176,31 +178,7 @@ public class SyncManager : NetworkBehaviour
     void handleEquipOrdersOnClient()
     {
         for (int i = 0; i < sm_equipOrders.Count; ++i)
-        {
-            var order = sm_equipOrders[i];
-            var player = MovementManager.GetObject(order.m_playerID);
-            var item = ItemManager.GetItem(order.m_itemID);
-			if (player == null)
-			{
-				Debug.Log("player not found for equip order");
-				continue;
-			}
-			if (item == null)
-			{
-				Debug.Log("item not found for equip order");
-				continue;
-			}
-			var equipment = player.GetComponent<Equipment>();
-			if (equipment == null)
-			{
-				Debug.Log("equipment not found for equip order");
-				continue;
-			}
-			if (order.m_equipType)
-                equipment.m_equipment.Add(item.gameObject);
-            else
-                equipment.m_equipment.Remove(item.gameObject);
-        }
+			RunEquipOrder(sm_equipOrders[i]);
         sm_equipOrders.Clear();
     }
 
