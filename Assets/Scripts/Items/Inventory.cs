@@ -11,18 +11,19 @@ public class Inventory : MonoBehaviour
 	public int m_maxItems = 5;
 	public int m_amountOfCoins = 0;
 
-    private List<GameObject> m_items;
-	private AudioSource m_audioSource;    
-
+    private List<GameObject> m_items = new List<GameObject>();
+    private AudioSource m_audioSource;
+    
 	void Start()
 	{
-		m_items = new List<GameObject>();
+		
 		m_audioSource = GetComponent<AudioSource>();
 	}
 
+
     public bool CanAddItem(GameObject item)
 	{
-		return m_items.Count < m_maxItems;
+        return m_items.Count < m_maxItems;
 	}
 
 	public bool AddItem(GameObject item)
@@ -31,7 +32,7 @@ public class Inventory : MonoBehaviour
 		if (CanAddItem(item) && itemName != "Coins")
 		{
 			m_items.Add(item);
-			m_audioSource.PlayOneShot(m_itemPickupAudio);
+			//m_audioSource.PlayOneShot(m_itemPickupAudio);
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
             AddToUIInventory(item);
 			return true;
