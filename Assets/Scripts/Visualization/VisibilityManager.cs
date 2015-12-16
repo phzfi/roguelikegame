@@ -90,22 +90,22 @@ public class VisibilityManager : MonoBehaviour
 
 	private static bool VisitTile(Vector2i tile)
 	{
-		if (tile.Distance(sm_playerPos) > 30)
+		if (tile.Distance(sm_playerPos) > 30) // If outside sight range, invisible
 			return false;
 
 		if (GetTile(tile) == VisibilityState.open)
 		{
-			LosResult result = LineOfSight.CheckLOS(sm_navAgent, sm_playerPos, tile, tile.Distance(sm_playerPos), false);
+			LosResult result = LineOfSight.CheckLOS(sm_navAgent, sm_playerPos, tile, tile.Distance(sm_playerPos), false); // Cast ray to current tile
 
-			sm_visibilityGrid[tile.y * w + tile.x] = VisibilityState.visible;
+			sm_visibilityGrid[tile.y * w + tile.x] = VisibilityState.visible; // If tile is visible, mark it as such
 			if (result.blocked)
-				sm_visibilityGrid[tile.y * w + tile.x] = sm_navAgent.CanAccess(tile) ? VisibilityState.open : VisibilityState.blocked;
+				sm_visibilityGrid[tile.y * w + tile.x] = sm_navAgent.CanAccess(tile) ? VisibilityState.open : VisibilityState.blocked; // If we can't see the tile, only close the node if it's a wall
 
-			if(GetTile(tile) != VisibilityState.open)
+			if(GetTile(tile) != VisibilityState.open) // Remove only closed nodes from open tiles' list
 				sm_openTiles.Remove(tile);
 
 			if (!result.blocked)
-				return PushAdjacentTiles(tile);
+				return PushAdjacentTiles(tile); // Add adjacent tiles to open tiles' list
 		}
 
 		return false;
@@ -126,7 +126,7 @@ public class VisibilityManager : MonoBehaviour
 		sm_navAgent = navAgent;
 		sm_playerPos = startTile;
 		
-		if (GetTile(startTile) == VisibilityState.open)
+		if (GetTile(startTile) == VisibilityState.open) // If no previous information, start search from current location
 			VisitTile(startTile);
 
 		bool newTiles = true;
@@ -137,7 +137,7 @@ public class VisibilityManager : MonoBehaviour
 			for (int i = 0; i < keys.Count; ++i)
 			{
 				Vector2i currentTile = keys[i];
-				newTiles = newTiles || VisitTile(currentTile);
+				newTiles = newTiles || VisitTile(currentTile); // Visit current tile, checking line of sight and adding adjacent tiles to open tile list
 			}
 		}
 
@@ -145,30 +145,28 @@ public class VisibilityManager : MonoBehaviour
 		List<Vector3> blockedTiles = new List<Vector3>();
 		for (int x = 0; x < w; ++x)
 		{
-			for (int y = 0; y < h; ++y)
+			for (int y = 0; y < h; ++y) // Loop over all tiles, adding visible tiles to a single list for rendering
 			{
 				Vector2i currentTile = new Vector2i(x, y);
 				VisibilityState tileState = GetTile(currentTile);
-
-				//if (tileState == VisibilityState.open)
-					//blockedTiles.Add(MapGrid.GridToWorldPoint(currentTile));
+				
 				if (tileState == VisibilityState.visible)
 					visibleTiles.Add(MapGrid.GridToWorldPoint(currentTile));
 			}
 		}
 
 		var openkeys = new List<Vector2i>(sm_openTiles.Keys);
-		for (int i = 0; i < openkeys.Count; ++i)
+		for (int i = 0; i < openkeys.Count; ++i) // Loop over open nodes, create another list for visualization
 		{
 			Vector2i currentTile = openkeys[i];
 			blockedTiles.Add(MapGrid.GridToWorldPoint(currentTile));
 		}
 
-		sm_closedLosRenderer.CreateMesh(blockedTiles.ToArray());
+		sm_closedLosRenderer.CreateMesh(blockedTiles.ToArray()); // Create meshes from tile lists
 		sm_openLosRenderer.CreateMesh(visibleTiles.ToArray());
 	}
 
-	public static List<Vector3> BreadthFirstSearch()
+	public static List<Vector3> BreadthFirstSearch() // Find any accessible nodes that can be moved into
 	{
 		List<Vector3> result = new List<Vector3>();
 
