@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class LosResult
 {
-	public bool blocked = true;
+	public bool blocked = false;
 	public List<Vector2i> openTiles;
 	public List<Vector2i> blockedTiles;
 }
@@ -59,10 +59,11 @@ public class LineOfSight : MonoBehaviour {
 			currentPos += dir;
 			currentTile = new Vector2i((int)currentPos.x, (int)currentPos.y);
 
-			if (currentTile.Distance(start) > range)
+			//if (currentTile.Distance(start) > range)
+			if(currentTile == stop)
 				break;
 		}
-
+		result.blocked = LosBlocked;
 		return result;
 	}
 }

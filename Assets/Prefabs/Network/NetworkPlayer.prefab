@@ -225,7 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_orderType: 0
   m_attackOrderTarget: 0
-  m_gridSpeed: 6
+  m_gridSpeed: 4
   m_syncer: {fileID: 0}
 --- !u!114 &11444724
 MonoBehaviour:
@@ -256,7 +256,7 @@ MonoBehaviour:
   m_itemPickupAudio: {fileID: 8300000, guid: 4ce5bd5507f54f943915100a6659cb3f, type: 3}
   m_coinPickupAudio: {fileID: 8300000, guid: 8075a1247fb557c4abe9d7f16db83de2, type: 3}
   m_maxItems: 5
-  m_UIElements: {fileID: 140922, guid: 0ffbb74c293c7d24b911855afed5ef9f, type: 2}
+  m_amountOfCoins: 0
 --- !u!114 &11480662
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -273,6 +273,7 @@ MonoBehaviour:
   m_syncer: {fileID: 0}
   m_inventory: {fileID: 0}
   m_equipment: {fileID: 0}
+  m_enemyAI: {fileID: 0}
   m_isPlayer: 1
 --- !u!1001 &100100000
 Prefab:
@@ -353,6 +354,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_isPlayer
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_gridSpeed
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
