@@ -475,7 +475,7 @@ Prefab:
       objectReference: {fileID: 261761855}
     - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_randomFillPercent
-      value: 45
+      value: 43
       objectReference: {fileID: 0}
     - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_smoothingIterations
@@ -483,11 +483,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_frequency
-      value: .150000006
+      value: .200000003
       objectReference: {fileID: 0}
     - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_roomCount
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_maxRoomSize
@@ -503,7 +503,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_standardDeviation
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_useRandomSeed
@@ -512,6 +512,34 @@ Prefab:
     - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_seed
       value: 11/11/2015 4:05:59 PM
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_roomThresholdSize
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_passageWidth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_maxSpaceSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_minSpaceSize
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_meanSpaceSize
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_width
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_height
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}

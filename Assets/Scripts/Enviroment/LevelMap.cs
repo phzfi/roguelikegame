@@ -20,15 +20,20 @@ public class LevelMap : MonoBehaviour
 {
 	public bool m_useRandomSeed;
 	public string m_seed = System.DateTime.Now.ToString();
-	[Range(0, 100)]
+
+    [Range(0, 100)]
 	public int m_randomFillPercent;
     public int m_smoothingIterations;
 
     public float m_frequency;
-    public int m_roomCount;
-    public int m_maxRoomSize;
-    public int m_minRoomSize;
-    public int m_meanRoomSize;
+    public int m_roomThresholdSize;
+    public int m_passageWidth;
+
+    [Range(0, 25)]
+    public int m_spaceCount;
+    public int m_maxSpaceSize;
+    public int m_minSpaceSize;
+    public int m_meanSpaceSize;
     public float m_standardDeviation;
 
 	private Vector2i m_size = new Vector2i(0, 0);
@@ -67,7 +72,9 @@ public class LevelMap : MonoBehaviour
 
         ProcessMap();
 
-        //PlaceRooms();
+        if (m_spaceCount > 0)
+            makeEmptySpaces();
+
         RemoveThinWalls();
 
 		m_navGrid = new NavGrid(this);
@@ -121,19 +128,20 @@ public class LevelMap : MonoBehaviour
         }
     }
 
-    private void PlaceRooms()
+    private void makeEmptySpaces()
     {
+        // Create empty rectangular spaces around on map
         System.Random pseudoRandom = new System.Random(m_seed.GetHashCode());
 
-        for (int i = 0; i < m_roomCount; i++)
+        for (int i = 0; i < m_spaceCount; i++)
         {
-            int roomWidth = (int)NextGaussian(m_meanRoomSize, m_standardDeviation, m_minRoomSize, m_maxRoomSize, pseudoRandom);
-            int roomHeight = (int)NextGaussian(m_meanRoomSize, m_standardDeviation, m_minRoomSize, m_maxRoomSize, pseudoRandom);
-            int x = pseudoRandom.Next(0, m_size.x - roomWidth - 1);
-            int y = pseudoRandom.Next(0, m_size.y - roomHeight - 1);
-            for (int j = x; j < x + roomWidth; j++)
+            int spaceWidth = (int)NextGaussian(m_meanSpaceSize, m_standardDeviation, m_minSpaceSize, m_maxSpaceSize, pseudoRandom);
+            int spaceHeight = (int)NextGaussian(m_meanSpaceSize, m_standardDeviation, m_minSpaceSize, m_maxSpaceSize, pseudoRandom);
+            int x = pseudoRandom.Next(0, m_size.x - spaceWidth - 1);
+            int y = pseudoRandom.Next(0, m_size.y - spaceHeight - 1);
+            for (int j = x; j < x + spaceWidth; j++)
             {
-                for (int k = y; k < y + roomHeight; k++)
+                for (int k = y; k < y + spaceHeight; k++)
                 {
                     if (j != 0 && k != 0 && k != m_size.y - 1 && j != m_size.x - 1)
                         m_map[j, k].m_tileType = MapTileType.Floor;
@@ -171,13 +179,12 @@ public class LevelMap : MonoBehaviour
     {
         // Create rooms and discard tiny rooms
         List<List<Vector2i>> roomRegions = GetRegions(MapTileType.Floor);
-        int roomThresholdSize = 30;
 
         List<Room> rooms = new List<Room>();
 
         for (int i = 0; i < roomRegions.Count; i++)
         {
-            if (roomRegions[i].Count < roomThresholdSize)
+            if (roomRegions[i].Count < m_roomThresholdSize)
             {
                 for (int j = 0; j < roomRegions[i].Count; j++)
                 {
@@ -188,6 +195,9 @@ public class LevelMap : MonoBehaviour
                 rooms.Add(new Room(roomRegions[i], m_map));
             }
         }
+
+        // Sort from largest room to smallest
+        // We pick our largest room as our "Main" room which we will check connectivity to.
         rooms.Sort();
         rooms[0].isMain = true;
         rooms[0].isAccessibleFromMain = true;
@@ -205,14 +215,18 @@ public class LevelMap : MonoBehaviour
             {
                 if (rooms[i].isAccessibleFromMain)
                 {
+                    // These are connected to the main room
                     secondRoomList.Add(rooms[i]);
                 } else
                 {
+                    // These are not connected to the main room
                     firstRoomList.Add(rooms[i]);
                 }
             }
         } else
         {
+            // If we do not care about accessibility from main
+            // we can just keep these two the same.
             firstRoomList = rooms;
             secondRoomList = rooms;
         }
@@ -224,11 +238,16 @@ public class LevelMap : MonoBehaviour
         Room bestRoomB = new Room();
         bool possibleConnection = false;
 
+        // Find the shortest possible connections
+        // For forced accessibility from main we need to look at all possible rooms
+        // that are not connected to main.
+        // Not forced, means we run it independently for each room and connect them to their nearest neighbor.
         for (int i = 0; i < firstRoomList.Count; i++)
         {
             if (!forceAccessiblityFromMain)
             {
                 possibleConnection = false;
+                // If we do not care about accessibility from main room, one connection is enough.
                 if (firstRoomList[i].connectedRooms.Count > 0)
                 {
                     continue;
@@ -237,6 +256,7 @@ public class LevelMap : MonoBehaviour
 
             for (int j = 0; j < secondRoomList.Count; j++)
             {
+                // Skip if the rooms are equal or already connected to each other.
                 if (firstRoomList[i] == secondRoomList[j] || firstRoomList[i].IsConnected(secondRoomList[j])) continue;
                 
                 for (int k = 0; k < firstRoomList[i].edgeTiles.Count; k++)
@@ -259,18 +279,22 @@ public class LevelMap : MonoBehaviour
                     }
                 }
             }
+            // One good connection for each room is enough if forcing is not enabled.
             if (possibleConnection && !forceAccessiblityFromMain)
             {
                 CreatePassage(bestRoomA, bestRoomB, bestTileA, bestTileB);
             }
         }
 
+        // We have checked through all possible rooms for a good connection.
         if (possibleConnection && forceAccessiblityFromMain)
         {
             CreatePassage(bestRoomA, bestRoomB, bestTileA, bestTileB);
             ConnectClosestRooms(rooms, true);
         }
 
+        // First we ran one iteration to connect all nearby rooms their nearest neighbor
+        // Then we need to force that every room is accessible from the main room 
         if (!forceAccessiblityFromMain)
         {
             ConnectClosestRooms(rooms, true);
@@ -279,18 +303,18 @@ public class LevelMap : MonoBehaviour
 
     private void CreatePassage(Room roomA, Room roomB, Vector2i tileA, Vector2i tileB)
     {
+        // Creates a passage between two rooms from tileA to tileB
         Room.ConnectRooms(roomA, roomB);
-        Debug.DrawLine(GridToWorldPos(tileA), GridToWorldPos(tileB), Color.green, 100.0f);
-
         List<Vector2i> line = GetLine(tileA, tileB);
         for (int i = 0; i < line.Count; i++)
         {
-            DrawCircle(line[i], 2);
+            DrawCircle(line[i], m_passageWidth);
         }
     }
 
     private void DrawCircle(Vector2i c, int r)
     {
+        // Turns tiles inside the circle with center c and radius r into floor tiles
         for (int x = -r; x <= r; x++)
         {
             for (int y = -r; y <= r; y++)
@@ -310,6 +334,7 @@ public class LevelMap : MonoBehaviour
 
     private List<Vector2i> GetLine(Vector2i from, Vector2i to)
     {
+        // Bresenham's line algorithm, returns the map tile positions along a line.
         List<Vector2i> line = new List<Vector2i>();
         int x = from.x;
         int y = from.y;
@@ -318,12 +343,10 @@ public class LevelMap : MonoBehaviour
         int dy = to.y - from.y;
 
         bool inverted = false;
-
-        int step = Math.Sign(dx);
-        int gradientStep = Math.Sign(dy);
-
         int longest = Mathf.Abs(dx);
         int shortest = Mathf.Abs(dy);
+        int step; int gradientStep;
+
         if (longest < shortest)
         {
             inverted = true;
@@ -331,9 +354,14 @@ public class LevelMap : MonoBehaviour
             shortest = Mathf.Abs(dx);
             step = Math.Sign(dy);
             gradientStep = Math.Sign(dx);
+        } else
+        {
+            step = Math.Sign(dx);
+            gradientStep = Math.Sign(dy);
         }
-
+        
         int gradientAccumulation = longest / 2;
+
         for (int i = 0; i < longest; i++)
         {
             line.Add(new Vector2i(x, y));
@@ -363,16 +391,9 @@ public class LevelMap : MonoBehaviour
         return line;
     }
 
-    // temporary debug function
-    private Vector3 GridToWorldPos(Vector2i tile)
-    {
-        float x = ((float)tile.x + 0.5f) * 1.5f;
-        float y = ((float)tile.y + 0.5f) * 1.5f;
-        return new Vector3(x, y, 0.0f);
-    }
-
     private List<List<Vector2i>> GetRegions(MapTileType type)
     {
+        // Get regions of a certain tile type.
         List<List<Vector2i>> regions = new List<List<Vector2i>>();
         bool[,] visited = new bool[Width, Height];
 
@@ -399,6 +420,7 @@ public class LevelMap : MonoBehaviour
 
     private List<Vector2i> GetRegionTiles(int startX, int startY)
     {
+        // Flood fill algorithm, fills in neighbors until it collides with a wall
         List<Vector2i> tiles = new List<Vector2i>();
         bool[,] visited = new bool[Width, Height];
         MapTileType type = m_map[startX, startY].m_tileType;
@@ -411,6 +433,7 @@ public class LevelMap : MonoBehaviour
             Vector2i tile = queue.Dequeue();
             tiles.Add(tile);
 
+            // Check neighboring tiles if they haven't been visited and visit and put into queue if not visited.
             if (IsInRange(tile.x - 1, tile.y) && !visited[tile.x - 1, tile.y] && m_map[tile.x - 1, tile.y].m_tileType == type)
             {
                 visited[tile.x - 1, tile.y] = true;
@@ -522,6 +545,7 @@ public class LevelMap : MonoBehaviour
             connectedRooms = new List<Room>();
             edgeTiles = new List<Vector2i>();
 
+            // Create edge tiles
             for (int i = 0; i < roomSize; i++)
             {
                 Vector2i tile = tiles[i];
@@ -540,6 +564,7 @@ public class LevelMap : MonoBehaviour
 
         public void SetAccessibleFromMain()
         {
+            // Recursively set accessibility for this room's connections.
             if (!isAccessibleFromMain)
             {
                 isAccessibleFromMain = true;
@@ -552,6 +577,7 @@ public class LevelMap : MonoBehaviour
 
         public static void ConnectRooms(Room first, Room second)
         {
+            // If one is accessible from main, we need to set the other to be accessible.
             if (first.isAccessibleFromMain)
             {
                 second.SetAccessibleFromMain();
