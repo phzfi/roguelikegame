@@ -47,9 +47,6 @@ public class MovementManager : MonoBehaviour
 		if (mover == null)
 			return;
 		mover.VisualizeMove(order.m_targetGridPos);
-
-		if(controller.isLocalPlayer && controller.m_isPlayer)
-			VisibilityManager.UpdateMoveRange();
 	}
 
 	public static void OrderAttack(AttackOrder order)

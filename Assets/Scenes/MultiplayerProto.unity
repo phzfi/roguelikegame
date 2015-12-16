@@ -1568,7 +1568,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -.0199999996
       objectReference: {fileID: 0}
     - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1592,12 +1592,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 152294, guid: c201887a95687be48a2dfdc828debd04, type: 2}
       propertyPath: m_Name
-      value: FogOfWarRenderer
+      value: FogOfWarRendererOpen
       objectReference: {fileID: 0}
     - target: {fileID: 11418904, guid: c201887a95687be48a2dfdc828debd04, type: 2}
       propertyPath: m_name
       value: FogOfWar
       objectReference: {fileID: 0}
+    - target: {fileID: 2371552, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cdbc740f930a5be468156cb22cbdab63, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c201887a95687be48a2dfdc828debd04, type: 2}
   m_IsPrefabParent: 0
@@ -1684,6 +1688,60 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 756baaac003b0be409756b7a86652bd3, type: 2}
+  m_IsPrefabParent: 0
+--- !u!1001 &1523264242
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1307245963}
+    m_Modifications:
+    - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -.0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11418904, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2371552, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: db3322e65aea6344a8b85cee572c3116, type: 2}
+    - target: {fileID: 152294, guid: c201887a95687be48a2dfdc828debd04, type: 2}
+      propertyPath: m_Name
+      value: FogOfWarRendererBlocked
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: c201887a95687be48a2dfdc828debd04, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &1560692480 stripped
 Transform:
@@ -1787,7 +1845,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -.00999999978
+      value: -.100000001
       objectReference: {fileID: 0}
     - target: {fileID: 412772, guid: c201887a95687be48a2dfdc828debd04, type: 2}
       propertyPath: m_LocalRotation.x
