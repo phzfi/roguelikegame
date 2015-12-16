@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class EquipmentSlot : MonoBehaviour, IDropHandler
 {
 
-    public Item.Type m_itemType = Item.Type.OTHER;
+    public Item.ItemType m_itemType = Item.ItemType.OTHER;
 
     public GameObject m_inventory;
     
@@ -57,7 +57,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
                 Debug.Log("Items equipped " + m_equipment.m_equipment.Count);
                 item.m_returnTo = transform;
             }
-            else if(m_itemType == Item.Type.INVENTORY)
+            else if(m_itemType == Item.ItemType.INVENTORY)
             {
                 var oldSlot = item.m_returnTo.GetComponent<EquipmentSlot>();
                 if(oldSlot != null)

@@ -518,6 +518,13 @@ public class SyncManager : NetworkBehaviour
 		sm_pickupOrders.Add(order);
 	}
 
+	public static bool IsTurnInProgress()
+	{
+		if (sm_clientData == null)
+			return false;
+		return sm_clientData.m_turnInProgress;
+	}
+
 	void Reset()
 	{
 		sm_currentTurn = 0;
