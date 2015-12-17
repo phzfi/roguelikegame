@@ -825,6 +825,54 @@ Prefab:
       propertyPath: randomFillPercent
       value: 44
       objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_randomFillPercent
+      value: 44
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_smoothingIterations
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_passageWidth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_frequency
+      value: .200000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_roomThresholdSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_spaceCount
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_maxSpaceSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_minSpaceSize
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_meanSpaceSize
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_standardDeviation
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_useRandomSeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
   m_IsPrefabParent: 0
