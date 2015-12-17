@@ -8,13 +8,6 @@ public class UnitTests
     GameObject itemToAdd = GameObject.CreatePrimitive(PrimitiveType.Cube);
     GameObject testPlayer = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-    [Test]
-    public void TestInventory()
-    {
-        Inventory inv = new Inventory();
-        Assert.That(inv != null);
-    }
-
 
     [Test]
     public void TestOneItemPickup()
@@ -55,14 +48,31 @@ public class UnitTests
     }
 
     [Test]
-    public void TestPlayerDie()
+    public void TestMultiplyVector2i()
     {
-        var combatSystem = testPlayer.AddComponent<CombatSystem>();
+        Vector2i a = new Vector2i(5, 3);
+        Vector2i b = new Vector2i(-2, 4);
 
-        int hp = 5;
-        combatSystem.m_currentHp = hp;
-        combatSystem.GetHit(5);
-        Assert.That(testPlayer.activeInHierarchy);
+        Assert.That(a * b == new Vector2i(-10, 12));
+
+    }
+
+    [Test]
+    public void TestSumVector2i()
+    {
+        Vector2i a = new Vector2i(5, 3);
+        Vector2i b = new Vector2i(-2, 4);
+
+        Assert.That(a + b == new Vector2i(3, 7));
+    }
+
+    [Test]
+    public void TestDifferenceVector2i()
+    {
+        Vector2i a = new Vector2i(5, 3);
+        Vector2i b = new Vector2i(-2, 4);
+
+        Assert.That(a - b == new Vector2i(7, -1));
     }
 
 }
