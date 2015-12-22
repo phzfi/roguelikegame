@@ -4,10 +4,17 @@ Preliminary versions. Some Loops might have cracks at beginning of audio file (d
 08.12.2015 - Audio Version 0.2
 Action sounds. Including two energy action sounds which are just tests (will provide actual ones with more variety this week).
 
+21.12.2015 - Audio Version 0.3
+Barehand attack sounds. Fixed bow show sound which had previously background noise mixed in. Added another variation for energy attack.
+
 Actions:
+- attack_barehand_1.mp3 (Barehand attack chunky)
+- attack_barehand_2.mp3 (Barehand attack light)
+- attack_bow_fixed.mp3 (Bow shot, previous had background noise mixed in)
 - attack_bow.mp3 (Bow shot)
-- attack_energylong.mp3 ()
-- attack_energyrepeating.mp3 ()
+- attack_energy.mp3 (Energy variation)
+- attack_energylong.mp3 (Energy with decay)
+- attack_energyrepeating.mp3 (Energy repeating)
 - attack_throwingknife.mp3 (Throwing knife)
 - sword_dagger.mp3 (Dagger)
 - sword_twohand.mp3 (Two hand sword)
