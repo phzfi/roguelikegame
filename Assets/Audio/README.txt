@@ -5,7 +5,7 @@ Preliminary versions. Some Loops might have cracks at beginning of audio file (d
 Action sounds. Including two energy action sounds which are just tests (will provide actual ones with more variety this week).
 
 21.12.2015 - Audio Version 0.3
-Barehand attack sounds. Fixed bow show sound which had previously background noise mixed in. Added another variation for energy attack.
+Barehand attack sounds. Fixed bow shot sound which had previously background noise mixed in. Added another variation for energy attack.
 
 Actions:
 - attack_barehand_1.mp3 (Barehand attack chunky)
