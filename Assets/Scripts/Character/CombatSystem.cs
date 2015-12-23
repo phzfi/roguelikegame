@@ -11,7 +11,7 @@ public class CombatSystem : NetworkBehaviour
 	public int m_damage = 1;
 	public Text m_textPrefab;
 
-	private Canvas m_textCanvas;
+	private GameObject m_textCanvas;
 	private Text m_label;
 	private Camera m_camera;
 	private Inventory m_inventory;
@@ -20,7 +20,7 @@ public class CombatSystem : NetworkBehaviour
 	public void Start()
 	{
 		m_currentHp = m_maxHp;
-		m_textCanvas = GameObject.FindGameObjectWithTag("TextCanvas").GetComponent<Canvas>();
+		m_textCanvas = GameObject.FindGameObjectWithTag("TextCanvas");
 		m_camera = FindObjectOfType<Camera>();
 		m_label = Instantiate(m_textPrefab);
 		m_label.transform.SetParent(m_textCanvas.transform, true);

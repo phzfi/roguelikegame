@@ -16,7 +16,7 @@ public class MenuManager : MonoBehaviour
 	public AudioClip m_clickAudio;
     public GameObject m_settings;
     public Slider m_volume;
-    public GameObject m_characterButtons;
+    public GameObject m_actionBar;
 
     public void Start()
 	{
@@ -61,14 +61,14 @@ public class MenuManager : MonoBehaviour
 	{
 		m_joinMenu.GetComponent<JoinMenuScreen>().JoinGame();
 		sm_menuOpen = false;
-        m_characterButtons.SetActive(true);
+        m_actionBar.SetActive(true);
 	}
 
 	public void HostGameFromHostMenu()
 	{
 		m_hostMenu.GetComponent<HostMenuScreen>().HostGame();
 		sm_menuOpen = false;
-        m_characterButtons.SetActive(true);
+        m_actionBar.SetActive(true);
     }
 
 	public void ExitGame()

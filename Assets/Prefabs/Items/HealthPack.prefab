@@ -19,7 +19,6 @@ GameObject:
   - 114: {fileID: 11477648}
   - 114: {fileID: 11473756}
   - 114: {fileID: 11449560}
-  - 114: {fileID: 11402394}
   m_Layer: 0
   m_Name: HealthPack
   m_TagString: Untagged
@@ -190,27 +189,6 @@ Light:
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 1, y: 1}
---- !u!114 &11402394
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65238f1337e04354d9644132144b5875, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_onRightDown:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: RightButtonEvent+RightButton, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  m_onRightUp:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: RightButtonEvent+RightButton, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
 --- !u!114 &11449560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -339,7 +317,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: d004799ed86dd9a4d9fd037f822ea3b9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 90bd8b3b9a5588246a730ef4f996cf2d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -445,6 +423,11 @@ Prefab:
       propertyPath: m_onRightDown.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 90bd8b3b9a5588246a730ef4f996cf2d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100182}
