@@ -250,6 +250,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 478998}
   - 114: {fileID: 11461300}
+  - 114: {fileID: 11488864}
   m_Layer: 5
   m_Name: SettingsObjects
   m_TagString: Untagged
@@ -791,7 +792,7 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1057,6 +1058,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &11488864
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 946dbe36e2c33d0408392193c420f50a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_exitMenu: {fileID: 113830}
+  m_exitSettings: {fileID: 189136}
 --- !u!114 &11491378
 MonoBehaviour:
   m_ObjectHideFlags: 1
