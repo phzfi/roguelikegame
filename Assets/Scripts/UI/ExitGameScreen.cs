@@ -24,11 +24,20 @@ public class ExitGameScreen : NetworkBehaviour {
     }
     
 
-    public void OpenExitGamePanel()
+    public void ToggleExitGamePanel()
     {
-        m_exitGame.SetActive(true);
-        m_volumeSlider.value = AudioListener.volume;
-        sm_exitingGame = true;
+        if(!sm_exitingGame)
+        {
+            m_exitGame.SetActive(true);
+            m_volumeSlider.value = AudioListener.volume;
+            sm_exitingGame = true;
+        }
+        else
+        {
+            m_exitGame.SetActive(false);
+            sm_exitingGame = false;
+        }
+        
     }
 
     public void ContinueGame()

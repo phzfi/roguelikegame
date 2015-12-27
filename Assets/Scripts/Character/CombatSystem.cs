@@ -10,12 +10,15 @@ public class CombatSystem : NetworkBehaviour
 	public int m_maxHp = 3;
 	public int m_damage = 1;
 	public Text m_textPrefab;
+    public AttackStyle m_currentAttackStyle = AttackStyle.MELEE;
 
 	private GameObject m_textCanvas;
 	private Text m_label;
 	private Camera m_camera;
 	private Inventory m_inventory;
 	private CharController m_controller;
+
+    public enum AttackStyle { MELEE, MAGE, RANGED };
 
 	public void Start()
 	{

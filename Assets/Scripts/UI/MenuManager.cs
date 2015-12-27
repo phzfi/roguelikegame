@@ -101,9 +101,9 @@ public class MenuManager : MonoBehaviour
         m_settings.GetComponent<SettingsMenuScreen>().CloseCredits();
     }
 
-    public void OpenExitGame()
+    public void ToggleExitGame()
     {
-        m_exitMenu.GetComponent<ExitGameScreen>().OpenExitGamePanel();
+        m_exitMenu.GetComponent<ExitGameScreen>().ToggleExitGamePanel();
     }
 
     public void CloseExitGame()
