@@ -43,9 +43,6 @@ public class Item : NetworkBehaviour
 		var inventory = obj.GetComponent<Inventory>();
 		if (inventory == null || !inventory.AddItem(gameObject))
 			return;
-
-		if(m_name == "Coins")
-            gameObject.SetActive(false);
 		ItemManager.UnregisterFromMap(ID);
 		m_onMap = false;
 	}
