@@ -27,10 +27,10 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
     void Start()
     {
         m_itemType = GetComponent<Item>().m_typeOfItem;
-        var inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas");
-        for(int i = 0; i < inventoryCanvas.transform.childCount; ++i)
+        var panels = GameObject.FindGameObjectWithTag("InventoryCanvas").transform.GetChild(0);
+        for(int i = 0; i < panels.childCount; ++i)
         {
-            var equipment = inventoryCanvas.transform.GetChild(i);
+            var equipment = panels.transform.GetChild(i);
             if (equipment.tag == "Equipment")
             {
                 var equipmentPanel = equipment.GetChild(0);
@@ -49,7 +49,8 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
     public void OnDrag(PointerEventData eventData)
     {
-        transform.position = eventData.position;
+        Vector2 pos = eventData.position;
+        transform.position = pos;
     }
 
     public void OnBeginDrag(PointerEventData eventData)

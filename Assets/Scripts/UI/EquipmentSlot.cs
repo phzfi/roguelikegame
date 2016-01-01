@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class EquipmentSlot : MonoBehaviour, IDropHandler
 {
 
     public Item.ItemType m_itemType = Item.ItemType.OTHER;
-
-    public GameObject m_inventory;
     
     private bool m_containsItem = false;
     private Equipment m_equipment;
@@ -50,28 +49,37 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
                 else
                 {
                     var oldEquippedItem = transform.GetChild(transform.childCount - 1);
-                    oldEquippedItem.SetParent(m_inventory.transform);
+                    oldEquippedItem.SetParent(item.m_returnTo.transform);
                     UnequipItem(oldEquippedItem.gameObject);
                 }
                 EquipItem(item.gameObject);
-                Debug.Log("Items equipped " + m_equipment.m_equipment.Count);
+                item.m_returnTo.GetComponent<InventorySlot>().m_containsItem = false;
                 item.m_returnTo = transform;
             }
             else if(m_itemType == Item.ItemType.INVENTORY)
             {
-                var oldSlot = item.m_returnTo.GetComponent<EquipmentSlot>();
-                if(oldSlot != null)
+                var oldEquipmentSlot = item.m_returnTo.GetComponent<EquipmentSlot>();
+                var oldInventorySlot = item.m_returnTo.GetComponent<InventorySlot>();
+                if(oldEquipmentSlot != null)
                 {
-                    oldSlot.m_containsItem = false;
+                    oldEquipmentSlot.m_containsItem = false;
                     UnequipItem(item.gameObject);
                 }
+                if(oldInventorySlot != null)
+                {
+                    if(!GetComponent<InventorySlot>().m_containsItem)
+                    {
+                        oldInventorySlot.GetComponent<InventorySlot>().m_containsItem = false;
+                    }
+                }
                 item.m_returnTo = transform;
+                GetComponent<InventorySlot>().m_containsItem = true;
             }
+            //TODO: fix case of dragging from equipment to correct item in inventory
             else
             {
                 m_warningSign.SetActive(true);
             }
-            Debug.Log("Items equipped " + m_equipment.m_equipment.Count);
         }
     }
 }

@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
 	public int m_amountOfCoins = 0;
     public List<GameObject> m_items;
 
-	private AudioSource m_audioSource;    
+	private AudioSource m_audioSource;   
 
 	void Start()
 	{
@@ -21,13 +21,13 @@ public class Inventory : MonoBehaviour
 		m_audioSource = GetComponent<AudioSource>();
 	}
 
-    public int AmountOfPotions()
+    public int AmountOfItem(string itemName)
     {
         int count = 0;
         for(int i = 0; i < m_items.Count; ++i)
         {
             var item = m_items[i].GetComponent<Item>();
-            if (item.m_name == "Potion")
+            if (item.m_name == itemName)
                 count += 1;
         }
         return count;
@@ -35,17 +35,16 @@ public class Inventory : MonoBehaviour
 
     public void UpdatePotionCount()
     {
-        var inventoryPanel = InventoryPanel();
-        int amountOfPotions = AmountOfPotions();
-        for(int i = 0; i < inventoryPanel.transform.childCount; ++i)
+        var slots = InventorySlots();
+        int amountOfPotions = AmountOfItem("Potion");
+        for(int i = 0; i < slots.transform.childCount; ++i)
         {
-            var child = inventoryPanel.transform.GetChild(i);
+            var child = slots.transform.GetChild(0).GetChild(i);
             var item = child.gameObject.GetComponent<Item>();
             if(item != null)
             {
                 if(item.m_name == "Potion")
                 {
-                    Debug.Log(item.gameObject);
                     for(int j = 0; i < item.transform.childCount; ++j)
                     {
                         var text = item.transform.GetChild(j).GetComponent<Text>();
@@ -77,7 +76,7 @@ public class Inventory : MonoBehaviour
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
             if (itemName == "Potion")
             {
-                if (AmountOfPotions() <= 1)
+                if (AmountOfItem("Potion") <= 1)
                     AddToUIInventory(item);
                 else
                 {
@@ -102,14 +101,23 @@ public class Inventory : MonoBehaviour
 		return false;
 	}
 
-    public GameObject InventoryPanel()
+    public GameObject InventorySlots()
     {
-        var inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas");
-        for (int i = 0; i < inventoryCanvas.transform.childCount; ++i)
+        var inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas").transform.GetChild(0);
+        for (int i = 0; i < inventoryCanvas.childCount; ++i)
         {
-            var child = inventoryCanvas.transform.GetChild(i);
+            var child = inventoryCanvas.GetChild(i);
             if (child.tag == "Inventory")
-                return child.GetChild(0).gameObject;
+            {
+                for(int j = 0; j < child.GetChild(0).childCount; ++j)
+                {
+                    var content = child.GetChild(0).GetChild(j);
+                    if(content.tag == "InventorySlots")
+                    {
+                        return content.gameObject;
+                    }
+                }
+            }  
         }
         return null;
     }
@@ -118,7 +126,20 @@ public class Inventory : MonoBehaviour
     //then rendered to the panel.
     public void AddToUIInventory(GameObject item)
     {
-        var inventoryPanel = InventoryPanel();
-        item.transform.SetParent(inventoryPanel.transform);      
+        GameObject inventorySlots = InventorySlots();
+
+        for(int i = 0; i < inventorySlots.transform.childCount; ++i)
+        {
+            var slot = inventorySlots.transform.GetChild(i).GetComponent<InventorySlot>();
+            if(!slot.m_containsItem)
+            {
+                item.transform.SetParent(slot.transform);
+                item.GetComponent<RectTransform>().localScale = Vector3.one;
+                slot.m_containsItem = true;
+                break;
+            }
+        }    
     }
+
+    
 }

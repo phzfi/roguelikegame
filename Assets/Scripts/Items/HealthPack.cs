@@ -19,7 +19,8 @@ public class HealthPack : MonoBehaviour
             {
                 inventory.m_items.Remove(item.gameObject);
                 inventory.UpdatePotionCount();
-                if(inventory.AmountOfPotions() < 1)
+                Debug.Log("Health potion used.");
+                if(inventory.AmountOfItem("Potion") < 1)
                     Destroy(gameObject);
                 return;
             }
