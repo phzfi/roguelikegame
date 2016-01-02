@@ -20,7 +20,7 @@ public class Item : NetworkBehaviour
     [SyncVar]
 	private bool m_onMap = true;
 
-    public enum ItemType { WEAPON, HEAD, BODY, LEGS, RING, SHIELD, OTHER, INVENTORY }; //possible types of items, inventory as well to drag items back from equipment
+    public enum ItemType { WEAPON, HEAD, BODY, LEGS, RING, SHIELD, OTHER };
 
     public ItemType m_typeOfItem = ItemType.OTHER;
 
@@ -43,9 +43,6 @@ public class Item : NetworkBehaviour
 		var inventory = obj.GetComponent<Inventory>();
 		if (inventory == null || !inventory.AddItem(gameObject))
 			return;
-
-		if(m_name == "Coins")
-            gameObject.SetActive(false);
 		ItemManager.UnregisterFromMap(ID);
 		m_onMap = false;
 	}

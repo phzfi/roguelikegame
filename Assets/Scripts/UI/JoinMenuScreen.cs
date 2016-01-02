@@ -21,7 +21,8 @@ public class JoinMenuScreen : NetworkBehaviour
 	{
 		if (!NetworkClient.active && !NetworkServer.active && m_manager.matchMaker == null)
 		{
-			m_manager.StartClient();
+            //Application.LoadLevel(1); //TODO: fix loading main scene from main menu
+            m_manager.StartClient();
 			m_serverPanel.SetActive(false);
 		}
 	}

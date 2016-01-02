@@ -43,6 +43,8 @@ MonoBehaviour:
   m_equipmentPanel: {fileID: 0}
   m_wrongSlotWarningSign: {fileID: 0}
   m_coinsText: {fileID: 0}
+  m_playerNameText: {fileID: 0}
+  m_healthBar: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

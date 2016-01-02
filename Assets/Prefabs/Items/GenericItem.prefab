@@ -18,6 +18,7 @@ GameObject:
   - 114: {fileID: 11419730}
   - 225: {fileID: 22543246}
   - 114: {fileID: 11485374}
+  - 114: {fileID: 11496738}
   m_Layer: 0
   m_Name: GenericItem
   m_TagString: Untagged
@@ -203,7 +204,6 @@ MonoBehaviour:
   m_returnTo: {fileID: 0}
   m_placeholderParent: {fileID: 0}
   m_changeIndex: 0
-  m_slots: {fileID: 0}
   m_itemType: 5
 --- !u!114 &11444866
 MonoBehaviour:
@@ -244,10 +244,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: 70
-  m_PreferredHeight: 70
+  m_MinWidth: 40
+  m_MinHeight: 40
+  m_PreferredWidth: 40
+  m_PreferredHeight: 40
   m_FlexibleWidth: 0
   m_FlexibleHeight: 0
 --- !u!114 &11487372
@@ -266,7 +266,7 @@ MonoBehaviour:
   m_strength: 0
   m_agility: 0
   m_intelligence: 0
-  m_typeOfItem: 5
+  m_typeOfItem: 0
 --- !u!114 &11489304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -299,6 +299,18 @@ MonoBehaviour:
     i15: 229
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &11496738
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 112124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fd41680bdeb77f4a8aa087f9f66f0a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tooltip: {fileID: 175626, guid: 36879e06ff64652479fd9736886d233b, type: 2}
 --- !u!222 &22216512
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -456,11 +468,37 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_PreferredHeight
-      value: 70
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_PreferredWidth
-      value: 70
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_tooltip
+      value: 
+      objectReference: {fileID: 175626, guid: 36879e06ff64652479fd9736886d233b, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_itemName
+      value: 
+      objectReference: {fileID: 11409884, guid: e0dca293a82c07a40984e9f006d0c6bf,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_infoText
+      value: 
+      objectReference: {fileID: 11494634, guid: e0dca293a82c07a40984e9f006d0c6bf,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_MinWidth
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_MinHeight
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_typeOfItem
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
