@@ -16,7 +16,8 @@ public class MenuManager : MonoBehaviour
 	public AudioClip m_clickAudio;
     public GameObject m_settings;
     public Slider m_volume;
-    public GameObject m_characterButtons;
+    public GameObject m_actionBar;
+    public Image m_background;
 
     public void Start()
 	{
@@ -61,14 +62,16 @@ public class MenuManager : MonoBehaviour
 	{
 		m_joinMenu.GetComponent<JoinMenuScreen>().JoinGame();
 		sm_menuOpen = false;
-        m_characterButtons.SetActive(true);
+        m_actionBar.SetActive(true);
+        m_background.enabled = false;
 	}
 
 	public void HostGameFromHostMenu()
 	{
 		m_hostMenu.GetComponent<HostMenuScreen>().HostGame();
 		sm_menuOpen = false;
-        m_characterButtons.SetActive(true);
+        m_actionBar.SetActive(true);
+        m_background.enabled = false;
     }
 
 	public void ExitGame()
@@ -101,9 +104,9 @@ public class MenuManager : MonoBehaviour
         m_settings.GetComponent<SettingsMenuScreen>().CloseCredits();
     }
 
-    public void OpenExitGame()
+    public void ToggleExitGame()
     {
-        m_exitMenu.GetComponent<ExitGameScreen>().OpenExitGamePanel();
+        m_exitMenu.GetComponent<ExitGameScreen>().ToggleExitGamePanel();
     }
 
     public void CloseExitGame()

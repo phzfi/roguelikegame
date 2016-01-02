@@ -49,6 +49,7 @@ public class HostMenuScreen : NetworkBehaviour
                     break;
             };
 #endif
+            //Application.LoadLevel(1); //TODO: fix loading main scene from main menu
 			m_manager.networkAddress = m_IPaddress.text;
 			m_manager.StartHost();
 			m_hostGamePanel.SetActive(false);
