@@ -17,6 +17,7 @@ GameObject:
   - 114: {fileID: 11492040}
   - 114: {fileID: 11489656}
   - 114: {fileID: 11490750}
+  - 114: {fileID: 11454794}
   m_Layer: 0
   m_Name: Potion
   m_TagString: Untagged
@@ -346,6 +347,22 @@ MonoBehaviour:
     i15: 238
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &11454794
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c3d27e016ec3274c84bb1a836b61245, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_placeholderItem: {fileID: 0}
+  m_returnTo: {fileID: 0}
+  m_placeholderParent: {fileID: 0}
+  m_changeIndex: 0
+  m_itemType: 0
 --- !u!114 &11470312
 MonoBehaviour:
   m_ObjectHideFlags: 1

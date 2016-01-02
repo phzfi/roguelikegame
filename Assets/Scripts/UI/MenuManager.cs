@@ -17,6 +17,7 @@ public class MenuManager : MonoBehaviour
     public GameObject m_settings;
     public Slider m_volume;
     public GameObject m_actionBar;
+    public Image m_background;
 
     public void Start()
 	{
@@ -62,6 +63,7 @@ public class MenuManager : MonoBehaviour
 		m_joinMenu.GetComponent<JoinMenuScreen>().JoinGame();
 		sm_menuOpen = false;
         m_actionBar.SetActive(true);
+        m_background.enabled = false;
 	}
 
 	public void HostGameFromHostMenu()
@@ -69,6 +71,7 @@ public class MenuManager : MonoBehaviour
 		m_hostMenu.GetComponent<HostMenuScreen>().HostGame();
 		sm_menuOpen = false;
         m_actionBar.SetActive(true);
+        m_background.enabled = false;
     }
 
 	public void ExitGame()

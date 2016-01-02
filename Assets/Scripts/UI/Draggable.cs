@@ -74,9 +74,9 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
             var outline = child.GetComponent<Outline>();
             if (outline != null)
             {
-                if (child.GetComponent<EquipmentSlot>() != null)
+                if (child.GetComponent<Slot>() != null)
                 {
-                    if (child.GetComponent<EquipmentSlot>().m_itemType == m_itemType)
+                    if (child.GetComponent<Slot>().m_itemType == m_itemType)
                     {
                         outline.effectColor = new Color(0, 1, 0, 1);
                         outline.enabled = true;

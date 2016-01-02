@@ -3,12 +3,12 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-public class EquipmentSlot : MonoBehaviour, IDropHandler
+public class Slot : MonoBehaviour, IDropHandler
 {
-
+    public bool m_isInventory = false;
     public Item.ItemType m_itemType = Item.ItemType.OTHER;
-    
-    private bool m_containsItem = false;
+    public bool m_containsItem = false;
+
     private Equipment m_equipment;
     private int m_playerID;
 
@@ -42,7 +42,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
         {
             if (m_itemType == item.m_itemType)
             {
-                if(!m_containsItem)
+                if (!m_containsItem)
                 {
                     m_containsItem = true;
                 }
@@ -53,29 +53,47 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
                     UnequipItem(oldEquippedItem.gameObject);
                 }
                 EquipItem(item.gameObject);
-                item.m_returnTo.GetComponent<InventorySlot>().m_containsItem = false;
+                item.m_returnTo.GetComponent<Slot>().m_containsItem = false;
                 item.m_returnTo = transform;
             }
-            else if(m_itemType == Item.ItemType.INVENTORY)
+            else if (m_isInventory)
             {
-                var oldEquipmentSlot = item.m_returnTo.GetComponent<EquipmentSlot>();
-                var oldInventorySlot = item.m_returnTo.GetComponent<InventorySlot>();
-                if(oldEquipmentSlot != null)
+                var oldSlot = item.m_returnTo.GetComponent<Slot>();
+
+                if (oldSlot.m_isInventory && !m_containsItem) //for moving an item to a different slot in inventory
                 {
-                    oldEquipmentSlot.m_containsItem = false;
+                    oldSlot.m_containsItem = false;
+                    item.m_returnTo = transform;
+                    m_containsItem = true;
+                }
+                else if (oldSlot.m_isInventory && m_containsItem) //for swapping two items in inventory
+                {
+                    var swapItem = transform.GetChild(0).GetComponent<Draggable>();
+                    swapItem.m_returnTo = oldSlot.transform;
+                    item.m_returnTo = transform;
+                    swapItem.transform.SetParent(swapItem.m_returnTo);
+                }
+
+                else if (!oldSlot.m_isInventory && !m_containsItem) //for unequipping items
+                {
+                    oldSlot.m_containsItem = false;
+                    item.m_returnTo = transform;
+                    m_containsItem = true;
                     UnequipItem(item.gameObject);
                 }
-                if(oldInventorySlot != null)
+                else if (!oldSlot.m_isInventory && m_containsItem) //for swapping items by dragging from equipment to inventory
                 {
-                    if(!GetComponent<InventorySlot>().m_containsItem)
+                    var swapEquippedItem = transform.GetChild(0).GetComponent<Item>();
+                    if (swapEquippedItem.m_typeOfItem == oldSlot.m_itemType)
                     {
-                        oldInventorySlot.GetComponent<InventorySlot>().m_containsItem = false;
+                        UnequipItem(item.gameObject);
+                        EquipItem(swapEquippedItem.gameObject);
+                        swapEquippedItem.GetComponent<Draggable>().m_returnTo = oldSlot.transform;
+                        swapEquippedItem.transform.SetParent(oldSlot.transform);
+                        item.m_returnTo = transform;
                     }
                 }
-                item.m_returnTo = transform;
-                GetComponent<InventorySlot>().m_containsItem = true;
             }
-            //TODO: fix case of dragging from equipment to correct item in inventory
             else
             {
                 m_warningSign.SetActive(true);
