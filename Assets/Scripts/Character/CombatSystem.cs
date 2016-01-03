@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System.Collections.Generic;
+
 
 public class CombatSystem : NetworkBehaviour
 {
@@ -71,38 +72,32 @@ public class CombatSystem : NetworkBehaviour
 
 	public void DropItems()
     {
-        // TODO: Switch to ItemSpawners
-        if (m_inventory.m_amountOfCoins > 0) {
-			for (int i = 0; i < m_inventory.m_amountOfCoins; i++) {
-				Vector3 pos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
-				GameObject obj = (GameObject)Instantiate(m_coinsPrefab, pos, Quaternion.identity);
-                if (obj == null) continue;
-				var item = obj.GetComponent<Item>();
-				
-				ItemManager.GetID(out item.ID);
-				item.m_pos = MapGrid.WorldToGridPoint(transform.position);
-				
-				NetworkServer.Spawn(obj);
-			}
+        List<GameObject> itemList = new List<GameObject>();
+ 
+       	for (int i = 0; i < m_inventory.m_amountOfCoins; i++) {
+            GameObject obj = m_coinsPrefab;
+            if (obj == null) continue;
+            itemList.Add(obj);
 		}
-        
-        // TODO: Same here
-        if (m_inventory.m_items.Count > 0)
+		
+        for (int i = 0; i < m_inventory.m_items.Count; i++)
         {
-            for (int i = 0; i < m_inventory.m_items.Count; ++i)
-            {
-                Vector3 pos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
-                GameObject obj = (GameObject) Instantiate(m_inventory.m_items[i], pos, Quaternion.identity);
-                if (obj == null) continue;
-                var item = obj.GetComponent<Item>();
-
-                ItemManager.GetID(out item.ID);
-                item.m_pos = MapGrid.WorldToGridPoint(transform.position);
-
-                NetworkServer.Spawn(obj);
-            }
+            GameObject obj = m_inventory.m_items[i];
+            if (obj == null) continue;
+            itemList.Add(obj);
         }
-	}
+
+        for (int i = 0; i < itemList.Count; i++)
+        {
+            Vector3 pos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
+            GameObject obj = (GameObject)Instantiate(itemList[i], pos, Quaternion.identity);
+            var item = obj.GetComponent<Item>();
+            ItemManager.GetID(out item.ID);
+            item.m_pos = MapGrid.WorldToGridPoint(pos);
+            NetworkServer.Spawn(obj);
+            Debug.Log("Dropped item: " + item.m_name + ", id: " + item.ID);
+        }
+    }
 
 	public void Die()
 	{
