@@ -69,20 +69,39 @@ public class CombatSystem : NetworkBehaviour
 		}
 	}
 
-	public void DropItems() {
-		if (m_inventory.m_amountOfCoins > 0) {
+	public void DropItems()
+    {
+        // TODO: Switch to ItemSpawners
+        if (m_inventory.m_amountOfCoins > 0) {
 			for (int i = 0; i < m_inventory.m_amountOfCoins; i++) {
 				Vector3 pos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
 				GameObject obj = (GameObject)Instantiate(m_coinsPrefab, pos, Quaternion.identity);
+                if (obj == null) continue;
 				var item = obj.GetComponent<Item>();
 				
 				ItemManager.GetID(out item.ID);
-				//ItemManager.Register (item);
 				item.m_pos = MapGrid.WorldToGridPoint(transform.position);
 				
 				NetworkServer.Spawn(obj);
 			}
 		}
+        
+        // TODO: Same here
+        if (m_inventory.m_items.Count > 0)
+        {
+            for (int i = 0; i < m_inventory.m_items.Count; ++i)
+            {
+                Vector3 pos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
+                GameObject obj = (GameObject) Instantiate(m_inventory.m_items[i], pos, Quaternion.identity);
+                if (obj == null) continue;
+                var item = obj.GetComponent<Item>();
+
+                ItemManager.GetID(out item.ID);
+                item.m_pos = MapGrid.WorldToGridPoint(transform.position);
+
+                NetworkServer.Spawn(obj);
+            }
+        }
 	}
 
 	public void Die()
