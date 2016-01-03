@@ -57,9 +57,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -215,7 +213,8 @@ MonoBehaviour:
   m_itemPickupAudio: {fileID: 8300000, guid: 4ce5bd5507f54f943915100a6659cb3f, type: 3}
   m_coinPickupAudio: {fileID: 8300000, guid: 8075a1247fb557c4abe9d7f16db83de2, type: 3}
   m_maxItems: 5
-  m_UIElements: {fileID: 140922, guid: 0ffbb74c293c7d24b911855afed5ef9f, type: 2}
+  m_amountOfCoins: 0
+  m_items: []
 --- !u!114 &11453456
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -243,6 +242,8 @@ MonoBehaviour:
   m_maxHp: 1
   m_damage: 1
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
+  m_currentAttackStyle: 0
+  m_coinsPrefab: {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
 --- !u!114 &11478352
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -311,6 +312,10 @@ Prefab:
       propertyPath: m_gridSpeed
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_coinsPrefab
+      value: 
+      objectReference: {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 122222}

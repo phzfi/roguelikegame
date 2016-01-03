@@ -10,13 +10,16 @@ public class CombatSystem : NetworkBehaviour
 	public int m_maxHp = 3;
 	public int m_damage = 1;
 	public Text m_textPrefab;
-    public AttackStyle m_currentAttackStyle = AttackStyle.MELEE;
+	public AttackStyle m_currentAttackStyle = AttackStyle.MELEE;
+	public GameObject m_coinsPrefab;
 
 	private GameObject m_textCanvas;
 	private Text m_label;
 	private Camera m_camera;
 	private Inventory m_inventory;
 	private CharController m_controller;
+
+
 
     public enum AttackStyle { MELEE, MAGE, RANGED };
 
@@ -67,16 +70,14 @@ public class CombatSystem : NetworkBehaviour
 	}
 
 	public void DropItems() {
-		Debug.Log ("Dropped gold!");
 		if (m_inventory.m_amountOfCoins > 0) {
-			GameObject coins = GameObject.Find ("Coins(Clone)");
 			for (int i = 0; i < m_inventory.m_amountOfCoins; i++) {
 				Vector3 pos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
-				Debug.Log ("Dropped gold: " + i);
-				GameObject obj = (GameObject)Instantiate(coins, pos, Quaternion.identity);
+				GameObject obj = (GameObject)Instantiate(m_coinsPrefab, pos, Quaternion.identity);
 				var item = obj.GetComponent<Item>();
 				
 				ItemManager.GetID(out item.ID);
+				//ItemManager.Register (item);
 				item.m_pos = MapGrid.WorldToGridPoint(transform.position);
 				
 				NetworkServer.Spawn(obj);
