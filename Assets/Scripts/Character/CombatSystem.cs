@@ -61,8 +61,27 @@ public class CombatSystem : NetworkBehaviour
 	{
 		int takenDamage = GetReducedDamage(dmg);
 		m_currentHp -= takenDamage;
-		if (m_currentHp <= 0)
+		if (m_currentHp <= 0) {
 			SyncManager.AddDeathOrder(m_controller.ID);
+		}
+	}
+
+	public void DropItems() {
+		Debug.Log ("Dropped gold!");
+		if (m_inventory.m_amountOfCoins > 0) {
+			GameObject coins = GameObject.Find ("Coins(Clone)");
+			for (int i = 0; i < m_inventory.m_amountOfCoins; i++) {
+				Vector3 pos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
+				Debug.Log ("Dropped gold: " + i);
+				GameObject obj = (GameObject)Instantiate(coins, pos, Quaternion.identity);
+				var item = obj.GetComponent<Item>();
+				
+				ItemManager.GetID(out item.ID);
+				item.m_pos = MapGrid.WorldToGridPoint(transform.position);
+				
+				NetworkServer.Spawn(obj);
+			}
+		}
 	}
 
 	public void Die()
@@ -70,6 +89,7 @@ public class CombatSystem : NetworkBehaviour
 		m_controller.Unregister();
 		m_label.enabled = false;
 		gameObject.SetActive(false);
+		DropItems ();
 		Debug.Log("player killed");
 	}
 }
