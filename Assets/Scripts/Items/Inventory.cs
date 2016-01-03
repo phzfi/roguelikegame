@@ -12,14 +12,27 @@ public class Inventory : MonoBehaviour
 	public int m_maxItems = 5;
 	public int m_amountOfCoins = 0;
     public List<GameObject> m_items;
+    public EquipUI m_equipmentSlotsParent;
+    public InventorySlots m_inventorySlotsParent;
 
-	private AudioSource m_audioSource;   
+	private AudioSource m_audioSource;
+    private Slot[] m_inventorySlots;
+    private Slot[] m_equipmentSlots;
 
 	void Start()
 	{
 		m_items = new List<GameObject>();
 		m_audioSource = GetComponent<AudioSource>();
-	}
+        m_equipmentSlotsParent = Resources.FindObjectsOfTypeAll<EquipUI>()[0];
+        if (m_equipmentSlotsParent == null)
+            Debug.Log("equipment slots not found in inventory");
+        m_inventorySlotsParent = Resources.FindObjectsOfTypeAll<InventorySlots>()[0];
+        if (m_inventorySlotsParent == null)
+            Debug.Log("inventory slots not found in inventory");
+        Debug.Log(m_inventorySlotsParent.gameObject);
+        m_inventorySlots = m_inventorySlotsParent.gameObject.GetComponentsInChildren<Slot>(true);
+        m_equipmentSlots = m_equipmentSlotsParent.gameObject.GetComponentsInChildren<Slot>(true);
+    }
 
     public int AmountOfItem(string itemName)
     {
@@ -35,27 +48,17 @@ public class Inventory : MonoBehaviour
 
     public void UpdatePotionCount()
     {
-        var slots = InventorySlots();
         int amountOfPotions = AmountOfItem("Potion");
-        Debug.Log(slots);
-        for(int i = 0; i < slots.transform.childCount; ++i)
+        for(int i = 0; i < m_inventorySlots.Length; ++i)
         {
-            var child = slots.transform.GetChild(0).GetChild(i);
-            var item = child.gameObject.GetComponent<Item>();
+            var child = m_inventorySlots[i].transform.GetChild(0);
+            var item = child.GetComponent<Item>();
             if(item != null)
             {
                 if(item.m_name == "Potion")
                 {
-                    for(int j = 0; i < item.transform.childCount; ++j)
-                    {
-                        var text = item.transform.GetChild(j).GetComponent<Text>();
-                        if (text == null)
-                        {
-                            continue;
-                        }
-                        text.text = amountOfPotions.ToString();
-                        break;
-                    }
+                    var amountText = item.GetComponentsInChildren<Text>(true)[0];
+                    amountText.text = amountOfPotions.ToString();
                     break;
                 }
             }
@@ -102,36 +105,13 @@ public class Inventory : MonoBehaviour
 		return false;
 	}
 
-    public GameObject InventorySlots()
-    {
-        var inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas").transform.GetChild(0);
-        for (int i = 0; i < inventoryCanvas.childCount; ++i)
-        {
-            var child = inventoryCanvas.GetChild(i);
-            if (child.tag == "Inventory")
-            {
-                for(int j = 0; j < child.GetChild(0).childCount; ++j)
-                {
-                    var content = child.GetChild(0).GetChild(j);
-                    if(content.tag == "InventorySlots")
-                    {
-                        return content.gameObject;
-                    }
-                }
-            }  
-        }
-        return null;
-    }
-
     //Moves the item to be a child of InventoryPanel UI component. The item's Image component's sprite is 
     //then rendered to the panel.
     public void AddToUIInventory(GameObject item)
     {
-        GameObject inventorySlots = InventorySlots();
-
-        for(int i = 0; i < inventorySlots.transform.childCount; ++i)
+        for(int i = 0; i < m_inventorySlots.Length; ++i)
         {
-            var slot = inventorySlots.transform.GetChild(i).GetComponent<Slot>();
+            var slot = m_inventorySlots[i];
             if(!slot.m_containsItem)
             {
                 item.transform.SetParent(slot.transform);

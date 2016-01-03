@@ -66,12 +66,15 @@ public class Slot : MonoBehaviour, IDropHandler
                     item.m_returnTo = transform;
                     m_containsItem = true;
                 }
-                else if (oldSlot.m_isInventory && m_containsItem) //for swapping two items in inventory
+                else if (oldSlot.m_isInventory && m_containsItem && transform.childCount > 0) //for swapping two items in inventory
                 {
                     var swapItem = transform.GetChild(0).GetComponent<Draggable>();
-                    swapItem.m_returnTo = oldSlot.transform;
-                    item.m_returnTo = transform;
-                    swapItem.transform.SetParent(swapItem.m_returnTo);
+                    if(swapItem != null)
+                    {
+                        swapItem.m_returnTo = oldSlot.transform;
+                        item.m_returnTo = transform;
+                        swapItem.transform.SetParent(swapItem.m_returnTo);
+                    }
                 }
 
                 else if (!oldSlot.m_isInventory && !m_containsItem) //for unequipping items
