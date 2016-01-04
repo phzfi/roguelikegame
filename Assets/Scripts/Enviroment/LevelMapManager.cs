@@ -67,11 +67,21 @@ public class LevelMapManager : NetworkBehaviour
             itemsToPlace.Add(m_items[i % m_items.Count]);
 
         System.Random pseudoRandom = new System.Random(m_map.m_seed.GetHashCode());
+        int dim = Mathf.CeilToInt(Mathf.Sqrt(itemsToPlace.Count));
+        int widthStep = (m_width - 1) / dim;
+        int heightStep = (m_height - 1) / dim;
+        List<int> visited = new List<int>();
+        int index;
 
         for (int i = 0; i < itemsToPlace.Count; i++)
         {
-            // Generate a position
-            Vector2i gridPos = new Vector2i(pseudoRandom.Next(1, m_width - 1), pseudoRandom.Next(1, m_height - 1));
+            do
+            {
+                index = pseudoRandom.Next(0, dim * dim);
+            } while (visited.Contains(index));
+            visited.Add(index);
+            Vector2i gridPos = new Vector2i(pseudoRandom.Next((index % dim) * widthStep + 1, ((index % dim + 1) * widthStep)),
+                                            pseudoRandom.Next((index / dim) * heightStep + 1, (index / dim + 1) * heightStep));
             gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
             Vector3 pos = MapGrid.GridToWorldPoint(gridPos, -1.0f);
             // Create item and place on map

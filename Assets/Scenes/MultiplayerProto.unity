@@ -1092,6 +1092,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_coinCount
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
   m_IsPrefabParent: 0
