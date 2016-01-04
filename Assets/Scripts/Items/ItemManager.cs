@@ -84,8 +84,11 @@ public class ItemManager : MonoBehaviour
 	{
 		var mover = CharManager.GetObject(order.m_playerID);
 		var item = GetItemOnMap(order.m_itemID);
-		item.Pickup(mover.gameObject);
-	}
+        if (item != null && mover != null)
+        {
+            item.Pickup(mover.gameObject);
+        }
+    }
 
 	private static void Reset()
 	{
