@@ -3,11 +3,16 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public class LevelMapManager : MonoBehaviour
+public class LevelMapManager : NetworkBehaviour
 {
 	public int m_width;
 	public int m_height;
-	public LevelMapVisualization m_mapVisualization; 
+	public LevelMapVisualization m_mapVisualization;
+    public GameObject m_coinsPrefab;
+    public int m_coinCount;
+    public int m_itemCount;
+    public List<GameObject> m_items;
+    
 
 	private LevelMap m_map = null;
 
@@ -17,6 +22,7 @@ public class LevelMapManager : MonoBehaviour
 		m_map.Generate(m_width, m_height);
 		m_mapVisualization.GenerateMesh(m_map);
 		GeneratePlayerStartPositions();
+        GenerateItems();
 	}
 
 	public LevelMap GetMap()
@@ -49,5 +55,33 @@ public class LevelMapManager : MonoBehaviour
 			playerStartPosGo.transform.position = MapGrid.GridToWorldPoint(gridPos, -0.5f);
 		}
 	}
+
+    private void GenerateItems()
+    {
+        List<GameObject> itemsToPlace = new List<GameObject>();
+
+        for (int i = 0; i < m_coinCount; i++)
+            itemsToPlace.Add(m_coinsPrefab);
+
+        for (int i = 0; i < m_itemCount; i++)
+            itemsToPlace.Add(m_items[i % m_items.Count]);
+
+        System.Random pseudoRandom = new System.Random(m_map.m_seed.GetHashCode());
+
+        for (int i = 0; i < itemsToPlace.Count; i++)
+        {
+            // Generate a position
+            Vector2i gridPos = new Vector2i(pseudoRandom.Next(1, m_width - 1), pseudoRandom.Next(1, m_height - 1));
+            gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
+            Vector3 pos = MapGrid.GridToWorldPoint(gridPos, -1.0f);
+            // Create item and place on map
+            GameObject obj = (GameObject)Instantiate(itemsToPlace[i], pos, Quaternion.identity);
+            var item = obj.GetComponent<Item>();
+            ItemManager.GetID(out item.ID);
+            item.m_pos = MapGrid.WorldToGridPoint(pos);
+            //NetworkServer.Spawn(obj);
+        }
+
+    }
 
 }
