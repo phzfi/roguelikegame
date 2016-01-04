@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections;
 using System.Collections.Generic;
 
 public class LevelMapManager : NetworkBehaviour
@@ -58,6 +57,7 @@ public class LevelMapManager : NetworkBehaviour
 
     private void GenerateItems()
     {
+        
         List<GameObject> itemsToPlace = new List<GameObject>();
 
         for (int i = 0; i < m_coinCount; i++)
@@ -79,9 +79,9 @@ public class LevelMapManager : NetworkBehaviour
             var item = obj.GetComponent<Item>();
             ItemManager.GetID(out item.ID);
             item.m_pos = MapGrid.WorldToGridPoint(pos);
-            //NetworkServer.Spawn(obj);
+            if (NetworkServer.active)
+                NetworkServer.Spawn(obj);
         }
-
     }
 
 }
