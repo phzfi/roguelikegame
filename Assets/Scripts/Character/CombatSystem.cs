@@ -11,12 +11,17 @@ public class CombatSystem : NetworkBehaviour
 	public int m_damage = 1;
 	public Text m_textPrefab;
     public AttackStyle m_currentAttackStyle = AttackStyle.MELEE;
+    public AudioClip m_meleeAudio;
+    public AudioClip m_mageAudio;
+    public AudioClip m_rangedAudio;
 
-	private GameObject m_textCanvas;
+    private GameObject m_textCanvas;
 	private Text m_label;
 	private Camera m_camera;
 	private Inventory m_inventory;
 	private CharController m_controller;
+    private AudioSource m_audioSource;
+
 
     public enum AttackStyle { MELEE, MAGE, RANGED };
 
@@ -29,6 +34,7 @@ public class CombatSystem : NetworkBehaviour
 		m_label.transform.SetParent(m_textCanvas.transform, true);
 		m_inventory = GetComponent<Inventory>(); // store inventory reference for use in damage modifiers
 		m_controller = GetComponent<CharController>();
+        m_audioSource = GetComponent<AudioSource>();
 	}
 
 	public void Update()
@@ -47,15 +53,33 @@ public class CombatSystem : NetworkBehaviour
 		return incomingDamage; // TODO: damage reduction
 	}
 
-	public void Attack(int targetID) // Deal damage to object, identified by ID.
+    private void PlayAttackSound()
+    {
+        switch (m_currentAttackStyle)
+        {
+            case AttackStyle.MELEE:
+                m_audioSource.PlayOneShot(m_meleeAudio);
+                break;
+            case AttackStyle.MAGE:
+                m_audioSource.PlayOneShot(m_mageAudio);
+                break;
+            case AttackStyle.RANGED:
+                m_audioSource.PlayOneShot(m_rangedAudio);
+                break;
+        }
+    }
+
+    public void Attack(int targetID) // Deal damage to object, identified by ID.
 	{
 		var target = CharManager.GetObject(targetID);
 		var targetSystem = target.GetComponent<CombatSystem>();
 		if (targetSystem == null)
 			return;
-
+        PlayAttackSound();        
 		targetSystem.GetHit(GetDamage());
 	}
+
+    
 
 	public void GetHit(int dmg)
 	{
