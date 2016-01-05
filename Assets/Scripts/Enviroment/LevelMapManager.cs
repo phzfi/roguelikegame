@@ -66,6 +66,7 @@ public class LevelMapManager : NetworkBehaviour
         for (int i = 0; i < m_itemCount; i++)
             itemsToPlace.Add(m_items[i % m_items.Count]);
 
+        // Create dimensions for square grid
         System.Random pseudoRandom = new System.Random(m_map.m_seed.GetHashCode());
         int dim = Mathf.CeilToInt(Mathf.Sqrt(itemsToPlace.Count));
         int widthStep = (m_width - 1) / dim;
@@ -75,15 +76,23 @@ public class LevelMapManager : NetworkBehaviour
 
         for (int i = 0; i < itemsToPlace.Count; i++)
         {
+            // Find an unvisited square
             do
             {
                 index = pseudoRandom.Next(0, dim * dim);
             } while (visited.Contains(index));
             visited.Add(index);
+
+            // Generate a random position within the square
             Vector2i gridPos = new Vector2i(pseudoRandom.Next((index % dim) * widthStep + 1, ((index % dim + 1) * widthStep)),
                                             pseudoRandom.Next((index / dim) * heightStep + 1, (index / dim + 1) * heightStep));
             gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
+
+            // Skip if inside wall
+            if (m_map.GetTileType(gridPos.x, gridPos.y) == MapTileType.Wall)
+                continue;
             Vector3 pos = MapGrid.GridToWorldPoint(gridPos, -1.0f);
+            
             // Create item and place on map
             GameObject obj = (GameObject)Instantiate(itemsToPlace[i], pos, Quaternion.identity);
             var item = obj.GetComponent<Item>();
