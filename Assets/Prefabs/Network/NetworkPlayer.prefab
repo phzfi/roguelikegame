@@ -56,9 +56,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -168,6 +166,10 @@ MonoBehaviour:
   m_maxHp: 3
   m_damage: 1
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
+  m_currentAttackStyle: 0
+  m_meleeAudio: {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+  m_mageAudio: {fileID: 8300000, guid: 77355488b9e393c4f972d8fa42ed1931, type: 3}
+  m_rangedAudio: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
 --- !u!114 &11415356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -257,6 +259,7 @@ MonoBehaviour:
   m_coinPickupAudio: {fileID: 8300000, guid: 8075a1247fb557c4abe9d7f16db83de2, type: 3}
   m_maxItems: 5
   m_amountOfCoins: 0
+  m_items: []
 --- !u!114 &11480662
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -359,6 +362,18 @@ Prefab:
       propertyPath: m_gridSpeed
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_meleeAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_mageAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: 77355488b9e393c4f972d8fa42ed1931, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_rangedAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180150}
