@@ -244,6 +244,7 @@ MonoBehaviour:
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
   m_coinsPrefab: {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
+  m_corpsePrefab: {fileID: 100000, guid: 049e8d68e8c5185458036ff43ee644c7, type: 2}
 --- !u!114 &11478352
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -316,6 +317,10 @@ Prefab:
       propertyPath: m_coinsPrefab
       value: 
       objectReference: {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_corpsePrefab
+      value: 
+      objectReference: {fileID: 100000, guid: 049e8d68e8c5185458036ff43ee644c7, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 122222}

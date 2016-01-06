@@ -13,6 +13,7 @@ public class CombatSystem : NetworkBehaviour
 	public Text m_textPrefab;
 	public AttackStyle m_currentAttackStyle = AttackStyle.MELEE;
 	public GameObject m_coinsPrefab;
+	public GameObject m_corpsePrefab;
 
 	private GameObject m_textCanvas;
 	private Text m_label;
@@ -99,12 +100,21 @@ public class CombatSystem : NetworkBehaviour
         }
     }
 
+	public void SpawnCorpse() 
+	{
+		Vector3 pos = new Vector3 (gameObject.transform.position.x, gameObject.transform.position.y, m_corpsePrefab.transform.position.z);
+		GameObject obj = (GameObject)Instantiate (m_corpsePrefab, pos, m_corpsePrefab.transform.rotation);
+		NetworkServer.Spawn (obj);
+		Debug.Log ("Corpse dropped!");
+	}
+
 	public void Die()
 	{
 		m_controller.Unregister();
 		m_label.enabled = false;
 		gameObject.SetActive(false);
 		DropItems ();
+		SpawnCorpse ();
 		Debug.Log("player killed");
 	}
 }
