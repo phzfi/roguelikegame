@@ -88,23 +88,24 @@ public class CombatSystem : NetworkBehaviour
             itemList.Add(obj);
         }
 
-        for (int i = 0; i < itemList.Count; i++)
-        {
-            Vector3 pos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
-            GameObject obj = (GameObject)Instantiate(itemList[i], pos, Quaternion.identity);
-            var item = obj.GetComponent<Item>();
-            ItemManager.GetID(out item.ID);
-            item.m_pos = MapGrid.WorldToGridPoint(pos);
-            NetworkServer.Spawn(obj);
-            Debug.Log("Dropped item: " + item.m_name + ", id: " + item.ID);
-        }
+		for (int i = 0; i < itemList.Count; i++) {
+			Vector3 pos = new Vector3 (gameObject.transform.position.x, gameObject.transform.position.y, -1.0f);
+			GameObject obj = (GameObject)Instantiate (itemList [i], pos, Quaternion.identity);
+			var item = obj.GetComponent<Item> ();
+			ItemManager.GetID (out item.ID);
+			item.m_pos = MapGrid.WorldToGridPoint (pos);
+			if (NetworkServer.active)
+				NetworkServer.Spawn (obj);
+			Debug.Log ("Dropped item: " + item.m_name + ", id: " + item.ID);
+		}
     }
 
 	public void SpawnCorpse() 
 	{
 		Vector3 pos = new Vector3 (gameObject.transform.position.x, gameObject.transform.position.y, m_corpsePrefab.transform.position.z);
 		GameObject obj = (GameObject)Instantiate (m_corpsePrefab, pos, m_corpsePrefab.transform.rotation);
-		NetworkServer.Spawn (obj);
+		if (NetworkServer.active)
+			NetworkServer.Spawn (obj);
 		Debug.Log ("Corpse dropped!");
 	}
 
