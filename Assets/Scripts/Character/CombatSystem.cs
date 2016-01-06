@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class CombatSystem : NetworkBehaviour
 {
@@ -12,6 +13,7 @@ public class CombatSystem : NetworkBehaviour
 	public Text m_textPrefab;
     public AttackStyle m_currentAttackStyle = AttackStyle.MELEE;
     public AudioClip m_meleeAudio;
+    public List<AudioClip> m_barehandSounds;
     public AudioClip m_mageAudio;
     public AudioClip m_rangedAudio;
 
@@ -19,6 +21,7 @@ public class CombatSystem : NetworkBehaviour
 	private Text m_label;
 	private Camera m_camera;
 	private Inventory m_inventory;
+    private Equipment m_equipment;
 	private CharController m_controller;
     private AudioSource m_audioSource;
 
@@ -34,6 +37,7 @@ public class CombatSystem : NetworkBehaviour
 		m_label.transform.SetParent(m_textCanvas.transform, true);
 		m_inventory = GetComponent<Inventory>(); // store inventory reference for use in damage modifiers
 		m_controller = GetComponent<CharController>();
+        m_equipment = GetComponent<Equipment>();
         m_audioSource = GetComponent<AudioSource>();
 	}
 
@@ -45,12 +49,14 @@ public class CombatSystem : NetworkBehaviour
 
 	private int GetDamage() // Get the attack damage of this object, modified by weapons etc.
 	{
-		return m_damage; // TODO: damage modifiers
+        var actualDamage = GetReducedDamage(m_damage + Mathf.CeilToInt(m_equipment.m_playerStrength * 0.25f));
+		return actualDamage; // TODO: damage modifiers
 	}
 
 	private int GetReducedDamage(int incomingDamage) // Modify incoming attack damage by damage reduction from armor
 	{
-		return incomingDamage; // TODO: damage reduction
+        var actualDamage = incomingDamage - Mathf.CeilToInt(0.25f * m_equipment.m_playerVitality);
+		return actualDamage; // TODO: damage reduction
 	}
 
     private void PlayAttackSound()
@@ -58,7 +64,20 @@ public class CombatSystem : NetworkBehaviour
         switch (m_currentAttackStyle)
         {
             case AttackStyle.MELEE:
-                m_audioSource.PlayOneShot(m_meleeAudio);
+                var equipment = m_equipment.m_equipment;
+                bool swordEquipped = false;
+                for (int i = 0; i < equipment.Count; ++i)
+                {
+                    if(equipment[i].GetComponent<Item>().m_name.Contains("Sword"))
+                    {
+                        swordEquipped = true;
+                    }
+                    continue;
+                }
+                if (!swordEquipped)
+                    m_audioSource.PlayOneShot(m_barehandSounds[Random.Range(0, m_barehandSounds.Count - 1)]);
+                else
+                    m_audioSource.PlayOneShot(m_meleeAudio);
                 break;
             case AttackStyle.MAGE:
                 m_audioSource.PlayOneShot(m_mageAudio);

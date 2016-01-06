@@ -16,6 +16,8 @@ public class Item : NetworkBehaviour
     public int m_agility = 0;
     [SyncVar]
     public int m_intelligence = 0;
+    [SyncVar]
+    public int m_vitality = 0;
 
     [SyncVar]
 	private bool m_onMap = true;

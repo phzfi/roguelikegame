@@ -25,14 +25,18 @@ public class Slot : MonoBehaviour, IDropHandler
             Debug.LogError("Could not find equipment for equipmentslot");
     }
 
-    public void EquipItem(GameObject item)
+    public void EquipItem(GameObject itemName)
     {
-        SyncManager.AddEquipOrder(item.GetComponent<Item>().ID, m_playerID, true);
+        var item = itemName.GetComponent<Item>();
+        SyncManager.AddEquipOrder(item.ID, m_playerID, true);
+        m_equipment.m_playerStrength += item.m_strength;
     }
 
-    public void UnequipItem(GameObject item)
+    public void UnequipItem(GameObject itemName)
     {
-        SyncManager.AddEquipOrder(item.GetComponent<Item>().ID, m_playerID, false);
+        var item = itemName.GetComponent<Item>();
+        SyncManager.AddEquipOrder(item.ID, m_playerID, false);
+        m_equipment.m_playerStrength -= item.m_strength;
     }
 
     public void OnDrop(PointerEventData eventData)

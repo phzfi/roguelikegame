@@ -56,7 +56,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -163,11 +165,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_currentHp: 0
-  m_maxHp: 3
+  m_maxHp: 30
   m_damage: 1
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
-  m_meleeAudio: {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+  m_meleeAudio: {fileID: 8300000, guid: 07ed8ba57da982047a3281cd98812483, type: 3}
+  m_barehandSounds:
+  - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
+  - {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
   m_mageAudio: {fileID: 8300000, guid: 77355488b9e393c4f972d8fa42ed1931, type: 3}
   m_rangedAudio: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
 --- !u!114 &11415356
@@ -244,6 +249,7 @@ MonoBehaviour:
   m_playerStrength: 0
   m_playerAgility: 0
   m_playerIntelligence: 0
+  m_playerVitality: 0
 --- !u!114 &11457766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -285,6 +291,14 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_meleeSounds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Enabled
       value: 1
@@ -365,7 +379,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_meleeAudio
       value: 
-      objectReference: {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+      objectReference: {fileID: 8300000, guid: 07ed8ba57da982047a3281cd98812483, type: 3}
     - target: {fileID: 0}
       propertyPath: m_mageAudio
       value: 
@@ -374,6 +388,10 @@ Prefab:
       propertyPath: m_rangedAudio
       value: 
       objectReference: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_maxHp
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180150}
