@@ -9,7 +9,7 @@ public class ItemSpawner : NetworkBehaviour
 
 	public void Start()
 	{
-		GameObject obj = (GameObject)Instantiate(m_item, transform.position, transform.rotation);
+		GameObject obj = (GameObject)Instantiate(m_item, transform.position, m_item.transform.rotation);
 		var item = obj.GetComponent<Item>();
 
 		ItemManager.GetID(out item.ID);
