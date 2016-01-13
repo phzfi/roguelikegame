@@ -18,6 +18,7 @@ GameObject:
   - 114: {fileID: 11489656}
   - 114: {fileID: 11490750}
   - 114: {fileID: 11454794}
+  - 114: {fileID: 11409500}
   m_Layer: 0
   m_Name: Potion
   m_TagString: Untagged
@@ -314,7 +315,38 @@ MonoBehaviour:
   m_strength: 0
   m_agility: 0
   m_intelligence: 0
+  m_vitality: 0
   m_typeOfItem: 6
+--- !u!114 &11409500
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 11492040}
+          m_MethodName: UseHealthPack
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!114 &11444768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -358,9 +390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3d27e016ec3274c84bb1a836b61245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_placeholderItem: {fileID: 0}
   m_returnTo: {fileID: 0}
-  m_placeholderParent: {fileID: 0}
   m_changeIndex: 0
   m_itemType: 0
 --- !u!114 &11470312
@@ -393,7 +423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: .196078435, g: .196078435, b: .196078435, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -407,7 +437,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 7
+    m_Alignment: 8
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
@@ -488,11 +518,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22482964}
   m_RootOrder: 3
-  m_AnchorMin: {x: .5, y: 0}
-  m_AnchorMax: {x: .5, y: 0}
-  m_AnchoredPosition: {x: 25, y: 5}
-  m_SizeDelta: {x: 70, y: 30}
-  m_Pivot: {x: .5, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -1.29999995, y: 0}
+  m_SizeDelta: {x: 16.6000004, y: 20}
+  m_Pivot: {x: 1, y: 0}
 --- !u!224 &22482964
 RectTransform:
   m_ObjectHideFlags: 1
@@ -532,6 +562,14 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Delegates.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_RootOrder
       value: 2
@@ -587,6 +625,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_PreferredHeight
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

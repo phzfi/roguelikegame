@@ -5,15 +5,11 @@ using UnityEngine.UI;
 
 public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-
     [HideInInspector]
-    public GameObject m_placeholderItem;
+    public bool m_isDraggedButton = false;
 
     [HideInInspector]
     public Transform m_returnTo;
-
-    [HideInInspector]
-    public Transform m_placeholderParent;
 
     [HideInInspector]
     public int m_changeIndex;
@@ -26,7 +22,11 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
     //Maybe find a better idea for getting the game object "Slots", or even make a better solution for slots
     void Start()
     {
-        m_itemType = GetComponent<Item>().m_typeOfItem;
+        if(GetComponent<Item>() != null)
+        {
+            m_itemType = GetComponent<Item>().m_typeOfItem;
+        }
+            
         var panels = GameObject.FindGameObjectWithTag("InventoryCanvas").transform.GetChild(0);
         for(int i = 0; i < panels.childCount; ++i)
         {
@@ -39,34 +39,28 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                     if(equipmentPanel.GetChild(j).name.Contains("Slots"))
                     {
                         m_slots = equipmentPanel.GetChild(j).gameObject;
-                        break;
+                        return;
                     }
                 }
-                break;
             }
         }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Vector2 pos = eventData.position;
-        transform.position = pos;
+        transform.position = eventData.position;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        m_placeholderItem = new GameObject();
-        m_placeholderItem.transform.SetParent(transform.parent);
-        LayoutElement element = m_placeholderItem.AddComponent<LayoutElement>();
-        element.preferredHeight = GetComponent<LayoutElement>().preferredHeight;
-        element.preferredWidth = GetComponent<LayoutElement>().preferredWidth;
-        element.flexibleHeight = 0;
-        element.flexibleWidth = 0;
-
-        m_placeholderItem.transform.SetSiblingIndex(transform.GetSiblingIndex());
+        
         m_returnTo = transform.parent;
-        m_placeholderParent = m_returnTo;
         transform.SetParent(transform.parent.parent);
+        if(m_isDraggedButton)
+        {
+            LayoutElement element = GetComponent<LayoutElement>();
+            element.ignoreLayout = true;
+        }
 
         for (int i = 0; i < m_slots.transform.childCount; i++)
         {
@@ -95,16 +89,20 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
     public void OnEndDrag(PointerEventData eventData)
     {
         transform.SetParent(m_returnTo);
-        
+        if (m_isDraggedButton)
+        {
+            LayoutElement element = GetComponent<LayoutElement>();
+            element.ignoreLayout = false;
+        }
+
         for (int i = 0; i < m_slots.transform.childCount; i++)
         {
             var child = m_slots.transform.GetChild(i);
             var outline = child.GetComponent<Outline>();
             outline.enabled = false;
         }
+        
         GetComponent<CanvasGroup>().blocksRaycasts = true;
-
-        Destroy(m_placeholderItem);
     }
 
 }

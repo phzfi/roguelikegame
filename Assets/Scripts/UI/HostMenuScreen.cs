@@ -3,8 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-[RequireComponent(typeof(NetworkManager))]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+
 public class HostMenuScreen : NetworkBehaviour
 {
 	public GameObject m_mainMenuPanel;
@@ -49,7 +48,6 @@ public class HostMenuScreen : NetworkBehaviour
                     break;
             };
 #endif
-            //Application.LoadLevel(1); //TODO: fix loading main scene from main menu
 			m_manager.networkAddress = m_IPaddress.text;
 			m_manager.StartHost();
 			m_hostGamePanel.SetActive(false);

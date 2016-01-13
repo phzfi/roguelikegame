@@ -37,26 +37,19 @@ public class Inventory : MonoBehaviour
     {
         var slots = InventorySlots();
         int amountOfPotions = AmountOfItem("Potion");
-        Debug.Log(slots);
         for(int i = 0; i < slots.transform.childCount; ++i)
         {
-            var child = slots.transform.GetChild(0).GetChild(i);
-            var item = child.gameObject.GetComponent<Item>();
+            var child = slots.transform.GetChild(i);
+            if (child.childCount == 0)
+                continue;
+            var item = child.GetChild(0).gameObject.GetComponent<Item>();
             if(item != null)
             {
                 if(item.m_name == "Potion")
                 {
-                    for(int j = 0; i < item.transform.childCount; ++j)
-                    {
-                        var text = item.transform.GetChild(j).GetComponent<Text>();
-                        if (text == null)
-                        {
-                            continue;
-                        }
-                        text.text = amountOfPotions.ToString();
-                        break;
-                    }
-                    break;
+                    var text = item.GetComponentsInChildren<Text>(true)[0];
+                    text.text = amountOfPotions.ToString();
+                    return;
                 }
             }
         }
@@ -78,7 +71,10 @@ public class Inventory : MonoBehaviour
             if (itemName == "Potion")
             {
                 if (AmountOfItem("Potion") <= 1)
+                {
                     AddToUIInventory(item);
+                }
+                    
                 else
                 {
                     UpdatePotionCount();
