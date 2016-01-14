@@ -10,6 +10,7 @@ public class Slot : MonoBehaviour, IDropHandler
     public bool m_containsItem = false;
 
     private Equipment m_equipment;
+	private Inventory m_inventory;
     private int m_playerID;
 
     public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
@@ -18,17 +19,19 @@ public class Slot : MonoBehaviour, IDropHandler
     {
         var player = CharManager.GetLocalPlayer();
         if (player == null)
-            Debug.LogError("Could not find local player for equipmentslot");
+            Debug.LogError("Could not find local player for slot");
         m_equipment = player.GetComponent<Equipment>();
+		m_inventory = player.GetComponent<Inventory>();
         m_playerID = player.ID;
         if (m_equipment == null)
-            Debug.LogError("Could not find equipment for equipmentslot");
+            Debug.LogError("Could not find equipment for slot");
     }
 
     public void EquipItem(GameObject itemName)
     {
         var item = itemName.GetComponent<Item>();
         SyncManager.AddEquipOrder(item.ID, m_playerID, true);
+		m_inventory.m_items.Remove(itemName);
         m_equipment.m_playerStrength += item.m_strength;
     }
 
@@ -36,7 +39,8 @@ public class Slot : MonoBehaviour, IDropHandler
     {
         var item = itemName.GetComponent<Item>();
         SyncManager.AddEquipOrder(item.ID, m_playerID, false);
-        m_equipment.m_playerStrength -= item.m_strength;
+		m_inventory.m_items.Add(itemName);
+		m_equipment.m_playerStrength -= item.m_strength;
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -70,12 +74,15 @@ public class Slot : MonoBehaviour, IDropHandler
                     item.m_returnTo = transform;
                     m_containsItem = true;
                 }
-                else if (oldSlot.m_isInventory && m_containsItem) //for swapping two items in inventory
+                else if (oldSlot.m_isInventory && m_containsItem && transform.childCount > 0) //for swapping two items in inventory
                 {
                     var swapItem = transform.GetChild(0).GetComponent<Draggable>();
-                    swapItem.m_returnTo = oldSlot.transform;
-                    item.m_returnTo = transform;
-                    swapItem.transform.SetParent(swapItem.m_returnTo);
+					if(swapItem != null)
+					{
+						swapItem.m_returnTo = oldSlot.transform;
+						item.m_returnTo = transform;
+						swapItem.transform.SetParent(swapItem.m_returnTo);
+					}
                 }
 
                 else if (!oldSlot.m_isInventory && !m_containsItem) //for unequipping items

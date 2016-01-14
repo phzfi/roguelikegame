@@ -22,9 +22,19 @@ public class Action : MonoBehaviour {
 	
 	public ActionDelegate m_useDelegate;
 
-	public void Listener()
+	private ActionManager m_actionManager;
+
+	public void Start()
 	{
-		Use(new ActionTargetData());
+		m_actionManager = FindObjectOfType<ActionManager>();
+	}
+
+	public void OnMouseClick()
+	{
+		if (m_targetingType == ActionTargetingType.self)
+			Use(new ActionTargetData());
+		else
+			m_actionManager.m_currentAction = this;
 	}
 	
 	public void Use(ActionTargetData target)
