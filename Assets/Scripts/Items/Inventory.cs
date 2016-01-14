@@ -37,7 +37,6 @@ public class Inventory : MonoBehaviour
     {
         var slots = InventorySlots();
         int amountOfPotions = AmountOfItem("Potion");
-        Debug.Log(slots);
         for(int i = 0; i < slots.transform.childCount; ++i)
         {
             var child = slots.transform.GetChild(0).GetChild(i);

@@ -18,6 +18,7 @@ GameObject:
   - 114: {fileID: 11489656}
   - 114: {fileID: 11490750}
   - 114: {fileID: 11454794}
+  - 114: {fileID: 11406222}
   m_Layer: 0
   m_Name: Potion
   m_TagString: Untagged
@@ -314,7 +315,24 @@ MonoBehaviour:
   m_strength: 0
   m_agility: 0
   m_intelligence: 0
+  m_vitality: 0
   m_typeOfItem: 6
+--- !u!114 &11406222
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetingType: 0
+  m_targetEnemies: 0
+  m_targetFriendlies: 0
+  m_targetSelf: 0
+  m_targetingMaxRange: 0
 --- !u!114 &11444768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -587,6 +605,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_PreferredHeight
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_targetFriendlies
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

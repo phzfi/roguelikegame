@@ -173,8 +173,8 @@ MonoBehaviour:
   m_barehandSounds:
   - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
   - {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
-  m_mageAudio: {fileID: 8300000, guid: 77355488b9e393c4f972d8fa42ed1931, type: 3}
-  m_rangedAudio: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
+  m_mageAudio: {fileID: 0}
+  m_rangedAudio: {fileID: 0}
 --- !u!114 &11415356
 MonoBehaviour:
   m_ObjectHideFlags: 1

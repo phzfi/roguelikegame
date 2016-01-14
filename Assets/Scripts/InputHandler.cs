@@ -12,6 +12,7 @@ public class InputHandler : Singleton<InputHandler>
 	public Color selectedColor = Color.red;
 
 	public PathVisualization pathVisualization;
+	private ActionManager m_actionManager;
 
 	static readonly Plane sm_groundPlane = new Plane(new Vector3(0, 0, -1), new Vector3(0, 0, 0));
 
@@ -21,6 +22,8 @@ public class InputHandler : Singleton<InputHandler>
 		{
 			selectedTile.localScale = new Vector3(MapGrid.tileSize, MapGrid.tileSize, 1.0f);
 		}
+
+		m_actionManager = FindObjectOfType<ActionManager>();
 	}
 
 	void Update()
@@ -48,12 +51,12 @@ public class InputHandler : Singleton<InputHandler>
 			
 			if (Input.GetMouseButton(1))
 			{
-                var mover = CharManager.GetLocalPlayer();
-                if (mover == null)
-                    Debug.Log("Inputhandler could not find local player");
-                
-                NavPath navPath = mover.m_mover.m_navAgent.SeekPath(mover.m_mover.m_gridPos, mouseGridPos);
-                worldSpacePath = MapGrid.NavPathToWorldSpacePath(navPath, -0.07f);
+				var mover = CharManager.GetLocalPlayer();
+				if (mover == null)
+					Debug.Log("Inputhandler could not find local player");
+
+				NavPath navPath = mover.m_mover.m_navAgent.SeekPath(mover.m_mover.m_gridPos, mouseGridPos);
+				worldSpacePath = MapGrid.NavPathToWorldSpacePath(navPath, -0.07f);
             }
 
             if (worldSpacePath.Count >= 2)
@@ -66,23 +69,33 @@ public class InputHandler : Singleton<InputHandler>
 			}
         }
 
+		if (Input.GetKeyDown(KeyCode.Escape)) // Esc cancels action targeting
+			m_actionManager.m_currentlyTargeting = false;
+
 		if (Input.GetMouseButtonUp(1))
 		{
-			bool attack = false;
-			for (int i = 0; i < CharManager.Objects.Count; ++i)
+			if (m_actionManager.m_currentlyTargeting) // If action targeting is active, use action instead of attacking or moving
 			{
-				var target = CharManager.Objects[i];
-				if (mouseGridPos == target.m_mover.m_gridPos)
-				{
-					attack = true;
-					MovementManager.InputAttackOrder(target.ID);
-					break;
-				}
+				m_actionManager.TargetPosition(mouseGridPos);
 			}
-
-			if (!attack)
+			else
 			{
-				MovementManager.InputMoveOrder(mouseGridPos);
+				bool attack = false;
+				for (int i = 0; i < CharManager.Objects.Count; ++i)
+				{
+					var target = CharManager.Objects[i];
+					if (mouseGridPos == target.m_mover.m_gridPos)
+					{
+						attack = true;
+						MovementManager.InputAttackOrder(target.ID);
+						break;
+					}
+				}
+
+				if (!attack)
+				{
+					MovementManager.InputMoveOrder(mouseGridPos);
+				}
 			}
 		}
 	}

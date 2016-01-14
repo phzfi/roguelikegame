@@ -95,15 +95,18 @@ public class CombatSystem : NetworkBehaviour
 		if (targetSystem == null)
 			return;
         PlayAttackSound();        
-		targetSystem.GetHit(GetDamage());
+		targetSystem.ChangeHP(-GetDamage());
 	}
 
     
 
-	public void GetHit(int dmg)
+	public void ChangeHP(int amount)
 	{
-		int takenDamage = GetReducedDamage(dmg);
-		m_currentHp -= takenDamage;
+		int actualAmount = amount;
+		if(amount < 0)
+			actualAmount = -GetReducedDamage(Mathf.Abs(amount)); // Damage resistance only applies if damage is being dealt.
+
+		m_currentHp = Mathf.Min(m_maxHp, m_currentHp + actualAmount);
 		if (m_currentHp <= 0)
 			SyncManager.AddDeathOrder(m_controller.ID);
 	}
