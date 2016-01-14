@@ -132,6 +132,10 @@ Prefab:
       propertyPath: m_Name
       value: HealthSpawner (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -268,6 +272,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -317,6 +325,10 @@ Prefab:
     - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
       propertyPath: m_Name
       value: HealthSpawner (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
@@ -376,6 +388,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -984,6 +1000,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1246329629}
     m_Modifications:
+    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_items.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 485898, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1072,6 +1092,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
+      propertyPath: m_coinCount
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
   m_IsPrefabParent: 0
@@ -1126,6 +1150,10 @@ Prefab:
       propertyPath: m_Name
       value: CoinSpawner
       objectReference: {fileID: 0}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -1176,6 +1204,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -1226,6 +1258,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -1277,6 +1313,10 @@ Prefab:
     - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
       propertyPath: m_Name
       value: HealthSpawner (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
@@ -1334,6 +1374,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -2426,6 +2470,10 @@ Prefab:
       propertyPath: m_Name
       value: HealthSpawner
       objectReference: {fileID: 0}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -2596,6 +2644,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -2697,6 +2749,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -2751,6 +2807,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -3298,6 +3358,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1246329629}
     m_Modifications:
+    - target: {fileID: 11490472, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
+      propertyPath: m_SpawnPrefabs.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 404170, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3334,6 +3398,10 @@ Prefab:
       propertyPath: m_syncManager
       value: 
       objectReference: {fileID: 258938888}
+    - target: {fileID: 11490472, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
+      propertyPath: m_SpawnPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 129782, guid: cab6cda1137c36f478393a42a6d0c2ee, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 60a351e9e2f234646941e8d518b3290e, type: 2}
   m_IsPrefabParent: 0
@@ -3616,6 +3684,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -3760,6 +3832,10 @@ Prefab:
       propertyPath: m_Name
       value: CoinSpawner 2
       objectReference: {fileID: 0}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -3827,6 +3903,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -3883,6 +3963,10 @@ Prefab:
     - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
       propertyPath: m_Name
       value: HealthSpawner (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
@@ -4066,6 +4150,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -4162,6 +4250,10 @@ Prefab:
       propertyPath: m_Name
       value: HealthSpawner (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0
@@ -4216,6 +4308,10 @@ Prefab:
       propertyPath: m_item
       value: 
       objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 162762, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bcd3f73bff122bf4093db8df3821184e, type: 2}
   m_IsPrefabParent: 0

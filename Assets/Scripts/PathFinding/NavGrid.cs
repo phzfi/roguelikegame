@@ -17,7 +17,7 @@ public class NavGridCell
 
 public class NavGrid
 {
-	public const float m_spiralSize = 20.0f; // TODO correct place for this?
+	public const float m_spiralSize = 30.0f; // TODO correct place for this?
 
 	public NavGridCell[,] m_navigationGrid;
 

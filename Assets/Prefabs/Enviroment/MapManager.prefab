@@ -43,6 +43,12 @@ MonoBehaviour:
   m_width: 50
   m_height: 50
   m_mapVisualization: {fileID: 0}
+  m_coinsPrefab: {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
+  m_coinCount: 5
+  m_itemCount: 5
+  m_items:
+  - {fileID: 129782, guid: cab6cda1137c36f478393a42a6d0c2ee, type: 2}
+  - {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
 --- !u!114 &11479710
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,14 +62,119 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_useRandomSeed: 1
   m_seed: 123
-  randomFillPercent: 0
+  m_randomFillPercent: 0
+  m_smoothingIterations: 0
+  m_frequency: 0
+  m_roomThresholdSize: 0
+  m_passageWidth: 0
+  m_spaceCount: 0
+  m_maxSpaceSize: 0
+  m_minSpaceSize: 0
+  m_meanSpaceSize: 0
+  m_standardDeviation: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_items.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_coinsPrefab
+      value: 
+      objectReference: {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_items.Array.data[0]
+      value: 
+      objectReference: {fileID: 129782, guid: cab6cda1137c36f478393a42a6d0c2ee, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_items.Array.data[1]
+      value: 
+      objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_coins
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_coinCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_itemCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i0
+      value: 27
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i1
+      value: 177
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i2
+      value: 39
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i3
+      value: 92
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i4
+      value: 198
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i5
+      value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i6
+      value: 212
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i7
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i8
+      value: 171
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i9
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i10
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i11
+      value: 85
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i12
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i13
+      value: 248
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i14
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AssetId.i15
+      value: 49
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ServerOnly
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 183562}
