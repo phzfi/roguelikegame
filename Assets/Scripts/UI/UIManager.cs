@@ -12,8 +12,8 @@ public class UIManager : MonoBehaviour
     public Text m_playerNameText;
     public Slider m_healthBar;
 
-    private bool m_inventoryOpen = false;
-    private bool m_equipmentOpen = false;
+    public static bool sm_inventoryOpen = false;
+    public static bool sm_equipmentOpen = false;
     private CharController m_localPlayer;
     private Inventory m_localInventory;
 
@@ -32,9 +32,9 @@ public class UIManager : MonoBehaviour
             UpdateAmountOfCoins();
             var playerCombatSystem = m_localPlayer.GetComponent<CombatSystem>();
             m_healthBar.value = (float) playerCombatSystem.m_currentHp / playerCombatSystem.m_maxHp;
-            var controller = m_localPlayer.GetComponent<CharController>();
-            if (controller != null)
-                m_playerNameText.text = "Player: " + controller.ID.ToString(); //player's ID is used as player's name for now
+            
+            if (m_localPlayer != null)
+                m_playerNameText.text = "Player: " + m_localPlayer.ID.ToString(); //player's ID is used as player's name for now
         }
 
         if (Input.GetKeyDown(KeyCode.I))
@@ -53,36 +53,55 @@ public class UIManager : MonoBehaviour
 
     public void ToggleInventory()
     {
-        if (!m_inventoryOpen)
+        if(!ChatManager.sm_chatOpen)
         {
-            m_inventoryPanel.SetActive(true);
-            m_inventoryOpen = true;
+            if (!sm_inventoryOpen)
+            {
+                m_inventoryPanel.SetActive(true);
+                sm_inventoryOpen = true;
+            }
+            else if (sm_inventoryOpen)
+            {
+                m_inventoryPanel.SetActive(false);
+                sm_inventoryOpen = false;
+            }
         }
-        else if (m_inventoryOpen)
-        {
-            m_inventoryPanel.SetActive(false);
-            m_inventoryOpen = false;
-        }
+        
     }
 
     public void ToggleEquipment()
     {
-        if (!m_equipmentOpen)
+        if (!ChatManager.sm_chatOpen)
         {
-            m_equipmentPanel.SetActive(true);
-            m_equipmentOpen = true;
-        }
-        else if (m_equipmentOpen)
-        {
-            m_equipmentPanel.SetActive(false);
-            m_equipmentOpen = false;
+            if (!sm_equipmentOpen)
+            {
+                m_equipmentPanel.SetActive(true);
+                sm_equipmentOpen = true;
+            }
+            else if (sm_equipmentOpen)
+            {
+                m_equipmentPanel.SetActive(false);
+                sm_equipmentOpen = false;
+            }
         }
     }
 
     private void ToggleBoth()
     {
-        ToggleEquipment();
-        ToggleInventory();
+        if((!sm_equipmentOpen && !sm_inventoryOpen) || (sm_equipmentOpen && sm_inventoryOpen))
+        {
+            ToggleEquipment();
+            ToggleInventory();
+        }
+        else if(!sm_equipmentOpen && sm_inventoryOpen)
+        {
+            ToggleEquipment();
+        }
+        else if(sm_equipmentOpen && !sm_inventoryOpen)
+        {
+            ToggleInventory();
+        }
+        
     }
 
     public void CloseWarningSign()
