@@ -2919,10 +2919,22 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11430844, guid: df0764abe24ff1440909d74583d2a35f, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 742127566}
     - target: {fileID: 11491934, guid: df0764abe24ff1440909d74583d2a35f, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 742127566}
+    - target: {fileID: 107750, guid: df0764abe24ff1440909d74583d2a35f, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11430844, guid: df0764abe24ff1440909d74583d2a35f, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df0764abe24ff1440909d74583d2a35f, type: 2}
   m_IsPrefabParent: 0
