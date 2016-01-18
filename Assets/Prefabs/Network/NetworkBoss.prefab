@@ -190,8 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eabba29f0c98c934ab7d1e58648e567a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_currentHp: 1
-  m_maxHp: 1
+  m_currentHp: 12
+  m_maxHp: 12
   m_damage: 1
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
@@ -286,7 +286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_orderType: 0
   m_attackOrderTarget: 0
-  m_gridSpeed: 1
+  m_gridSpeed: 2
   m_syncer: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -297,7 +297,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_gridSpeed
-      value: 1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_currentHp
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_maxHp
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

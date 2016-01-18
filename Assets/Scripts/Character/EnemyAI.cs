@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyAI : MonoBehaviour {
-	public int m_attackRange = 15;
+// Inherit this class and implement m_chaseRange and TakeTurn() to create new AI behaviour.
+public abstract class EnemyAI : MonoBehaviour {
+	public abstract int m_chaseRange;
 	private CharController m_controller;
 	private SimpleCharacterMovement m_mover;
 
@@ -12,34 +13,6 @@ public class EnemyAI : MonoBehaviour {
 		m_mover = m_controller.m_mover;
 	}
 
-	public void TakeTurn() // Runs the turn decision logic for this NPC. 
-	{
-		float minDist = m_attackRange;
-		var target = m_controller;
-		bool foundTarget = false;
-
-		for(int i = 0; i < CharManager.Objects.Count; ++i) // Find closest player character inside attack range and attack it.
-		{
-			var controller = CharManager.Objects[i];
-			if (!controller.m_isPlayer)
-				continue;
-
-			var mover = controller.m_mover;
-			var myPos = m_mover.m_gridPos;
-			var enemyPos = mover.m_gridPos;
-			float dist = myPos.Distance(enemyPos);
-
-			if(dist < minDist) // TODO: line of sight and some smarter parameters
-			{
-				minDist = dist;
-				target = controller;
-				foundTarget = true;
-			}
-		}
-
-		if(foundTarget) // If target found, chase and attack it
-		{
-			m_mover.AttackCommand(target.ID);
-		}
-	}
+	public abstract void TakeTurn(); // Runs the turn decision logic for this NPC. 
+	
 }
