@@ -160,7 +160,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 102116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 216b07b127beb3446b33dbd00204bd70, type: 3}
+  m_Script: {fileID: 11500000, guid: da2812e8b5905a5419f5e36e41c700c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_attackRange: 15
