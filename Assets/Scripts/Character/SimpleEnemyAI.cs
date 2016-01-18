@@ -4,7 +4,7 @@ using System.Collections;
 public class SimpleEnemyAI : EnemyAI {
 	public int m_chaseRange = 15;
 
-	public void TakeTurn() // Runs the turn decision logic for this NPC. 
+	override public void TakeTurn() // Runs the turn decision logic for this NPC. 
 	{
 		float minDist = m_chaseRange;
 		var target = m_controller;

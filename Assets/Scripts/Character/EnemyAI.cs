@@ -3,9 +3,9 @@ using System.Collections;
 
 // Inherit this class and implement m_chaseRange and TakeTurn() to create new AI behaviour.
 public abstract class EnemyAI : MonoBehaviour {
-	public abstract int m_chaseRange;
-	private CharController m_controller;
-	private SimpleCharacterMovement m_mover;
+	public int m_chaseRange = 15;
+	protected CharController m_controller;
+	protected SimpleCharacterMovement m_mover;
 
 	public void Start()
 	{

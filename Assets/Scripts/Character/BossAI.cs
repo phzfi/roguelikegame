@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class BossAI : EnemyAI {
-	public int m_chaseRange = 5;
+	//public int m_chaseRange = 5;
 	//TODO: Store starting position and try to move there when no valid targets are in range.
 
-	public void TakeTurn() // Runs the turn decision logic for this NPC. 
+	override public void TakeTurn() // Runs the turn decision logic for this NPC. 
 	{
 		float minDist = m_chaseRange;
 		var target = m_controller;

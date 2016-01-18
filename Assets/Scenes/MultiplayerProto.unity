@@ -3328,6 +3328,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_attackRange: 15
+  m_controller: {fileID: 0}
+  m_mover: {fileID: 0}
 --- !u!1001 &1307245962
 Prefab:
   m_ObjectHideFlags: 0
