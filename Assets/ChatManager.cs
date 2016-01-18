@@ -30,17 +30,22 @@ public class ChatManager : NetworkBehaviour
         }
     }
     
-    public void SendChatMessage()
+    public void AddMessage(string msg)
     {
-        
         var player = CharManager.GetLocalPlayer();
         if (m_messages.Count > m_maxMessages)
             m_messages.RemoveAt(0);
-        string message = player.ID.ToString() + ": " + m_messageToBeSent.text;
-        m_messages.Add(message);
-        m_messageList.text += message;
-        if (m_messageList.text.Length != 0)
-            m_messageList.text += "\n";
+        m_messages.Add(msg);
+        m_messageList.text += msg;
+    }
+
+    public void SendMessage()
+    {
+        var player = CharManager.GetLocalPlayer();
+        if (m_messageToBeSent.text.Length == 0)
+            return;
+        string message = player.ID.ToString() + ": " + m_messageToBeSent.text + "\n";
+        SyncManager.AddChatMessage(message, player.ID);
         m_messageToBeSent.text = "";
     }
 
@@ -59,7 +64,7 @@ public class ChatManager : NetworkBehaviour
                 }
                 else
                 {
-                    SendChatMessage();
+                    SendMessage();
                     
                 }
             }

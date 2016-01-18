@@ -19,6 +19,7 @@ public class SyncManager : NetworkBehaviour
 	private static List<AttackOrder> sm_attackOrders = new List<AttackOrder>();
 	private static List<DeathOrder> sm_deathOrders = new List<DeathOrder>();
     private static List<EquipOrder> sm_equipOrders = new List<EquipOrder>();
+    private ChatManager m_chatManager;
 	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
@@ -32,7 +33,7 @@ public class SyncManager : NetworkBehaviour
 
 	void Start()
 	{
-
+        m_chatManager = FindObjectOfType<ChatManager>();
 	}
 
 	void Update()
@@ -54,12 +55,15 @@ public class SyncManager : NetworkBehaviour
 		NetworkServer.RegisterHandler((short)msgType.death, EmptyMessageHandler);
 		NetworkServer.RegisterHandler((short)msgType.turnSync, EmptyMessageHandler);
         NetworkServer.RegisterHandler((short)msgType.equipOrder, OnServerReceiveEquipOrders);
+        NetworkServer.RegisterHandler((short)msgType.chatMessage, OnServerReceiveChatMessage);
         sm_serverData = new ServerData();
 		enabled = true;
 		sm_isServer = true;
 	}
 
-	public void InitOnClient(NetworkConnection connection) // initialize client side sync logic
+    
+
+    public void InitOnClient(NetworkConnection connection) // initialize client side sync logic
 	{
 		sm_clientData = new ClientData();
 		sm_clientData.m_connection = connection;
@@ -72,6 +76,7 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.RegisterHandler((short)msgType.death, OnClientReceiveDeath);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.turnSync, OnClientReceiveTurnSync);
         sm_clientData.m_connection.RegisterHandler((short)msgType.equipOrder, OnClientReceiveEquipOrders);
+        sm_clientData.m_connection.RegisterHandler((short)msgType.chatMessage, OnClientReceiveChatMessage);
         enabled = true;
 
 		var msg = new ConnectionMessage();
@@ -367,7 +372,18 @@ public class SyncManager : NetworkBehaviour
 			Debug.Log("Can't find player data for client ID: " + moveOrderMessage.m_clientID);
 	}
 
-	void OnClientReceiveDeath(NetworkMessage msg)
+    private void OnServerReceiveChatMessage(NetworkMessage netMsg)
+    {
+        NetworkServer.SendToAll((short)msgType.chatMessage, netMsg.ReadMessage<ChatMessage>());
+        //TODO: add to chatlog
+    }
+
+    private void OnClientReceiveChatMessage(NetworkMessage netMsg)
+    {
+        m_chatManager.AddMessage(netMsg.ReadMessage<ChatMessage>().m_message);
+    }
+
+    void OnClientReceiveDeath(NetworkMessage msg)
 	{
 		var deathMsg = msg.ReadMessage<DeathMessage>();
 		for (int i = 0; i < deathMsg.m_orders.Length; ++i)
@@ -465,6 +481,14 @@ public class SyncManager : NetworkBehaviour
 		sm_pickupOrders.AddRange(pickupMsg.m_orders);
 		handlePickupOrdersOnClient();
 	}
+
+    public static void AddChatMessage(string message, int id)
+    {
+        var msg = new ChatMessage();
+        msg.m_clientID = id;
+        msg.m_message = message;
+        sm_clientData.m_connection.Send((short)msgType.chatMessage, msg);
+    }
 
 	public static void AddMoveOrder(Vector2i targetGridPos, int moverID)
 	{
