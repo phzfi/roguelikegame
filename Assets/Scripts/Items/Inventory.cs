@@ -13,12 +13,14 @@ public class Inventory : MonoBehaviour
 	public int m_amountOfCoins = 0;
     public List<GameObject> m_items;
 
-	private AudioSource m_audioSource;   
+	private AudioSource m_audioSource;
+    private CharController m_player;
 
 	void Start()
 	{
 		m_items = new List<GameObject>();
 		m_audioSource = GetComponent<AudioSource>();
+        m_player = GetComponent<CharController>();
 	}
 
     public int AmountOfItem(string itemName)
@@ -68,6 +70,12 @@ public class Inventory : MonoBehaviour
             m_items.Add(item);
             m_audioSource.PlayOneShot(m_itemPickupAudio);
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
+            if (!m_player.isLocalPlayer)
+            {
+                item.SetActive(false);
+                return true;
+            }
+
             if (itemName == "Potion")
             {
                 if (AmountOfItem("Potion") <= 1)
@@ -77,13 +85,12 @@ public class Inventory : MonoBehaviour
                     UpdatePotionCount();
                     item.SetActive(false);
                 }
-                    
             }
             else
                 AddToUIInventory(item);
-            
+
             return true;
-		}
+        }
 		if (itemName == "Coins")
 		{
             item.SetActive(false);
