@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class LevelMapVisualization : MonoBehaviour
 {
-	static public float sm_depth = 1.0f;
+	static public float sm_depth = 0.0f;
 	static public float sm_meshHeight = 3.0f;
 	public Material gridMaterial;
 	public Transform gridTransform;
@@ -107,7 +107,7 @@ public class LevelMapVisualization : MonoBehaviour
 		UpdateGrid(map.Size);
     }
 
-    public void MarchingSquaresMesh(LevelMap map, float squareSize)
+    public void MarchingSquaresMesh(LevelMap map)
     {
         triangleDictionary.Clear();
         edges.Clear();
@@ -116,7 +116,7 @@ public class LevelMapVisualization : MonoBehaviour
         vertices = new List<Vector3>();
         triangles = new List<int>();
 
-        squareGrid = new SquareGrid(map, squareSize);
+        squareGrid = new SquareGrid(map, MapGrid.tileSize);
 
         for (int x = 0; x < squareGrid.squares.GetLength(0); x++)
         {
@@ -126,53 +126,73 @@ public class LevelMapVisualization : MonoBehaviour
             }
         }
 
+        CreateWallMesh();
+
+        int width = map.Width;
+        int height = map.Height;
+        float tileSize = MapGrid.tileSize;
+        Vector3 heightVector = new Vector3(0, 0, -sm_meshHeight);
+
+        Vector3 floorTopLeft = MapGrid.GridToWorldPoint(0, height - 1, sm_depth);
+        floorTopLeft.x -= tileSize / 2;
+        floorTopLeft.y += tileSize / 2;
+        Vector3 floorTopRight = MapGrid.GridToWorldPoint(width - 1, height - 1, sm_depth);
+        floorTopRight.x += tileSize / 2;
+        floorTopRight.y += tileSize / 2;
+        Vector3 floorBotLeft = MapGrid.GridToWorldPoint(0, 0, sm_depth);
+        floorBotLeft.x -= tileSize / 2;
+        floorBotLeft.y -= tileSize / 2;
+        Vector3 floorBotRight = MapGrid.GridToWorldPoint(width - 1, 0, sm_depth);
+        floorBotRight.x += tileSize / 2;
+        floorBotRight.y -= tileSize / 2;
+
+        // Create floor
+        CreateTriangle(floorBotRight, floorTopLeft, floorTopRight);
+        CreateTriangle(floorBotRight, floorBotLeft, floorTopLeft);
+
+        // Create top edge (to fix shadows)
+        Vector3 floorTopLeft2 = floorTopLeft + heightVector;
+        Vector3 floorTopRight2 = floorTopRight + heightVector;
+        CreateTriangle(floorTopLeft2, floorTopLeft, floorTopRight);
+        CreateTriangle(floorTopLeft2, floorTopRight, floorTopRight2);
+
+        // Create right edge (to fix shadows)
+        Vector3 floorBotRight2 = floorBotRight + heightVector;
+        CreateTriangle(floorBotRight, floorBotRight2, floorTopRight);
+        CreateTriangle(floorTopRight, floorBotRight2, floorTopRight2);
+
         Mesh mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.RecalculateNormals();
 
-        CreateWallMesh();
+        UpdateGrid(map.Size);
     }
 
     private void CreateWallMesh()
     {
-        // TODO: Move wall mesh data into same container as floor
         CalculateMeshEdges();
-
-        GameObject walls = new GameObject();
-        MeshFilter meshFilter = walls.AddComponent<MeshFilter>();
-        MeshRenderer meshRenderer = walls.AddComponent<MeshRenderer>();
-        meshRenderer.material = gridMaterial;
-
-        List<Vector3> wallVertices = new List<Vector3>();
-        List<int> wallTriangles = new List<int>();
-        Mesh wallMesh = new Mesh();
 
         for (int i = 0; i < edges.Count; i++)
         {
             for (int j = 0; j < edges[i].Count - 1; j++)
             {
-                int startIndex = wallVertices.Count;
-                wallVertices.Add(vertices[edges[i][j]]);
-                wallVertices.Add(vertices[edges[i][j + 1]]);
-                wallVertices.Add(vertices[edges[i][j]] + Vector3.forward * sm_meshHeight);
-                wallVertices.Add(vertices[edges[i][j + 1]] + Vector3.forward * sm_meshHeight);
+                int startIndex = vertices.Count;
+                vertices.Add(vertices[edges[i][j]]);
+                vertices.Add(vertices[edges[i][j + 1]]);
+                vertices.Add(vertices[edges[i][j]] + Vector3.forward * sm_meshHeight);
+                vertices.Add(vertices[edges[i][j + 1]] + Vector3.forward * sm_meshHeight);
 
-                wallTriangles.Add(startIndex);
-                wallTriangles.Add(startIndex + 2);
-                wallTriangles.Add(startIndex + 3);
+                triangles.Add(startIndex);
+                triangles.Add(startIndex + 2);
+                triangles.Add(startIndex + 3);
 
-                wallTriangles.Add(startIndex + 3);
-                wallTriangles.Add(startIndex + 1);
-                wallTriangles.Add(startIndex);
+                triangles.Add(startIndex + 3);
+                triangles.Add(startIndex + 1);
+                triangles.Add(startIndex);
             }
         }
-
-        wallMesh.vertices = wallVertices.ToArray();
-        wallMesh.triangles = wallTriangles.ToArray();
-        meshFilter.mesh = wallMesh;
-
     }
 
     private void TriangulateSquare(Square square)
@@ -419,11 +439,13 @@ public class LevelMapVisualization : MonoBehaviour
 
             CornerNode[,] cornerNodes = new CornerNode[w, h];
 
+            Vector3 offset = new Vector3(-MapGrid.tileSize / 2.0f, -MapGrid.tileSize / 2.0f, 0);
+
             for (int x = 0; x < w; x++)
             {
                 for (int y = 0; y < h; y++)
                 {
-                    Vector3 pos = MapGrid.GridToWorldPoint(x, y, -sm_meshHeight);
+                    Vector3 pos = MapGrid.GridToWorldPoint(x, y, sm_depth - sm_meshHeight) + offset;
                     cornerNodes[x, y] = new CornerNode(pos, map.GetTileType(x, y) == MapTileType.Wall, squareSize);
                 }
             }
