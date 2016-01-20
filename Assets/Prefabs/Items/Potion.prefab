@@ -20,6 +20,7 @@ GameObject:
   - 114: {fileID: 11454794}
   - 114: {fileID: 11406222}
   - 114: {fileID: 11441622}
+  - 114: {fileID: 11432098}
   m_Layer: 0
   m_Name: Potion
   m_TagString: Untagged
@@ -334,6 +335,18 @@ MonoBehaviour:
   m_targetFriendlies: 0
   m_targetSelf: 0
   m_targetingMaxRange: 0
+--- !u!114 &11432098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c88d35ae5753946a4f31b0733ebe89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_draggedButton: {fileID: 0}
 --- !u!114 &11441622
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -512,7 +525,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_heals: 1
-  m_draggedButton: {fileID: 0}
 --- !u!222 &22265516
 CanvasRenderer:
   m_ObjectHideFlags: 1

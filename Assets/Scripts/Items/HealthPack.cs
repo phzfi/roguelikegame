@@ -6,7 +6,6 @@ public class HealthPack : MonoBehaviour
 {
     public int m_heals = 1;
 	public ActionDelegate m_useDelegate;
-    public GameObject m_draggedButton;
 
 	public void Start()
 	{
@@ -34,11 +33,12 @@ public class HealthPack : MonoBehaviour
                 {
                     GetComponentInParent<Slot>().m_containsItem = false;
                     Destroy(gameObject);
-                    var actionBarSlot = m_draggedButton.GetComponentInParent<ActionBarSlot>();
+                    var draggedButton = GetComponent<ActionDraggedButton>().m_draggedButton;
+                    var actionBarSlot = draggedButton.GetComponentInParent<ActionBarSlot>();
                     if(actionBarSlot != null)
                     {
                         actionBarSlot.m_isEmpty = true;
-                        Destroy(m_draggedButton);
+                        Destroy(draggedButton);
                     }
                 }
                     

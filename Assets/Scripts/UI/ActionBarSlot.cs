@@ -42,6 +42,7 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 		}
 	}
 
+    //Makes a button based on the item/spell that was dragged to the slot.
 	private GameObject MakeUsableButton(GameObject original)
 	{
 		GameObject usableButton = new GameObject();
@@ -60,7 +61,7 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 		var action = original.GetComponent<Action>();
 		if (action != null)
 			button.onClick.AddListener(() => { action.OnMouseClick(); });
-        original.GetComponent<HealthPack>().m_draggedButton = usableButton;
+        original.GetComponent<ActionDraggedButton>().m_draggedButton = usableButton;
 		m_draggedButton = usableButton;
 
 		var image = usableButton.AddComponent<Image>();
