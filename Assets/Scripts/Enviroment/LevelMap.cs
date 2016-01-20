@@ -14,6 +14,7 @@ public struct MapTile
 {
 	public MapTileType m_tileType;
 	public int m_visualizationIndex;
+	public bool m_isAccessible;
 }
 
 public class LevelMap : MonoBehaviour
@@ -50,6 +51,11 @@ public class LevelMap : MonoBehaviour
 		return m_map[x, y].m_tileType;
 	}
 
+	public bool IsAccessible(int x, int y) {
+		Debug.Assert(m_map != null, "Trying to access map data before its created!");
+		return m_map [x, y].m_isAccessible;
+	}
+
 	public NavGrid GetNavGrid()
 	{
 		Debug.Assert(m_navGrid != null, "Trying to access map nav data before its created!");
@@ -76,6 +82,8 @@ public class LevelMap : MonoBehaviour
 		ProcessMap();
 		
         RemoveThinWalls();
+
+		UpdateAccessibility ();
 
 		m_navGrid = new NavGrid(this);
 	}
@@ -127,6 +135,36 @@ public class LevelMap : MonoBehaviour
             }
         }
     }
+
+	private void UpdateAccessibility()
+	{
+		for (int x = 0; x < m_size.x; x++)
+		{
+			for (int y = 0; y < m_size.y; y++)
+			{
+				if (x == 0 || y == 0 || y == m_size.y - 1 || x == m_size.x - 1)
+				{
+					m_map[x, y].m_isAccessible = false;
+				} else
+				{
+					int neighbor_walls = 0;
+					if (GetTileType(x, y) == MapTileType.Wall)
+						neighbor_walls += 1;
+					if (GetTileType (x + 1, y) == MapTileType.Wall)
+						neighbor_walls += 1;
+					if (GetTileType (x, y + 1) == MapTileType.Wall)
+						neighbor_walls += 1;
+					if (GetTileType(x + 1, y + 1) == MapTileType.Wall)
+						neighbor_walls += 1;
+
+					if (neighbor_walls >= 2)
+						m_map[x, y].m_isAccessible = false;
+					else
+						m_map[x, y].m_isAccessible = true;
+				}
+			}
+		}
+	}
 
     private void makeEmptySpaces()
     {
