@@ -8,35 +8,40 @@ using UnityEngine.EventSystems;
 public class ChatManager : NetworkBehaviour
 {
     public GameObject m_chatObjects;
-    public InputField m_messageList;
+    public GameObject m_messageList;
     public InputField m_messageToBeSent;
     public int m_maxMessages = 10;
-
-    public List<string> m_messages = new List<string>();
+    public Text m_chatMessagePrefab;
 
     public static bool sm_chatOpen = false;
 
-    private CustomNetworkManager m_networkManager;
+    private static List<Text> sm_messages = new List<Text>();
 
     public void Start()
     {
-        m_networkManager = FindObjectOfType<CustomNetworkManager>();
-        if(m_messages.Count > 0)
+        m_chatMessagePrefab.text = "";
+        for(int i = 0; i<m_maxMessages; ++i)
         {
-            for(int i = 0; i < m_messages.Count; ++i)
-            {
-                m_messageList.text += "\n" + m_messages[i];
-            }
+            var emptyMessagePlaceholder = Instantiate(m_chatMessagePrefab);
+            sm_messages.Add(emptyMessagePlaceholder);
+            emptyMessagePlaceholder.transform.SetParent(m_messageList.transform);
+            emptyMessagePlaceholder.transform.localScale = Vector3.one;
         }
     }
-    
+
     public void AddMessage(string msg)
     {
         var player = CharManager.GetLocalPlayer();
-        if (m_messages.Count > m_maxMessages)
-            m_messages.RemoveAt(0);
-        m_messages.Add(msg);
-        m_messageList.text += msg;
+        m_chatMessagePrefab.text = msg;
+        var messageText = Instantiate(m_chatMessagePrefab);
+        sm_messages.Add(messageText);
+        messageText.transform.SetParent(m_messageList.transform);
+        messageText.transform.localScale = Vector3.one;
+        if (sm_messages.Count > m_maxMessages)
+        {
+            sm_messages.RemoveAt(0);
+            Destroy(m_messageList.transform.GetChild(0).gameObject);
+        }
     }
 
     public void SendMessage()
@@ -44,14 +49,14 @@ public class ChatManager : NetworkBehaviour
         var player = CharManager.GetLocalPlayer();
         if (m_messageToBeSent.text.Length == 0)
             return;
-        string message = player.ID.ToString() + ": " + m_messageToBeSent.text + "\n";
+        string message = player.ID.ToString() + ": " + m_messageToBeSent.text;
         SyncManager.AddChatMessage(message, player.ID);
         m_messageToBeSent.text = "";
     }
 
     void Update()
     {
-        if(Input.GetKeyDown("enter"))
+        if(Input.GetKeyDown(KeyCode.Return))
         {
             if (!sm_chatOpen)
                 ToggleChat();
@@ -65,7 +70,6 @@ public class ChatManager : NetworkBehaviour
                 else
                 {
                     SendMessage();
-                    
                 }
             }
         }
@@ -83,6 +87,5 @@ public class ChatManager : NetworkBehaviour
             m_chatObjects.SetActive(false);
             sm_chatOpen = false;
         }
-        
     }
 }

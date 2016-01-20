@@ -42,8 +42,9 @@ MonoBehaviour:
   m_chatObjects: {fileID: 0}
   m_messageList: {fileID: 0}
   m_messageToBeSent: {fileID: 0}
-  m_maxMessages: 10
-  m_messages: []
+  m_maxMessages: 20
+  m_chatMessagePrefab: {fileID: 11411636, guid: a7882d0044c588a439a69505f2497bb4,
+    type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

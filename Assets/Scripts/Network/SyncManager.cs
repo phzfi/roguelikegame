@@ -7,7 +7,9 @@ using System;
 // Class in charge of running the game logic over network connections. Note that when hosting, the same instance of SyncManager handles both client and server side
 public class SyncManager : NetworkBehaviour
 {
-	private float m_lastSync = -99.0f;
+    public static List<string> sm_chatLog = new List<string>();
+
+    private float m_lastSync = -99.0f;
 
 	private static ClientData sm_clientData; // stores all data relevant only to client, null if server
 	private static ServerData sm_serverData; // stores all data relevant only to server, null if client
@@ -19,6 +21,7 @@ public class SyncManager : NetworkBehaviour
 	private static List<AttackOrder> sm_attackOrders = new List<AttackOrder>();
 	private static List<DeathOrder> sm_deathOrders = new List<DeathOrder>();
     private static List<EquipOrder> sm_equipOrders = new List<EquipOrder>();
+    
     private ChatManager m_chatManager;
 	
 	public float m_syncRate = .5f;
@@ -375,6 +378,7 @@ public class SyncManager : NetworkBehaviour
     private void OnServerReceiveChatMessage(NetworkMessage netMsg)
     {
         NetworkServer.SendToAll((short)msgType.chatMessage, netMsg.ReadMessage<ChatMessage>());
+        sm_chatLog.Add(netMsg.ReadMessage<ChatMessage>().m_message);
         //TODO: add to chatlog
     }
 
