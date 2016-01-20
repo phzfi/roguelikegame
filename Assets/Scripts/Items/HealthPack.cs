@@ -6,6 +6,7 @@ public class HealthPack : MonoBehaviour
 {
     public int m_heals = 1;
 	public ActionDelegate m_useDelegate;
+    public GameObject m_draggedButton;
 
 	public void Start()
 	{
@@ -27,9 +28,20 @@ public class HealthPack : MonoBehaviour
             {
                 inventory.m_items.Remove(item.gameObject);
                 inventory.UpdatePotionCount();
-                Debug.Log("Health potion used.");
-                if(inventory.AmountOfItem("Potion") < 1)
+                int potions = inventory.AmountOfItem("Potion");
+                Debug.Log("Health potion used. Potions left " + potions);
+                if(potions < 1)
+                {
+                    GetComponentInParent<Slot>().m_containsItem = false;
                     Destroy(gameObject);
+                    var actionBarSlot = m_draggedButton.GetComponentInParent<ActionBarSlot>();
+                    if(actionBarSlot != null)
+                    {
+                        actionBarSlot.m_isEmpty = true;
+                        Destroy(m_draggedButton);
+                    }
+                }
+                    
                 return;
             }
         }
