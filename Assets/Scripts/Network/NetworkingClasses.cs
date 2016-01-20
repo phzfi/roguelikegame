@@ -13,7 +13,8 @@ public enum msgType : short
 	attackOrder,
 	death,
 	turnSync,
-    equipOrder
+    equipOrder,
+	actionOrder
 } // start higher since unity reserves some message types
 
 public struct MoveOrder
@@ -53,6 +54,7 @@ public struct MoveOrder
 		return true;
 	}
 }
+
 
 public struct AttackOrder
 {
@@ -113,6 +115,11 @@ public class ConnectionMessage : MessageBase
 public class MoveOrderMessage : MessageBase
 {
 	public MoveOrder[] m_orders;
+	public int m_clientID;
+}
+public class ActionMessage : MessageBase
+{
+	public ActionData[] m_actions;
 	public int m_clientID;
 }
 

@@ -19,6 +19,8 @@ public class SyncManager : NetworkBehaviour
 	private static List<AttackOrder> sm_attackOrders = new List<AttackOrder>();
 	private static List<DeathOrder> sm_deathOrders = new List<DeathOrder>();
     private static List<EquipOrder> sm_equipOrders = new List<EquipOrder>();
+	private static List<ActionData> sm_outgoingActions = new List<ActionData>();
+	private static List<ActionData> sm_incomingActions = new List<ActionData>();
 	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
@@ -53,7 +55,8 @@ public class SyncManager : NetworkBehaviour
 		NetworkServer.RegisterHandler((short)msgType.attackOrder, OnServerReceiveAttackOrders);
 		NetworkServer.RegisterHandler((short)msgType.death, EmptyMessageHandler);
 		NetworkServer.RegisterHandler((short)msgType.turnSync, EmptyMessageHandler);
-        NetworkServer.RegisterHandler((short)msgType.equipOrder, OnServerReceiveEquipOrders);
+		NetworkServer.RegisterHandler((short)msgType.actionOrder, OnServerRecieveActionOrders);
+		NetworkServer.RegisterHandler((short)msgType.equipOrder, OnServerReceiveEquipOrders);
         sm_serverData = new ServerData();
 		enabled = true;
 		sm_isServer = true;
@@ -71,7 +74,8 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.RegisterHandler((short)msgType.attackOrder, OnClientReceiveAttackOrders);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.death, OnClientReceiveDeath);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.turnSync, OnClientReceiveTurnSync);
-        sm_clientData.m_connection.RegisterHandler((short)msgType.equipOrder, OnClientReceiveEquipOrders);
+		sm_clientData.m_connection.RegisterHandler((short)msgType.actionOrder, OnClientReceiveActionOrders);
+		sm_clientData.m_connection.RegisterHandler((short)msgType.equipOrder, OnClientReceiveEquipOrders);
         enabled = true;
 
 		var msg = new ConnectionMessage();
@@ -196,7 +200,7 @@ public class SyncManager : NetworkBehaviour
 		for (int i = 0; i < sm_attackOrders.Count; ++i)
 		{
 			//var order = sm_attackOrders[i];
-			//TODO: do things
+			//TODO: visualize attacks
 		}
 		sm_attackOrders.Clear();
 	}
@@ -209,6 +213,27 @@ public class SyncManager : NetworkBehaviour
 			MovementManager.OrderAttack(order);
 		}
 		sm_attackOrders.Clear();
+	}
+
+	void handleActionOrdersOnClient()
+	{
+		for (int i = 0; i < sm_incomingActions.Count; ++i)
+		{
+			//var order = sm_incomingActions[i];
+			//TODO: visualize actions
+		}
+		sm_incomingActions.Clear();
+	}
+
+	void handleActionOrdersOnServer()
+	{
+		for(int i = 0; i < sm_incomingActions.Count; ++i)
+		{
+			var actionData = sm_incomingActions[i];
+			var action = ActionManager.GetAction(actionData.m_actionID);
+			action.Use(actionData.m_target);
+		}
+		sm_incomingActions.Clear();
 	}
 
 	void StartServerTurn() // advances the game state by one turn, runs all the server-side game logic
@@ -290,6 +315,13 @@ public class SyncManager : NetworkBehaviour
 		equipMsg.m_orders = equipOrders;
 		equipMsg.m_clientID = sm_clientData.m_clientID;
         sm_clientData.m_connection.Send((short)msgType.equipOrder, equipMsg);
+
+		var actionMsg = new ActionMessage();
+		ActionData[] actions = sm_outgoingActions.ToArray();
+		sm_outgoingActions.Clear();
+		actionMsg.m_actions = actions;
+		actionMsg.m_clientID = sm_clientData.m_clientID;
+		sm_clientData.m_connection.Send((short)msgType.actionOrder, actionMsg);
     }
 
 	void SendVisualizeOrdersToClients()
@@ -409,6 +441,12 @@ public class SyncManager : NetworkBehaviour
 			Debug.Log("Couldn't find player data for equip order sender!");
     }
 
+	void OnServerRecieveActionOrders(NetworkMessage msg)
+	{
+		var actionMessage = msg.ReadMessage<ActionMessage>();
+		sm_incomingActions.AddRange(actionMessage.m_actions);
+	}
+
     void OnServerReceiveConnection(NetworkMessage msg) // creates new server data entry for connected client so that they can be tracked when changing turns
 	{
 		var connectMsg = msg.ReadMessage<ConnectionMessage>(); // when receiving connection message from client, generate server data for the client
@@ -422,6 +460,13 @@ public class SyncManager : NetworkBehaviour
 
 		connectMsg.m_clientID = msg.conn.connectionId;
 		msg.conn.Send((short)msgType.connected, connectMsg);
+	}
+
+	void OnClientReceiveActionOrders(NetworkMessage msg)
+	{
+		var actionMessage = msg.ReadMessage<ActionMessage>();
+		sm_incomingActions.AddRange(actionMessage.m_actions);
+		handleActionOrdersOnClient();
 	}
 
 	void OnClientReceiveConnection(NetworkMessage msg)
@@ -497,6 +542,15 @@ public class SyncManager : NetworkBehaviour
 
 		var order = new AttackOrder(moverID, targetID);
 		sm_attackOrders.Add(order);
+	}
+
+	public static void AddAction(ActionData action)
+	{
+		if (sm_clientData.m_turnInProgress)
+			return;
+
+		sm_outgoingActions.Clear(); // TODO: chained actions
+		sm_outgoingActions.Add(action);
 	}
 
 	public static void AddServerAttackOrder(int targetID, int moverID) // Version that ignores turn in progress

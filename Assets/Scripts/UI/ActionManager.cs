@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ActionManager : MonoBehaviour
 {
@@ -7,16 +8,27 @@ public class ActionManager : MonoBehaviour
 	public Action m_currentAction = null;
 	public bool m_currentlyTargeting = false; // Whether we're currently targeting some action. TODO: change cursor to appropriate
 
+	public static Dictionary<int, Action> sm_actionDictionary;
+
+	private InputHandler m_inputHandler;
+
 	// Use this for initialization
 	void Start()
 	{
-
+		m_inputHandler = FindObjectOfType<InputHandler>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 
+	}
+
+	public static Action GetAction(int ID)
+	{
+		if (sm_actionDictionary.ContainsKey(ID))
+			return sm_actionDictionary[ID];
+		return null;
 	}
 
 	public void TargetPosition(Vector2i mouseGridPos)
@@ -33,7 +45,10 @@ public class ActionManager : MonoBehaviour
 					ActionTargetData targetData = new ActionTargetData();
 					targetData.m_playerTarget = false;
 					targetData.m_gridTarget = mouseGridPos;
-					m_currentAction.Use(targetData);
+					ActionData action = new ActionData();
+					action.m_actionID = m_currentAction.ID;
+					action.m_target = targetData;
+					SyncManager.AddAction(action);
 				}
 				break;
 
@@ -47,7 +62,11 @@ public class ActionManager : MonoBehaviour
 							ActionTargetData targetData = new ActionTargetData();
 							targetData.m_playerTarget = true;
 							targetData.m_targetID = target.ID;
-							m_currentAction.Use(targetData);
+							targetData.m_userID = CharManager.GetLocalPlayer().ID;
+							ActionData action = new ActionData();
+							action.m_actionID = m_currentAction.ID;
+							action.m_target = targetData;
+							SyncManager.AddAction(action);
 							break;
 						}
 					}
