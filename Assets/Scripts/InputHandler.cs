@@ -10,6 +10,8 @@ public class InputHandler : Singleton<InputHandler>
 	public Material selectedTileMaterial;
 	public Color hoverColor = Color.black;
 	public Color selectedColor = Color.red;
+    public Texture2D m_swordCursor;
+    public Texture2D m_walkCursor;
 
 	public PathVisualization pathVisualization;
 	private ActionManager m_actionManager;
@@ -22,7 +24,7 @@ public class InputHandler : Singleton<InputHandler>
 		{
 			selectedTile.localScale = new Vector3(MapGrid.tileSize, MapGrid.tileSize, 1.0f);
 		}
-
+        
 		m_actionManager = FindObjectOfType<ActionManager>();
 	}
 
@@ -57,6 +59,17 @@ public class InputHandler : Singleton<InputHandler>
 
 				NavPath navPath = mover.m_mover.m_navAgent.SeekPath(mover.m_mover.m_gridPos, mouseGridPos);
 				worldSpacePath = MapGrid.NavPathToWorldSpacePath(navPath, -0.07f);
+                for (int i = 0; i < CharManager.Objects.Count; ++i)
+                {
+                    var target = CharManager.Objects[i];
+                    if (mouseGridPos == target.m_mover.m_gridPos)
+                    {
+                        Cursor.SetCursor(m_swordCursor, Vector2.zero, CursorMode.Auto);
+                        break;
+                    }
+                    else
+                        Cursor.SetCursor(m_walkCursor, Vector2.zero, CursorMode.Auto);
+                }
             }
 
             if (worldSpacePath.Count >= 2)
@@ -96,7 +109,8 @@ public class InputHandler : Singleton<InputHandler>
 				{
 					MovementManager.InputMoveOrder(mouseGridPos);
 				}
-			}
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            }
 		}
 	}
 	
