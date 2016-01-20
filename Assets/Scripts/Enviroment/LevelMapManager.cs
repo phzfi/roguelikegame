@@ -90,7 +90,7 @@ public class LevelMapManager : NetworkBehaviour
             gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
 
             // Skip if inside wall
-            if (m_map.GetTileType(gridPos.x, gridPos.y) == MapTileType.Wall)
+            if (!m_map.IsAccessible(gridPos.x, gridPos.y))
                 continue;
             Vector3 pos = MapGrid.GridToWorldPoint(gridPos, -1.0f);
             

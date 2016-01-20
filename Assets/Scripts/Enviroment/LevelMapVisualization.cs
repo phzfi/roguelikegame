@@ -4,13 +4,14 @@ using System.Collections.Generic;
 
 public class LevelMapVisualization : MonoBehaviour
 {
-	static public float sm_depth = 0.0f;
+	static public float sm_depth = 0.1f;
 	static public float sm_meshHeight = 3.0f;
 	public Material gridMaterial;
 	public Transform gridTransform;
 
 	private List<Vector3> vertices;
 	private List<int> triangles;
+    private List<Vector2> uvs;
     private Dictionary<int, List<Triangle>> triangleDictionary = new Dictionary<int, List<Triangle>>();
     private List<List<int>> edges = new List<List<int>>();
     private HashSet<int> visited = new HashSet<int>();
@@ -115,19 +116,9 @@ public class LevelMapVisualization : MonoBehaviour
 
         vertices = new List<Vector3>();
         triangles = new List<int>();
+        uvs = new List<Vector2>();
 
         squareGrid = new SquareGrid(map, MapGrid.tileSize);
-
-        for (int x = 0; x < squareGrid.squares.GetLength(0); x++)
-        {
-            for (int y = 0; y < squareGrid.squares.GetLength(1); y++)
-            {
-                TriangulateSquare(squareGrid.squares[x, y]);
-            }
-        }
-
-        CreateWallMesh();
-
         int width = map.Width;
         int height = map.Height;
         float tileSize = MapGrid.tileSize;
@@ -146,25 +137,55 @@ public class LevelMapVisualization : MonoBehaviour
         floorBotRight.x += tileSize / 2;
         floorBotRight.y -= tileSize / 2;
 
+        // Create wall top pieces using marching squares
+        for (int x = 0; x < squareGrid.squares.GetLength(0); x++)
+        {
+            for (int y = 0; y < squareGrid.squares.GetLength(1); y++)
+            {
+                TriangulateSquare(squareGrid.squares[x, y]);
+            }
+        }
+
+        // Create uvs for wall top vertices
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            float u = Mathf.InverseLerp(floorBotLeft.x, floorTopRight.x, vertices[i].x);
+            float v = Mathf.InverseLerp(floorBotLeft.y, floorTopRight.y, vertices[i].y);
+            uvs.Add(new Vector2(u, v));
+        }
+
+        // Create wall sides
+        CreateWallMesh();
+        
         // Create floor
         CreateTriangle(floorBotRight, floorTopLeft, floorTopRight);
         CreateTriangle(floorBotRight, floorBotLeft, floorTopLeft);
+        uvs.Add(new Vector2(1.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f));
+        uvs.Add(new Vector2(1.0f, 1.0f)); uvs.Add(new Vector2(1.0f, 0.0f));
+        uvs.Add(new Vector2(0.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f));
 
         // Create top edge (to fix shadows)
         Vector3 floorTopLeft2 = floorTopLeft + heightVector;
         Vector3 floorTopRight2 = floorTopRight + heightVector;
         CreateTriangle(floorTopLeft2, floorTopLeft, floorTopRight);
         CreateTriangle(floorTopLeft2, floorTopRight, floorTopRight2);
+        uvs.Add(new Vector2(0.0f, 1.0f)); uvs.Add(new Vector2(0.0f, 0.0f));
+        uvs.Add(new Vector2(1.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f));
+        uvs.Add(new Vector2(1.0f, 0.0f)); uvs.Add(new Vector2(1.0f, 1.0f));
 
         // Create right edge (to fix shadows)
         Vector3 floorBotRight2 = floorBotRight + heightVector;
         CreateTriangle(floorBotRight, floorBotRight2, floorTopRight);
         CreateTriangle(floorTopRight, floorBotRight2, floorTopRight2);
+        uvs.Add(new Vector2(0.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f));
+        uvs.Add(new Vector2(1.0f, 0.0f)); uvs.Add(new Vector2(1.0f, 0.0f));
+        uvs.Add(new Vector2(0.0f, 1.0f)); uvs.Add(new Vector2(1.0f, 1.0f));
 
         Mesh mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
+        mesh.uv = uvs.ToArray();
         mesh.RecalculateNormals();
 
         UpdateGrid(map.Size);
@@ -183,6 +204,11 @@ public class LevelMapVisualization : MonoBehaviour
                 vertices.Add(vertices[edges[i][j + 1]]);
                 vertices.Add(vertices[edges[i][j]] + Vector3.forward * sm_meshHeight);
                 vertices.Add(vertices[edges[i][j + 1]] + Vector3.forward * sm_meshHeight);
+
+                uvs.Add(new Vector2(0.0f, 0.0f));
+                uvs.Add(new Vector2(1.0f, 0.0f));
+                uvs.Add(new Vector2(0.0f, 1.0f));
+                uvs.Add(new Vector2(1.0f, 1.0f));
 
                 triangles.Add(startIndex);
                 triangles.Add(startIndex + 2);
@@ -338,11 +364,13 @@ public class LevelMapVisualization : MonoBehaviour
 
     private void FollowEdge(int vertex, int edge)
     {
-        edges[edge].Add(vertex);
-        visited.Add(vertex);
-        int nextVertex = GetConnectedEdgeVertex(vertex);
-        if (nextVertex != -1)
-            FollowEdge(nextVertex, edge);
+        int vtx = vertex;
+        while (vtx != -1)
+        {
+            edges[edge].Add(vtx);
+            visited.Add(vtx);
+            vtx = GetConnectedEdgeVertex(vtx);
+        }
     }
 
     private int GetConnectedEdgeVertex(int vertex)
