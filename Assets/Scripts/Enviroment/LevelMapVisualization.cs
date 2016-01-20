@@ -437,23 +437,23 @@ public class LevelMapVisualization : MonoBehaviour
             int w = map.Width;
             int h = map.Height;
 
-            CornerNode[,] cornerNodes = new CornerNode[w, h];
+            CornerNode[,] cornerNodes = new CornerNode[w + 1, h + 1];
 
             Vector3 offset = new Vector3(-MapGrid.tileSize / 2.0f, -MapGrid.tileSize / 2.0f, 0);
 
-            for (int x = 0; x < w; x++)
+            for (int x = 0; x < w + 1; x++)
             {
-                for (int y = 0; y < h; y++)
+                for (int y = 0; y < h + 1; y++)
                 {
                     Vector3 pos = MapGrid.GridToWorldPoint(x, y, sm_depth - sm_meshHeight) + offset;
-                    cornerNodes[x, y] = new CornerNode(pos, map.GetTileType(x, y) == MapTileType.Wall, squareSize);
+                    cornerNodes[x, y] = new CornerNode(pos, x == w || y == h || map.GetTileType(x, y) == MapTileType.Wall, squareSize);
                 }
             }
 
-            squares = new Square[w - 1, h - 1];
-            for (int x = 0; x < w - 1; x++)
+            squares = new Square[w, h];
+            for (int x = 0; x < w; x++)
             {
-                for (int y = 0; y < h - 1; y++)
+                for (int y = 0; y < h; y++)
                 {
                     squares[x, y] = new Square(cornerNodes[x, y + 1], cornerNodes[x + 1, y + 1], cornerNodes[x + 1, y], cornerNodes[x, y]);
                 }
