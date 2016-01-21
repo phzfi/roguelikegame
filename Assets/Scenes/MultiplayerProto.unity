@@ -3327,9 +3327,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216b07b127beb3446b33dbd00204bd70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_attackRange: 15
-  m_controller: {fileID: 0}
-  m_mover: {fileID: 0}
 --- !u!1001 &1307245962
 Prefab:
   m_ObjectHideFlags: 0
