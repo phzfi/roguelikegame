@@ -9,6 +9,7 @@ public class CombatSystem : NetworkBehaviour
 	public int m_currentHp;
 	public int m_maxHp = 3;
 	public int m_damage = 1;
+    public bool isBoss = false;
 	public Text m_textPrefab;
     public AttackStyle m_currentAttackStyle = AttackStyle.MELEE;
 
@@ -55,6 +56,8 @@ public class CombatSystem : NetworkBehaviour
 			return;
 
 		targetSystem.GetHit(GetDamage());
+        if (targetSystem == null)
+            Debug.Log("I killed the boss!");
 	}
 
 	public void GetHit(int dmg)
@@ -67,9 +70,15 @@ public class CombatSystem : NetworkBehaviour
 
 	public void Die()
 	{
-		m_controller.Unregister();
+        if (isBoss)
+        {
+            Debug.Log("boss killed!!"); // TODO: victory sequence
+        } 
+        
+        m_controller.Unregister();
 		m_label.enabled = false;
 		gameObject.SetActive(false);
 		Debug.Log("player killed");
+        
 	}
 }
