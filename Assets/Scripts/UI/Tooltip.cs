@@ -30,7 +30,10 @@ public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 if(item != null)
                 {
                     m_itemName.text = item.m_name;
-                    m_infoText.text = "Some placeholder text, fix this later specifically for each item.";
+                    m_infoText.text = "Strength: " + item.m_strength
+                        + "\nAgility: " + item.m_agility
+                        + "\nIntelligence: " + item.m_intelligence
+                        + "\nVitality: " + item.m_vitality;
                     Vector3 pos = GetComponent<RectTransform>().localPosition;
                     m_tooltip.transform.localPosition = new Vector3(pos.x + 10, pos.y, pos.z);
                     m_tooltip.SetActive(true);

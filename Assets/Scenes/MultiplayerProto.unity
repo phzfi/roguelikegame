@@ -589,6 +589,10 @@ Transform:
   - {fileID: 860959546}
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!1 &510869459 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 153416, guid: 9a8e0578020aade48942c33b84c15d5c, type: 2}
+  m_PrefabInternal: {fileID: 925581909}
 --- !u!1001 &535431284
 Prefab:
   m_ObjectHideFlags: 0
@@ -3692,6 +3696,10 @@ Prefab:
       propertyPath: m_healthBar
       value: 
       objectReference: {fileID: 672362997}
+    - target: {fileID: 11448696, guid: ca2f21b817b35d14f9668eb6cf63869d, type: 2}
+      propertyPath: m_tooltip
+      value: 
+      objectReference: {fileID: 510869459}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ca2f21b817b35d14f9668eb6cf63869d, type: 2}
   m_IsPrefabParent: 0

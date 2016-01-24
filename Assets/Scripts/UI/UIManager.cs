@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public Text m_coinsText;
     public Text m_playerNameText;
     public Slider m_healthBar;
+    public GameObject m_tooltip;
 
     public static bool sm_inventoryOpen = false;
     public static bool sm_equipmentOpen = false;
@@ -64,6 +65,8 @@ public class UIManager : MonoBehaviour
             {
                 m_inventoryPanel.SetActive(false);
                 sm_inventoryOpen = false;
+                if (m_tooltip.activeInHierarchy)
+                    m_tooltip.SetActive(false);
             }
         }
         
@@ -82,6 +85,8 @@ public class UIManager : MonoBehaviour
             {
                 m_equipmentPanel.SetActive(false);
                 sm_equipmentOpen = false;
+                if (m_tooltip.activeInHierarchy)
+                    m_tooltip.SetActive(false);
             }
         }
     }
