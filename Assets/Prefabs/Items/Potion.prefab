@@ -18,6 +18,9 @@ GameObject:
   - 114: {fileID: 11489656}
   - 114: {fileID: 11490750}
   - 114: {fileID: 11454794}
+  - 114: {fileID: 11406222}
+  - 114: {fileID: 11441622}
+  - 114: {fileID: 11432098}
   m_Layer: 0
   m_Name: Potion
   m_TagString: Untagged
@@ -314,7 +317,66 @@ MonoBehaviour:
   m_strength: 0
   m_agility: 0
   m_intelligence: 0
+  m_vitality: 0
   m_typeOfItem: 6
+--- !u!114 &11406222
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetingType: 0
+  m_targetEnemies: 0
+  m_targetFriendlies: 0
+  m_targetSelf: 0
+  m_targetingMaxRange: 0
+--- !u!114 &11432098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c88d35ae5753946a4f31b0733ebe89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_draggedButton: {fileID: 0}
+--- !u!114 &11441622
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 11406222}
+          m_MethodName: OnMouseClick
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 0
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!114 &11444768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -358,9 +420,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3d27e016ec3274c84bb1a836b61245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_placeholderItem: {fileID: 0}
+  m_isDraggedButton: 0
   m_returnTo: {fileID: 0}
-  m_placeholderParent: {fileID: 0}
   m_changeIndex: 0
   m_itemType: 0
 --- !u!114 &11470312
@@ -490,8 +551,8 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: .5, y: 0}
   m_AnchorMax: {x: .5, y: 0}
-  m_AnchoredPosition: {x: 25, y: 5}
-  m_SizeDelta: {x: 70, y: 30}
+  m_AnchoredPosition: {x: 14, y: 0}
+  m_SizeDelta: {x: 24, y: 30}
   m_Pivot: {x: .5, y: 0}
 --- !u!224 &22482964
 RectTransform:
@@ -533,6 +594,18 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: m_Delegates.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_event.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
@@ -543,10 +616,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 11492040}
+      objectReference: {fileID: 11406222}
     - target: {fileID: 0}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: UseHealthPack
+      value: OnMouseClick
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_tooltip
@@ -562,11 +635,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_AnchoredPosition.x
-      value: 25
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_AnchoredPosition.y
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalPosition.z
@@ -587,6 +660,30 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_PreferredHeight
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_targetFriendlies
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_SizeDelta.x
+      value: 24
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
