@@ -226,7 +226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_name: Sword
   ID: -1
-  m_strength: 0
+  m_strength: 10
   m_agility: 0
   m_intelligence: 0
   m_vitality: 0
@@ -349,6 +349,10 @@ Prefab:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: f962bb4024092fc4089360aed210bf65, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_strength
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 122640}

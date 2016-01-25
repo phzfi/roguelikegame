@@ -276,7 +276,7 @@ MonoBehaviour:
   m_strength: 0
   m_agility: 0
   m_intelligence: 0
-  m_vitality: 0
+  m_vitality: 8
   m_typeOfItem: 5
 --- !u!222 &22254738
 CanvasRenderer:
@@ -332,6 +332,10 @@ Prefab:
       propertyPath: m_tooltip
       value: 
       objectReference: {fileID: 175626, guid: 36879e06ff64652479fd9736886d233b, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_vitality
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 121334}
