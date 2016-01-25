@@ -12,12 +12,13 @@ public class UIManager : MonoBehaviour
     public Text m_playerNameText;
     public Slider m_healthBar;
     public GameObject m_tooltip;
+    public ActionBarSlot[] m_actionBarSlots;
 
     public static bool sm_inventoryOpen = false;
     public static bool sm_equipmentOpen = false;
     private CharController m_localPlayer;
     private Inventory m_localInventory;
-
+    
     void Update()
     {
         if (m_localPlayer == null)
@@ -50,6 +51,24 @@ public class UIManager : MonoBehaviour
         {
             ToggleEquipment();
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            UseHotkey(1);
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            UseHotkey(2);
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            UseHotkey(3);
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            UseHotkey(4);
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            UseHotkey(5);
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+            UseHotkey(6);
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+            UseHotkey(7);
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+            UseHotkey(8);
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+            UseHotkey(9);
     }
 
     public void ToggleInventory()
@@ -117,5 +136,12 @@ public class UIManager : MonoBehaviour
     public void UpdateAmountOfCoins()
     {
         m_coinsText.text = m_localInventory.m_amountOfCoins.ToString();
+    }
+
+    public void UseHotkey(int button)
+    {
+        var clickable = m_actionBarSlots[button - 1].GetComponentInChildren<Button>();
+        if (clickable != null)
+            clickable.onClick.Invoke();
     }
 }

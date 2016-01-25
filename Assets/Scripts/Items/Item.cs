@@ -61,4 +61,20 @@ public class Item : NetworkBehaviour
 	{
 		ItemManager.Unregister(ID);
 	}
+
+    public override string ToString()
+    {
+        string information = "";
+        if (m_typeOfItem == ItemType.OTHER)
+            information = "Heals " + GetComponent<HealthPack>().m_heals + " hitpoints.";
+        else
+        {
+            information = "Strength: " + m_strength
+                        + "\nAgility: " + m_agility
+                        + "\nIntelligence: " + m_intelligence
+                        + "\nVitality: " + m_vitality;
+        }
+
+        return information;
+    }
 }

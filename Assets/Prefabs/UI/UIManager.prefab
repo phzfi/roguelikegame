@@ -45,6 +45,17 @@ MonoBehaviour:
   m_coinsText: {fileID: 0}
   m_playerNameText: {fileID: 0}
   m_healthBar: {fileID: 0}
+  m_tooltip: {fileID: 0}
+  m_actionBarSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

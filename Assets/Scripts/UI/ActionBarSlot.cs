@@ -46,7 +46,6 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 	private GameObject MakeUsableButton(GameObject original)
 	{
 		GameObject usableButton = new GameObject();
-		var rectTransform = usableButton.AddComponent<RectTransform>();
 		LayoutElement element = usableButton.AddComponent<LayoutElement>();
 		LayoutElement oldElement = original.GetComponent<LayoutElement>();
 		element.preferredHeight = oldElement.preferredHeight;
@@ -55,13 +54,12 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 		element.flexibleWidth = 0;
 		element.minHeight = oldElement.minHeight;
 		element.minWidth = oldElement.minWidth;
-		var canvasGroup = usableButton.AddComponent<CanvasGroup>();
 		usableButton.name = original.name + " Button";
 		var button = usableButton.AddComponent<Button>();
 		var action = original.GetComponent<Action>();
 		if (action != null)
 			button.onClick.AddListener(() => { action.OnMouseClick(); });
-        original.GetComponent<ActionDraggedButton>().m_draggedButton = usableButton;
+        original.GetComponent<ActionDraggedButton>().m_draggedButtons.Add(usableButton);
 		m_draggedButton = usableButton;
 
 		var image = usableButton.AddComponent<Image>();

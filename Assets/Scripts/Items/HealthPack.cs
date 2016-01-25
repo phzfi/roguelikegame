@@ -33,13 +33,19 @@ public class HealthPack : MonoBehaviour
                 {
                     GetComponentInParent<Slot>().m_containsItem = false;
                     Destroy(gameObject);
-                    var draggedButton = GetComponent<ActionDraggedButton>().m_draggedButton;
-                    var actionBarSlot = draggedButton.GetComponentInParent<ActionBarSlot>();
-                    if(actionBarSlot != null)
+                    var draggedButtons = GetComponent<ActionDraggedButton>().m_draggedButtons;
+                    for (int j = 0; i < draggedButtons.Count; ++i)
                     {
-                        actionBarSlot.m_isEmpty = true;
-                        Destroy(draggedButton);
+                        var actionBarSlot = draggedButtons[j].GetComponentInParent<ActionBarSlot>();
+                        if (actionBarSlot != null)
+                        {
+                            actionBarSlot.m_isEmpty = true;
+                            Destroy(draggedButtons[j].gameObject);
+                        }
                     }
+                    
+
+                    
                 }
                     
                 return;
