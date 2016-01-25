@@ -60,6 +60,7 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 		if (action != null)
 			button.onClick.AddListener(() => { action.OnMouseClick(); });
         original.GetComponent<ActionDraggedButton>().m_draggedButtons.Add(usableButton);
+        Debug.Log(original.GetComponent<ActionDraggedButton>().m_draggedButtons.Count);
 		m_draggedButton = usableButton;
 
 		var image = usableButton.AddComponent<Image>();

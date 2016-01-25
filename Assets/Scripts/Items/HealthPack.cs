@@ -40,8 +40,8 @@ public class HealthPack : MonoBehaviour
                         if (actionBarSlot != null)
                         {
                             actionBarSlot.m_isEmpty = true;
-                            Destroy(draggedButtons[j].gameObject);
                         }
+                        Destroy(draggedButtons[j].gameObject);
                     }
                     
 
