@@ -6,7 +6,7 @@ public class LevelMapVisualization : MonoBehaviour
 {
 	static public float sm_depth = 0.1f;
 	static public float sm_meshHeight = 3.0f;
-	public Material gridMaterial;
+    public Material gridMaterial;
 	public Transform gridTransform;
 
 	private List<Vector3> vertices;
@@ -151,7 +151,7 @@ public class LevelMapVisualization : MonoBehaviour
         {
             float u = Mathf.InverseLerp(floorBotLeft.x, floorTopRight.x, vertices[i].x);
             float v = Mathf.InverseLerp(floorBotLeft.y, floorTopRight.y, vertices[i].y);
-            uvs.Add(new Vector2(u, v));
+            uvs.Add(new Vector2(u * map.Width, v * map.Height));
         }
 
         // Create wall sides
@@ -160,26 +160,26 @@ public class LevelMapVisualization : MonoBehaviour
         // Create floor
         CreateTriangle(floorBotRight, floorTopLeft, floorTopRight);
         CreateTriangle(floorBotRight, floorBotLeft, floorTopLeft);
-        uvs.Add(new Vector2(1.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f));
-        uvs.Add(new Vector2(1.0f, 1.0f)); uvs.Add(new Vector2(1.0f, 0.0f));
-        uvs.Add(new Vector2(0.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f));
+        uvs.Add(new Vector2(1.0f * width, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f * height));
+        uvs.Add(new Vector2(1.0f * width, 1.0f * height)); uvs.Add(new Vector2(1.0f * width, 0.0f));
+        uvs.Add(new Vector2(0.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f * height));
 
         // Create top edge (to fix shadows)
         Vector3 floorTopLeft2 = floorTopLeft + heightVector;
         Vector3 floorTopRight2 = floorTopRight + heightVector;
         CreateTriangle(floorTopLeft2, floorTopLeft, floorTopRight);
         CreateTriangle(floorTopLeft2, floorTopRight, floorTopRight2);
-        uvs.Add(new Vector2(0.0f, 1.0f)); uvs.Add(new Vector2(0.0f, 0.0f));
-        uvs.Add(new Vector2(1.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f));
-        uvs.Add(new Vector2(1.0f, 0.0f)); uvs.Add(new Vector2(1.0f, 1.0f));
+        uvs.Add(new Vector2(0.0f, 1.0f * height)); uvs.Add(new Vector2(0.0f, 0.0f));
+        uvs.Add(new Vector2(1.0f * width, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f * height));
+        uvs.Add(new Vector2(1.0f * width, 0.0f)); uvs.Add(new Vector2(1.0f * width, 1.0f * height));
 
         // Create right edge (to fix shadows)
         Vector3 floorBotRight2 = floorBotRight + heightVector;
         CreateTriangle(floorBotRight, floorBotRight2, floorTopRight);
         CreateTriangle(floorTopRight, floorBotRight2, floorTopRight2);
-        uvs.Add(new Vector2(0.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f));
-        uvs.Add(new Vector2(1.0f, 0.0f)); uvs.Add(new Vector2(1.0f, 0.0f));
-        uvs.Add(new Vector2(0.0f, 1.0f)); uvs.Add(new Vector2(1.0f, 1.0f));
+        uvs.Add(new Vector2(0.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f * height));
+        uvs.Add(new Vector2(1.0f * width, 0.0f)); uvs.Add(new Vector2(1.0f * width, 0.0f));
+        uvs.Add(new Vector2(0.0f, 1.0f * height)); uvs.Add(new Vector2(1.0f * width, 1.0f * height));
 
         Mesh mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
@@ -207,8 +207,8 @@ public class LevelMapVisualization : MonoBehaviour
 
                 uvs.Add(new Vector2(0.0f, 0.0f));
                 uvs.Add(new Vector2(1.0f, 0.0f));
-                uvs.Add(new Vector2(0.0f, 1.0f));
-                uvs.Add(new Vector2(1.0f, 1.0f));
+                uvs.Add(new Vector2(0.0f, 1.0f * sm_meshHeight));
+                uvs.Add(new Vector2(1.0f, 1.0f * sm_meshHeight));
 
                 triangles.Add(startIndex);
                 triangles.Add(startIndex + 2);
