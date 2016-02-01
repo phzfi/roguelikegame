@@ -7,6 +7,9 @@ public class LevelMapVisualization : MonoBehaviour
 	static public float sm_depth = 0.1f;
 	static public float sm_meshHeight = 3.0f;
     public Material gridMaterial;
+    public Material wallMaterial;
+    public Material topMaterial;
+    public Material floorMaterial;
 	public Transform gridTransform;
 
 	private List<Vector3> vertices;
@@ -16,6 +19,10 @@ public class LevelMapVisualization : MonoBehaviour
     private List<List<int>> edges = new List<List<int>>();
     private HashSet<int> visited = new HashSet<int>();
     private SquareGrid squareGrid;
+
+    private List<Vector3> floorVertices;
+    private List<int> floorTriangles;
+    private List<Vector2> floorUVs;
 
 	public void GenerateMesh(LevelMap map)
 	{
@@ -154,71 +161,108 @@ public class LevelMapVisualization : MonoBehaviour
             uvs.Add(new Vector2(u * map.Width, v * map.Height));
         }
 
-        // Create wall sides
+        // Initialize top piece game object
+        GameObject top = new GameObject();
+        top.name = "Top";
+        top.transform.parent = this.gameObject.transform;
+        MeshRenderer topMeshRenderer = top.AddComponent<MeshRenderer>();
+        MeshFilter topMeshFilter = top.AddComponent<MeshFilter>();
+        topMeshRenderer.material = topMaterial;
+        topMeshFilter.mesh.vertices = vertices.ToArray();
+        topMeshFilter.mesh.triangles = triangles.ToArray();
+        topMeshFilter.mesh.uv = uvs.ToArray();
+        topMeshFilter.mesh.RecalculateNormals();
+
+        // Create walls
         CreateWallMesh();
-        
+
         // Create floor
-        CreateTriangle(floorBotRight, floorTopLeft, floorTopRight);
-        CreateTriangle(floorBotRight, floorBotLeft, floorTopLeft);
-        uvs.Add(new Vector2(1.0f * width, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f * height));
-        uvs.Add(new Vector2(1.0f * width, 1.0f * height)); uvs.Add(new Vector2(1.0f * width, 0.0f));
-        uvs.Add(new Vector2(0.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f * height));
+        floorVertices = new List<Vector3>();
+        floorTriangles = new List<int>();
+        floorUVs = new List<Vector2>();
+
+        CreateFloorTriangle(floorBotRight, floorTopLeft, floorTopRight);
+        CreateFloorTriangle(floorBotRight, floorBotLeft, floorTopLeft);
+        floorUVs.Add(new Vector2(1.0f * width, 0.0f)); floorUVs.Add(new Vector2(0.0f, 1.0f * height));
+        floorUVs.Add(new Vector2(1.0f * width, 1.0f * height)); floorUVs.Add(new Vector2(1.0f * width, 0.0f));
+        floorUVs.Add(new Vector2(0.0f, 0.0f)); floorUVs.Add(new Vector2(0.0f, 1.0f * height));
 
         // Create top edge (to fix shadows)
         Vector3 floorTopLeft2 = floorTopLeft + heightVector;
         Vector3 floorTopRight2 = floorTopRight + heightVector;
-        CreateTriangle(floorTopLeft2, floorTopLeft, floorTopRight);
-        CreateTriangle(floorTopLeft2, floorTopRight, floorTopRight2);
-        uvs.Add(new Vector2(0.0f, 1.0f * height)); uvs.Add(new Vector2(0.0f, 0.0f));
-        uvs.Add(new Vector2(1.0f * width, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f * height));
-        uvs.Add(new Vector2(1.0f * width, 0.0f)); uvs.Add(new Vector2(1.0f * width, 1.0f * height));
+        CreateFloorTriangle(floorTopLeft2, floorTopLeft, floorTopRight);
+        CreateFloorTriangle(floorTopLeft2, floorTopRight, floorTopRight2);
+        floorUVs.Add(new Vector2(0.0f, 1.0f * sm_meshHeight)); floorUVs.Add(new Vector2(0.0f, 0.0f));
+        floorUVs.Add(new Vector2(1.0f * width, 0.0f)); floorUVs.Add(new Vector2(0.0f, 1.0f * sm_meshHeight));
+        floorUVs.Add(new Vector2(1.0f * width, 0.0f)); floorUVs.Add(new Vector2(1.0f * width, 1.0f * sm_meshHeight));
 
         // Create right edge (to fix shadows)
         Vector3 floorBotRight2 = floorBotRight + heightVector;
-        CreateTriangle(floorBotRight, floorBotRight2, floorTopRight);
-        CreateTriangle(floorTopRight, floorBotRight2, floorTopRight2);
-        uvs.Add(new Vector2(0.0f, 0.0f)); uvs.Add(new Vector2(0.0f, 1.0f * height));
-        uvs.Add(new Vector2(1.0f * width, 0.0f)); uvs.Add(new Vector2(1.0f * width, 0.0f));
-        uvs.Add(new Vector2(0.0f, 1.0f * height)); uvs.Add(new Vector2(1.0f * width, 1.0f * height));
+        CreateFloorTriangle(floorBotRight, floorBotRight2, floorTopRight);
+        CreateFloorTriangle(floorTopRight, floorBotRight2, floorTopRight2);
+        floorUVs.Add(new Vector2(0.0f, 0.0f)); floorUVs.Add(new Vector2(0.0f, 1.0f * sm_meshHeight));
+        floorUVs.Add(new Vector2(1.0f * width, 0.0f)); floorUVs.Add(new Vector2(1.0f * width, 0.0f));
+        floorUVs.Add(new Vector2(0.0f, 1.0f * sm_meshHeight)); floorUVs.Add(new Vector2(1.0f * width, 1.0f * sm_meshHeight));
 
-        Mesh mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.uv = uvs.ToArray();
-        mesh.RecalculateNormals();
+        // Initialize floor game object
+        GameObject floor = new GameObject();
+        floor.name = "Floor";
+        floor.transform.parent = this.gameObject.transform;
+        MeshRenderer floorMeshRenderer = floor.AddComponent<MeshRenderer>();
+        MeshFilter floorMeshFilter = floor.AddComponent<MeshFilter>();
+        floorMeshRenderer.material = floorMaterial;
+        floorMeshFilter.mesh.vertices = floorVertices.ToArray();
+        floorMeshFilter.mesh.triangles = floorTriangles.ToArray();
+        floorMeshFilter.mesh.uv = floorUVs.ToArray();
+        floorMeshFilter.mesh.RecalculateNormals();
 
         UpdateGrid(map.Size);
     }
 
     private void CreateWallMesh()
     {
+        GameObject walls = new GameObject();
+        walls.name = "Walls";
+        MeshRenderer meshRenderer = walls.AddComponent<MeshRenderer>();
+        MeshFilter meshFilter = walls.AddComponent<MeshFilter>();
+        walls.transform.parent = this.gameObject.transform;
+
+        List<Vector3> wallVertices = new List<Vector3>();
+        List<int> wallTriangles = new List<int>();
+        List<Vector2> wallUVs = new List<Vector2>();
+
         CalculateMeshEdges();
 
         for (int i = 0; i < edges.Count; i++)
         {
             for (int j = 0; j < edges[i].Count - 1; j++)
             {
-                int startIndex = vertices.Count;
-                vertices.Add(vertices[edges[i][j]]);
-                vertices.Add(vertices[edges[i][j + 1]]);
-                vertices.Add(vertices[edges[i][j]] + Vector3.forward * sm_meshHeight);
-                vertices.Add(vertices[edges[i][j + 1]] + Vector3.forward * sm_meshHeight);
+                int startIndex = wallVertices.Count;
+                wallVertices.Add(vertices[edges[i][j]]);
+                wallVertices.Add(vertices[edges[i][j + 1]]);
+                wallVertices.Add(vertices[edges[i][j]] + Vector3.forward * sm_meshHeight);
+                wallVertices.Add(vertices[edges[i][j + 1]] + Vector3.forward * sm_meshHeight);
 
-                uvs.Add(new Vector2(0.0f, 0.0f));
-                uvs.Add(new Vector2(1.0f, 0.0f));
-                uvs.Add(new Vector2(0.0f, 1.0f * sm_meshHeight));
-                uvs.Add(new Vector2(1.0f, 1.0f * sm_meshHeight));
+                wallUVs.Add(new Vector2(0.0f, 0.0f));
+                wallUVs.Add(new Vector2(1.0f, 0.0f));
+                wallUVs.Add(new Vector2(0.0f, 1.0f * sm_meshHeight));
+                wallUVs.Add(new Vector2(1.0f, 1.0f * sm_meshHeight));
 
-                triangles.Add(startIndex);
-                triangles.Add(startIndex + 2);
-                triangles.Add(startIndex + 3);
+                wallTriangles.Add(startIndex);
+                wallTriangles.Add(startIndex + 2);
+                wallTriangles.Add(startIndex + 3);
 
-                triangles.Add(startIndex + 3);
-                triangles.Add(startIndex + 1);
-                triangles.Add(startIndex);
+                wallTriangles.Add(startIndex + 3);
+                wallTriangles.Add(startIndex + 1);
+                wallTriangles.Add(startIndex);
             }
         }
+
+        meshRenderer.material = wallMaterial;
+        meshFilter.mesh.vertices = wallVertices.ToArray();
+        meshFilter.mesh.triangles = wallTriangles.ToArray();
+        meshFilter.mesh.uv = wallUVs.ToArray();
+        meshFilter.mesh.RecalculateNormals();
     }
 
     private void TriangulateSquare(Square square)
@@ -321,13 +365,23 @@ public class LevelMapVisualization : MonoBehaviour
     }
 
     private void CreateTriangle(Vector3 a, Vector3 b, Vector3 c)
+    {
+        vertices.Add(a);
+        triangles.Add(vertices.Count - 1);
+        vertices.Add(b);
+        triangles.Add(vertices.Count - 1);
+        vertices.Add(c);
+        triangles.Add(vertices.Count - 1);
+    }
+
+    private void CreateFloorTriangle(Vector3 a, Vector3 b, Vector3 c)
 	{
-		vertices.Add(a);
-		triangles.Add(vertices.Count - 1);
-		vertices.Add(b);
-		triangles.Add(vertices.Count - 1);
-		vertices.Add(c);
-		triangles.Add(vertices.Count - 1);
+        floorVertices.Add(a);
+		floorTriangles.Add(floorVertices.Count - 1);
+		floorVertices.Add(b);
+		floorTriangles.Add(floorVertices.Count - 1);
+		floorVertices.Add(c);
+		floorTriangles.Add(floorVertices.Count - 1);
 	}
 
     private void AddTriangleToDictionary(int vertex, Triangle triangle)
