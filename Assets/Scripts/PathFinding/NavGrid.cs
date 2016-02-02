@@ -17,7 +17,7 @@ public class NavGridCell
 
 public class NavGrid
 {
-	public const float m_spiralSize = 20.0f; // TODO correct place for this?
+	public const float m_spiralSize = 30.0f; // TODO correct place for this?
 
 	public NavGridCell[,] m_navigationGrid;
 
@@ -91,19 +91,7 @@ public class NavGrid
 			{
 				NavGridCell cell = new NavGridCell();
 				MapTileType tileType = map.GetTileType(x, y);
-				switch (tileType)
-				{
-					case MapTileType.Empty:
-					case MapTileType.Wall:
-						cell.m_accessible = false;
-						break;
-					case MapTileType.Floor:
-						cell.m_accessible = true;
-						break;
-					default:
-						Debug.Assert(false, "Unknown map tile type: " + tileType);
-						break;
-				}
+				cell.m_accessible = map.IsAccessible(x, y);
 				m_navigationGrid[x, y] = cell;
 			}
 		}

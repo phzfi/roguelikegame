@@ -16,13 +16,15 @@ public class Item : NetworkBehaviour
     public int m_agility = 0;
     [SyncVar]
     public int m_intelligence = 0;
+    [SyncVar]
+    public int m_vitality = 0;
 
     [SyncVar]
 	private bool m_onMap = true;
 
-    public enum Type { WEAPON, HEAD, BODY, LEGS, RING, SHIELD, OTHER, INVENTORY }; //possible types of items, inventory as well to drag items back from equipment
+    public enum ItemType { WEAPON, HEAD, BODY, LEGS, RING, SHIELD, OTHER };
 
-    public Type m_typeOfItem = Type.OTHER;
+    public ItemType m_typeOfItem = ItemType.OTHER;
 
     void Start()
 	{
@@ -43,9 +45,6 @@ public class Item : NetworkBehaviour
 		var inventory = obj.GetComponent<Inventory>();
 		if (inventory == null || !inventory.AddItem(gameObject))
 			return;
-
-		if(m_name == "Coins")
-            gameObject.SetActive(false);
 		ItemManager.UnregisterFromMap(ID);
 		m_onMap = false;
 	}
@@ -62,4 +61,20 @@ public class Item : NetworkBehaviour
 	{
 		ItemManager.Unregister(ID);
 	}
+
+    public override string ToString()
+    {
+        string information = "";
+        if (m_typeOfItem == ItemType.OTHER)
+            information = "Heals " + GetComponent<HealthPack>().m_heals + " hitpoints.";
+        else
+        {
+            information = "Strength: " + m_strength
+                        + "\nAgility: " + m_agility
+                        + "\nIntelligence: " + m_intelligence
+                        + "\nVitality: " + m_vitality;
+        }
+
+        return information;
+    }
 }
