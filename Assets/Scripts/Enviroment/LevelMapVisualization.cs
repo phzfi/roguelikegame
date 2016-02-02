@@ -240,49 +240,65 @@ public class LevelMapVisualization : MonoBehaviour
             // 1 active
             case 1:
                 MeshFromPoints(width, height, centerLeft, centerBottom, bottomLeft);
+                CreateWall(centerLeft, centerBottom);
                 break;
             case 2:
                 MeshFromPoints(width, height, bottomRight, centerBottom, centerRight);
+                CreateWall(centerBottom, centerRight);
                 break;
             case 4:
                 MeshFromPoints(width, height, topRight, centerRight, centerTop);
+                CreateWall(centerRight, centerTop);
                 break;
             case 8:
                 MeshFromPoints(width, height, topLeft, centerTop, centerLeft);
+                CreateWall(centerTop, centerLeft);
                 break;
 
             // 2 active
             case 3:
                 MeshFromPoints(width, height, centerRight, bottomRight, bottomLeft, centerLeft);
+                CreateWall(centerLeft, centerRight);
                 break;
             case 6:
                 MeshFromPoints(width, height, centerTop, topRight, bottomRight, centerBottom);
+                CreateWall(centerBottom, centerTop);
                 break;
             case 9:
                 MeshFromPoints(width, height, topLeft, centerTop, centerBottom, bottomLeft);
+                CreateWall(centerTop, centerBottom);
                 break;
             case 12:
                 MeshFromPoints(width, height, topLeft, topRight, centerRight, centerLeft);
+                CreateWall(centerRight, centerLeft);
                 break;
             case 5:
                 MeshFromPoints(width, height, centerTop, topRight, centerRight, centerBottom, bottomLeft, centerLeft);
+                CreateWall(centerLeft, centerTop);
+                CreateWall(centerRight, centerBottom);
                 break;
             case 10:
                 MeshFromPoints(width, height, topLeft, centerTop, centerRight, bottomRight, centerBottom, centerLeft);
+                CreateWall(centerTop, centerRight);
+                CreateWall(centerBottom, centerLeft);
                 break;
 
             // 3 active
             case 7:
                 MeshFromPoints(width, height, centerTop, topRight, bottomRight, bottomLeft, centerLeft);
+                CreateWall(centerLeft, centerTop);
                 break;
             case 11:
                 MeshFromPoints(width, height, topLeft, centerTop, centerRight, bottomRight, bottomLeft);
+                CreateWall(centerTop, centerRight);
                 break;
             case 13:
                 MeshFromPoints(width, height, topLeft, topRight, centerRight, centerBottom, bottomLeft);
+                CreateWall(centerRight, centerBottom);
                 break;
             case 14:
                 MeshFromPoints(width, height, topLeft, topRight, bottomRight, centerBottom, centerLeft);
+                CreateWall(centerBottom, centerLeft);
                 break;
 
             // 4 active
@@ -298,6 +314,32 @@ public class LevelMapVisualization : MonoBehaviour
         if (points.Length >= 4) CreateTriangle(points[0], points[2], points[3], width, height);
         if (points.Length >= 5) CreateTriangle(points[0], points[3], points[4], width, height);
         if (points.Length >= 6) CreateTriangle(points[0], points[4], points[5], width, height);
+    }
+
+    private void CreateWall(Vector3 a, Vector3 b)
+    {
+        Vector3 c = a + new Vector3(0.0f, 0.0f, sm_meshHeight);
+        Vector3 d = b + new Vector3(0.0f, 0.0f, sm_meshHeight);
+
+        wallVertices.Add(a);
+        wallUVs.Add(new Vector2(0.0f, 1.0f * sm_meshHeight));
+        wallTriangles.Add(wallVertices.Count - 1);
+        wallVertices.Add(c);
+        wallUVs.Add(new Vector2(0.0f, 0.0f));
+        wallTriangles.Add(wallVertices.Count - 1);
+        wallVertices.Add(b);
+        wallUVs.Add(new Vector2(1.0f, 1.0f * sm_meshHeight));
+        wallTriangles.Add(wallVertices.Count - 1);
+
+        wallVertices.Add(b);
+        wallUVs.Add(new Vector2(1.0f, 1.0f * sm_meshHeight));
+        wallTriangles.Add(wallVertices.Count - 1);
+        wallVertices.Add(c);
+        wallUVs.Add(new Vector2(0.0f, 0.0f));
+        wallTriangles.Add(wallVertices.Count - 1);
+        wallVertices.Add(d);
+        wallUVs.Add(new Vector2(1.0f, 0.0f));
+        wallTriangles.Add(wallVertices.Count - 1);
     }
 
     private void CreateWalls()
