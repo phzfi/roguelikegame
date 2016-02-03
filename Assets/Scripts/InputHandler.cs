@@ -45,7 +45,7 @@ public class InputHandler : Singleton<InputHandler>
 		}
 
 		// Visualize potential movement path to target tile
-		if (pathVisualization)
+		if (pathVisualization && !m_actionManager.m_currentlyTargeting)
 		{
 			List<Vector3> worldSpacePath = new List<Vector3>();
 			
@@ -100,7 +100,7 @@ public class InputHandler : Singleton<InputHandler>
 		}
 	}
 	
-	private static Vector2i GetMouseGridPosition()
+	public static Vector2i GetMouseGridPosition()
 	{
 		Debug.Assert(Camera.main, "Main camera not found!");
 
