@@ -17,12 +17,14 @@ public class LevelMapManager : NetworkBehaviour
 
 	void Start()
 	{
+        
 		m_map = GetComponent<LevelMap>();
 		m_map.Generate(m_width, m_height);
         //m_mapVisualization.GenerateMesh(m_map);
         m_mapVisualization.MarchingSquaresMesh(m_map);
         GeneratePlayerStartPositions();
         GenerateItems();
+        
 	}
 
 	public LevelMap GetMap()

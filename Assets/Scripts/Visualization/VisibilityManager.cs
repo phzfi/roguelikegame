@@ -113,7 +113,7 @@ public class VisibilityManager : MonoBehaviour
 
 	public static void UpdateLos()
 	{
-		int sightRange = 10;
+		//int sightRange = 10;
 
 		var player = CharManager.GetLocalPlayer();
 

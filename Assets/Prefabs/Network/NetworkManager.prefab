@@ -107,6 +107,8 @@ MonoBehaviour:
   matchName: default
   matchSize: 4
   m_syncManager: {fileID: 0}
+  m_hostSyncManager: {fileID: 0}
+  m_clientSyncManager: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -118,6 +120,16 @@ Prefab:
       propertyPath: m_PlayerPrefab
       value: 
       objectReference: {fileID: 180150, guid: febad74dc2122b346991b7939a79ad59, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_clientSyncManager
+      value: 
+      objectReference: {fileID: 11496800, guid: a1c8e6150cec5484594d498d104347a5,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_hostSyncManager
+      value: 
+      objectReference: {fileID: 11497796, guid: aa67ff3ad3b6d2d4481074a7ae29a34b,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 150516}

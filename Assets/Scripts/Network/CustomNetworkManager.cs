@@ -6,23 +6,53 @@ public class CustomNetworkManager : NetworkManager
 {
 	[SerializeField]
 	private SyncManager m_syncManager;
+    [SerializeField]
+    private HostSyncManager m_hostSyncManager;
+    [SerializeField]
+    private ClientSyncManager m_clientSyncManager;
 
-	public void Start()
+    public void Start()
 	{
-		m_syncManager.enabled = false;
-	}
+        if(m_syncManager)
+		    m_syncManager.enabled = false;
+        if (m_hostSyncManager)
+            m_hostSyncManager.enabled = false;
+        if (m_clientSyncManager)
+            m_clientSyncManager.enabled = false;
+    }
 
 	public override void OnClientConnect(NetworkConnection conn) // called when connected to a server
 	{
 		base.OnClientConnect(conn);
-		m_syncManager.InitOnClient(conn);
-	}
+        if (m_clientSyncManager)
+        {
+            m_hostSyncManager.enabled = true;
+            m_clientSyncManager.InitOnClient(conn);
+        }
+        else if (m_syncManager)
+        {
+            m_syncManager.enabled = true;
+            m_syncManager.InitOnClient(conn);
+        }
+        else
+            Debug.LogError("Unable to to initialize either syncs");
+    }
 
 	public override void OnStartServer() // called when starting server or host
 	{
 		base.OnStartServer();
-		m_syncManager.InitOnServer();
-		m_syncManager.enabled = true;
+        if (m_hostSyncManager)
+        {
+            m_hostSyncManager.enabled = true;
+            m_hostSyncManager.InitOnServer();
+        }
+        else if (m_syncManager)
+        {
+            m_syncManager.enabled = true;
+            m_syncManager.InitOnServer();
+        }
+        else
+            Debug.LogError("Unable to to initialize either syncs");
 	}
 
 	public override void OnServerDisconnect(NetworkConnection conn) // called on server (or host) when client disconnects
@@ -40,6 +70,15 @@ public class CustomNetworkManager : NetworkManager
 	public override void OnStopServer() // called on server when server (or host) is stopped
 	{
 		base.OnStopServer();
-		m_syncManager.StopOnServer();
-	}
+        if (m_hostSyncManager)
+        {
+            m_hostSyncManager.StopOnServer();
+            m_hostSyncManager.enabled = false;
+        }
+        else if (m_syncManager)
+        {
+            m_syncManager.StopOnServer();
+            m_syncManager.enabled = false;
+        }
+    }
 }
