@@ -56,9 +56,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -164,10 +162,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eabba29f0c98c934ab7d1e58648e567a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_currentHp: 0
-  m_maxHp: 3
+  m_currentHp: 30
+  m_maxHp: 39
   m_damage: 1
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
+  m_currentAttackStyle: 0
 --- !u!114 &11415356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -225,7 +224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_orderType: 0
   m_attackOrderTarget: 0
-  m_gridSpeed: 4
+  m_gridSpeed: 8
   m_syncer: {fileID: 0}
 --- !u!114 &11444724
 MonoBehaviour:
@@ -257,6 +256,7 @@ MonoBehaviour:
   m_coinPickupAudio: {fileID: 8300000, guid: 8075a1247fb557c4abe9d7f16db83de2, type: 3}
   m_maxItems: 5
   m_amountOfCoins: 0
+  m_items: []
 --- !u!114 &11480662
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -357,7 +357,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_gridSpeed
-      value: 4
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_currentHp
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_maxHp
+      value: 39
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
