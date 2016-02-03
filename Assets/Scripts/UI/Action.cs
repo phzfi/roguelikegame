@@ -21,7 +21,7 @@ public struct ActionData
 
 public delegate void ActionDelegate(ActionTargetData targetData);
 
-public class Action : MonoBehaviour {
+public class Action : NetworkBehaviour {
 
 	public enum ActionTargetingType { self = 0, ranged, target, ground }
 
@@ -49,7 +49,10 @@ public class Action : MonoBehaviour {
 	public void Update()
 	{
 		if (!m_registered && ID >= 0)
+		{
 			ActionManager.sm_actionDictionary.Add(ID, this);
+			m_registered = true;
+		}
     }
 
 	public void OnMouseClick()

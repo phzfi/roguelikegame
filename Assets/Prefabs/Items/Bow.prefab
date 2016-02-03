@@ -21,6 +21,7 @@ GameObject:
   - 114: {fileID: 11413836}
   - 33: {fileID: 3302938}
   - 23: {fileID: 2317324}
+  - 114: {fileID: 11404030}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -131,6 +132,19 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+--- !u!114 &11404030
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 178154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d63ff75e83bf1d440a3784be32987630, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_maxRange: 10
+  m_damage: 5
 --- !u!114 &11413836
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -204,11 +218,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_targetingType: 0
-  m_targetEnemies: 0
+  m_targetingType: 1
+  m_targetEnemies: 1
   m_targetFriendlies: 0
   m_targetSelf: 0
-  m_targetingMaxRange: 0
+  m_targetingMaxRange: 10
+  ID: -1
 --- !u!114 &11480722
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -298,7 +313,7 @@ MonoBehaviour:
   m_agility: 0
   m_intelligence: 0
   m_vitality: 0
-  m_typeOfItem: 0
+  m_typeOfItem: 6
 --- !u!222 &22281282
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -346,7 +361,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_typeOfItem
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Mesh
@@ -356,6 +371,26 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: db3322e65aea6344a8b85cee572c3116, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_targetingType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_targetingMaxRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_targetEnemies
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_maxRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_damage
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 178154}

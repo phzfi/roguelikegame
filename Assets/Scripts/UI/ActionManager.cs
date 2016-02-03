@@ -16,6 +16,7 @@ public class ActionManager : MonoBehaviour
 	void Start()
 	{
 		m_inputHandler = FindObjectOfType<InputHandler>();
+		sm_actionDictionary = new Dictionary<int, Action>();
 	}
 
 	// Update is called once per frame

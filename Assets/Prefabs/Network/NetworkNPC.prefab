@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216b07b127beb3446b33dbd00204bd70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_attackRange: 15
+  m_attackRange: 2
 --- !u!114 &11453564
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -246,9 +246,7 @@ MonoBehaviour:
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
   m_meleeAudio: {fileID: 0}
-  m_barehandSounds:
-  - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
-  - {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+  m_barehandSounds: []
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
 --- !u!114 &11478352
@@ -295,6 +293,7 @@ MonoBehaviour:
   m_syncer: {fileID: 0}
   m_inventory: {fileID: 0}
   m_equipment: {fileID: 0}
+  m_combatSystem: {fileID: 0}
   m_enemyAI: {fileID: 0}
   m_isPlayer: 0
 --- !u!1001 &100100000
@@ -336,6 +335,10 @@ Prefab:
       propertyPath: m_rangedAudio
       value: 
       objectReference: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_attackRange
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 122222}

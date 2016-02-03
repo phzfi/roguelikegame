@@ -272,6 +272,7 @@ public class SyncManager : NetworkBehaviour
 
 	void EndServerTurn() // finishes the server side turn
 	{
+		handleActionOrdersOnServer();
 		handleMoveOrdersOnServer();
 		handleAttackOrdersOnServer();
         handleEquipOrdersOnServer();
