@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class Equipment : NetworkBehaviour
 {
     
-    public List<GameObject> m_equipment;
+    public List<GameObject> m_equipment = new List<GameObject>();
 
     [SyncVar]
     public int m_playerStrength = 0;
@@ -16,12 +16,6 @@ public class Equipment : NetworkBehaviour
     public int m_playerIntelligence = 0;
     [SyncVar]
     public int m_playerVitality = 0;
-
-    void Start()
-    {
-        m_equipment = new List<GameObject>();
-    }
-
 
 
 }
