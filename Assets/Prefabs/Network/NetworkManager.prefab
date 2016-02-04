@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &404170
 Transform:
   m_ObjectHideFlags: 1
@@ -96,7 +96,6 @@ MonoBehaviour:
     m_IsAcksLong: 0
     m_Channels: []
   m_Channels: 
-  m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 235
   m_PacketLossPercentage: 0

@@ -11,7 +11,7 @@ public class LevelMapManager : MonoBehaviour
 
 	private LevelMap m_map = null;
 
-	void Start()
+	void Awake()
 	{
 		m_map = GetComponent<LevelMap>();
 		m_map.Generate(m_width, m_height);

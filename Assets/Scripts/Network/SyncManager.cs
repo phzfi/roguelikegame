@@ -111,7 +111,10 @@ public class SyncManager : NetworkBehaviour
 
 	public void DisconnectClient(NetworkConnection connection) // remove disconnected client from players list so that we won't wait for them during turn changes
 	{
-		for (int i = 0; i < sm_serverData.m_playerData.Count; ++i)
+		if (sm_serverData == null)
+			return;
+
+        for (int i = 0; i < sm_serverData.m_playerData.Count; ++i)
 		{
 			var playerData = sm_serverData.m_playerData[i];
 			if (playerData.m_connectionID == connection.connectionId) // tell server to stop tracking disconnected client
