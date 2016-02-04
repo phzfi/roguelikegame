@@ -245,8 +245,10 @@ MonoBehaviour:
   m_damage: 1
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
-  m_meleeAudio: {fileID: 0}
-  m_barehandSounds: []
+  m_meleeAudio: {fileID: 8300000, guid: 07ed8ba57da982047a3281cd98812483, type: 3}
+  m_barehandSounds:
+  - {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+  - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
 --- !u!114 &11478352
@@ -339,6 +341,14 @@ Prefab:
       propertyPath: m_attackRange
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 122222}
