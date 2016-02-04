@@ -14,7 +14,8 @@ public enum msgType : short
 	death,
 	turnSync,
     equipOrder,
-    chatMessage
+    chatMessage,
+	actionOrder
 } // start higher since unity reserves some message types
 
 public struct MoveOrder
@@ -92,6 +93,12 @@ public struct EquipOrder
         m_itemID = itemID;
         m_playerID = playerID;
     }
+}
+
+public class ActionMessage : MessageBase
+{
+	public ActionData[] m_actions;
+	public int m_clientID;
 }
 
 public class ChatMessage : MessageBase

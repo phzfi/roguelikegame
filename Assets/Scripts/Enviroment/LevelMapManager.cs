@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using System.Collections;
 
 public class LevelMapManager : NetworkBehaviour
 {
@@ -22,7 +23,8 @@ public class LevelMapManager : NetworkBehaviour
         //m_mapVisualization.GenerateMesh(m_map);
         m_mapVisualization.MarchingSquaresMesh(m_map);
         GeneratePlayerStartPositions();
-        GenerateItems();
+		//GenerateItems();
+		StartCoroutine(DelayItemGenerate());
 	}
 
 	public LevelMap GetMap()
@@ -56,7 +58,25 @@ public class LevelMapManager : NetworkBehaviour
 		}
 	}
 
-    private void GenerateItems()
+	IEnumerator DelayItemGenerate() // coroutine that waits until all clients have sent their input for this turn, then finishes the server side turn
+	{
+		while (true)
+		{
+			if (SyncManager.IsServer)
+			{
+				GenerateItems();
+                yield break;
+			}
+			else if (SyncManager.sm_running)
+			{
+				yield break;
+			}
+
+			yield return null;
+		}
+	}
+
+	private void GenerateItems()
     {
         
         List<GameObject> itemsToPlace = new List<GameObject>();
@@ -99,8 +119,7 @@ public class LevelMapManager : NetworkBehaviour
             var item = obj.GetComponent<Item>();
             ItemManager.GetID(out item.ID);
             item.m_pos = MapGrid.WorldToGridPoint(pos);
-            if (NetworkServer.active)
-                NetworkServer.Spawn(obj);
+            NetworkServer.Spawn(obj);
         }
     }
 
