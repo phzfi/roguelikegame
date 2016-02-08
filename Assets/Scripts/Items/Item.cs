@@ -65,15 +65,21 @@ public class Item : NetworkBehaviour
     public override string ToString()
     {
         string information = "";
-        if (m_typeOfItem == ItemType.OTHER)
-            information = "Heals " + GetComponent<HealthPack>().m_heals + " hitpoints.";
-        else
-        {
-            information = "Strength: " + m_strength
-                        + "\nAgility: " + m_agility
-                        + "\nIntelligence: " + m_intelligence
-                        + "\nVitality: " + m_vitality;
-        }
+		if (m_typeOfItem == ItemType.OTHER)
+		{
+			var hp = GetComponent<HealthPack>();
+			if (hp != null)
+				information = "Heals " + hp.m_heals + " hitpoints.";
+			else
+				information = m_name;
+		}
+		else
+		{
+			information = "Strength: " + m_strength
+						+ "\nAgility: " + m_agility
+						+ "\nIntelligence: " + m_intelligence
+						+ "\nVitality: " + m_vitality;
+		}
 
         return information;
     }

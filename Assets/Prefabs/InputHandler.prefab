@@ -108,7 +108,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -132,7 +134,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -196,6 +200,8 @@ MonoBehaviour:
     type: 2}
   hoverColor: {r: .533333361, g: .533333361, b: .533333361, a: 1}
   selectedColor: {r: 1, g: 0, b: 0, a: 1}
+  m_swordCursor: {fileID: 2800000, guid: 5d86c1148e9c7ab4a808e1dffe4a006b, type: 3}
+  m_walkCursor: {fileID: 2800000, guid: c0d2613ff261902478c01c3c6d0423cf, type: 3}
   pathVisualization: {fileID: 11412454}
 --- !u!1001 &100100000
 Prefab:
