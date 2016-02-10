@@ -13,12 +13,14 @@ public class Inventory : MonoBehaviour
 	public int m_amountOfCoins = 0;
     public List<GameObject> m_items;
 
-	private AudioSource m_audioSource;   
+	private AudioSource m_audioSource;
+    private CharController m_player;
 
 	void Start()
 	{
 		m_items = new List<GameObject>();
 		m_audioSource = GetComponent<AudioSource>();
+        m_player = GetComponent<CharController>();
 	}
 
     public int AmountOfItem(string itemName)
@@ -33,36 +35,29 @@ public class Inventory : MonoBehaviour
         return count;
     }
 
-    public void UpdatePotionCount()
-    {
-        var slots = InventorySlots();
-        int amountOfPotions = AmountOfItem("Potion");
-        Debug.Log(slots);
-        for(int i = 0; i < slots.transform.childCount; ++i)
-        {
-            var child = slots.transform.GetChild(0).GetChild(i);
-            var item = child.gameObject.GetComponent<Item>();
-            if(item != null)
-            {
-                if(item.m_name == "Potion")
-                {
-                    for(int j = 0; i < item.transform.childCount; ++j)
-                    {
-                        var text = item.transform.GetChild(j).GetComponent<Text>();
-                        if (text == null)
-                        {
-                            continue;
-                        }
-                        text.text = amountOfPotions.ToString();
-                        break;
-                    }
-                    break;
-                }
-            }
-        }
-    }
+	public void UpdatePotionCount()
+	{
+		var slots = InventorySlots();
+		int amountOfPotions = AmountOfItem("Potion");
+		for (int i = 0; i < slots.transform.childCount; ++i)
+		{
+			var child = slots.transform.GetChild(i);
+			if (child.childCount == 0)
+				continue;
+			var item = child.GetChild(0).gameObject.GetComponent<Item>();
+			if (item != null)
+			{
+				if (item.m_name == "Potion")
+				{
+					var text = item.GetComponentsInChildren<Text>(true)[0];
+					text.text = amountOfPotions.ToString();
+					return;
+				}
+			}
+		}
+	}
 
-    public bool CanAddItem(GameObject item)
+	public bool CanAddItem(GameObject item)
 	{
 		return m_items.Count < m_maxItems;
 	}
@@ -75,6 +70,12 @@ public class Inventory : MonoBehaviour
             m_items.Add(item);
             m_audioSource.PlayOneShot(m_itemPickupAudio);
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
+            if (!m_player.isLocalPlayer)
+            {
+                item.SetActive(false);
+                return true;
+            }
+
             if (itemName == "Potion")
             {
                 if (AmountOfItem("Potion") <= 1)
@@ -84,13 +85,12 @@ public class Inventory : MonoBehaviour
                     UpdatePotionCount();
                     item.SetActive(false);
                 }
-                    
             }
             else
                 AddToUIInventory(item);
-            
+
             return true;
-		}
+        }
 		if (itemName == "Coins")
 		{
             item.SetActive(false);
