@@ -16,7 +16,7 @@ public class ClientSyncManager : NetworkBehaviour
 
         var msg = new InputConnectMessage();
         msg.m_playerIndex = -1;
-        msg.m_connection = connection;
+        msg.m_connectionIndex = connection.connectionId;
         m_playerData.m_connection.Send((short)networkMsgType.connectPlayer, msg);
         Debug.Log("Send initialized at client to server");
     }

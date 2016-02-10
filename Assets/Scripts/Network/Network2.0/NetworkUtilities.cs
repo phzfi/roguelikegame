@@ -10,9 +10,9 @@ public enum networkMsgType : short
 
 public class HostPlayerData
 {
-    public HostPlayerData(NetworkConnection connection)
+    public HostPlayerData(int connectionId)
     {
-        m_connection = connection;
+        m_connectionId = connectionId;
         m_inputStack = new List<InputOrder>();
     }
 
@@ -21,7 +21,7 @@ public class HostPlayerData
         m_inputStack.Clear();
     }
 
-    public NetworkConnection m_connection;
+    public int m_connectionId;
     public List<InputOrder> m_inputStack;
 }
 

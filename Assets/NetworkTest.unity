@@ -3326,6 +3326,10 @@ Prefab:
       propertyPath: m_ServerOnly
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11496212, guid: 8dad3d286699d91498d7a747ba1f6140, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11495486, guid: 8dad3d286699d91498d7a747ba1f6140, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 8dad3d286699d91498d7a747ba1f6140, type: 2}
@@ -3352,22 +3356,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 0
-    i1: 0
-    i2: 0
-    i3: 0
-    i4: 0
-    i5: 0
-    i6: 0
-    i7: 0
-    i8: 0
-    i9: 0
-    i10: 0
-    i11: 0
-    i12: 0
-    i13: 0
-    i14: 0
-    i15: 0
+    i0: 141
+    i1: 173
+    i2: 61
+    i3: 40
+    i4: 102
+    i5: 153
+    i6: 217
+    i7: 20
+    i8: 152
+    i9: 215
+    i10: 167
+    i11: 71
+    i12: 186
+    i13: 31
+    i14: 97
+    i15: 64
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!4 &1341768902 stripped

@@ -45,16 +45,16 @@ public class HostSyncManager : NetworkBehaviour
     {
         var connectMessage = msg.ReadMessage<InputConnectMessage>();
         int playerId = connectMessage.m_playerIndex;
-        var connection = connectMessage.m_connection;
+        int connectionId = connectMessage.m_connectionIndex;
         if (playerId == -1)
         {
-            InputStacks.Add(playerIdCounter, new HostPlayerData(connection));
+            InputStacks.Add(playerIdCounter, new HostPlayerData(connectionId));
             playerIdCounter++;
             DummyGameLogic.Instance.AddPlayer();
 
-            //var outputMsg = new OutputConnectMessage();
-            //connection.Send((short)networkMsgType.connectPlayer, outputMsg);
-            //Debug.Log("Send initialized at client to server");
+            var outputMsg = new OutputConnectMessage();
+            NetworkServer.SendToClient(connectionId, (short)networkMsgType.connectPlayer, outputMsg);
+            Debug.Log("Send initialized at client to server");
         }
         else
         {

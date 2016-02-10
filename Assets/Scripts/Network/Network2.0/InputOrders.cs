@@ -9,8 +9,8 @@ abstract public class InputOrder
 
 public class InputConnectMessage : MessageBase
 {
-    public NetworkConnection m_connection;
     public int m_playerIndex;
+    public int m_connectionIndex;
 }
 
 public class InputOrderMessage : MessageBase
@@ -25,7 +25,7 @@ public class InputOrderMessage : MessageBase
     public bool m_clearStack;
 }
 
-public class MovementInputOrder : InputOrder
+public class MovementInputOrder
 {
     MovementInputOrder(Vector2i targetPosition)
     {
@@ -33,7 +33,7 @@ public class MovementInputOrder : InputOrder
     }
     private Vector2i m_targetGridPos;
 
-    public override void ExecuteOrder()
+    public void ExecuteOrder()
     {
         DummyGameLogic.Instance.ExecuteMovement();
     }
