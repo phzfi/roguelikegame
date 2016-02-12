@@ -26,6 +26,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 
 	private CombatSystem m_combatSystem;
 	private CharController m_controller;
+    private Animator m_animator;
 
 	bool m_onGoingMovement = false;
 	float m_distanceOnStep = 0.0f;
@@ -38,6 +39,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		m_audioSource = GetComponent<AudioSource>();
 		m_syncer = GetComponent<PlayerSync>();
 		m_combatSystem = GetComponent<CombatSystem>();
+        m_animator = GetComponent<Animator>();
 
 		LevelMapManager mapManager = FindObjectOfType<LevelMapManager>();
 		LevelMap map = mapManager.GetMap();
@@ -126,7 +128,8 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			Vector3 endWorldPos = MapGrid.GridToWorldPoint(targetGridPos, transform.position.z);
 			StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(startWorldPos, endWorldPos, true));
 		}
-	}
+        
+    }
 
 	IEnumerator InterpolateCurveMovementCoroutine(CatmullRomSpline spline, int pathPointCount)
 	{
@@ -188,8 +191,8 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			case OrderType.none:
 				return false;
 			case OrderType.move:
-				m_navPath = m_navAgent.SeekPath(m_gridPos, m_moveOrderTarget);
-				break;
+                m_navPath = m_navAgent.SeekPath(m_gridPos, m_moveOrderTarget);
+                break;
 			case OrderType.attack:
 				var target = CharManager.GetObject(m_attackOrderTarget);
 				if (target == null) // if target not found, it must be dead and we can cancel attack order

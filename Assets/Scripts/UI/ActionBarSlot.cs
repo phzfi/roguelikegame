@@ -25,18 +25,20 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 			if (item.m_itemType == Item.ItemType.OTHER)
 			{
 				GameObject button = MakeUsableButton(item.gameObject);
+                GameObject addButton = Instantiate(button);
 				if (!m_isEmpty)
 				{
 					var oldSlottedItem = GetComponentInChildren<Draggable>();
 					Destroy(oldSlottedItem.gameObject);
 				}
-				var drag = button.GetComponent<Draggable>();
+				var drag = addButton.GetComponent<Draggable>();
 
 				drag.m_returnTo = transform;
 				drag.transform.SetParent(drag.m_returnTo);
 				m_isEmpty = false;
-				var rectTransform = button.GetComponent<RectTransform>();
+				var rectTransform = addButton.GetComponent<RectTransform>();
 				rectTransform.localScale = Vector3.one;
+                Debug.Log(ActionDraggedButton.m_draggedButtons.Count);
 			}
 
 		}
@@ -59,16 +61,15 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 		var action = original.GetComponent<Action>();
 		if (action != null)
 			button.onClick.AddListener(() => { action.OnMouseClick(); });
-        original.GetComponent<ActionDraggedButton>().m_draggedButtons.Add(usableButton);
-        Debug.Log(original.GetComponent<ActionDraggedButton>().m_draggedButtons.Count);
-		m_draggedButton = usableButton;
+        ActionDraggedButton.m_draggedButtons.Add(usableButton);        
+		//m_draggedButton = usableButton;
 
 		var image = usableButton.AddComponent<Image>();
 		image.sprite = original.GetComponent<Image>().sprite;
 		button.targetGraphic = image;
 		var drag = usableButton.AddComponent<Draggable>();
 		drag.m_isDraggedButton = true;
-
+        usableButton.AddComponent<CanvasGroup>();
 
 		return usableButton;
 	}

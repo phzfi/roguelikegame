@@ -32,8 +32,8 @@ public class HealthPack : MonoBehaviour
                 if(potions < 1)
                 {
                     GetComponentInParent<Slot>().m_containsItem = false;
-                    Destroy(gameObject);
-                    var draggedButtons = GetComponent<ActionDraggedButton>().m_draggedButtons;
+                    var draggedButtons = ActionDraggedButton.m_draggedButtons;
+                    Debug.Log(draggedButtons.Count);
                     for (int j = 0; i < draggedButtons.Count; ++i)
                     {
                         var actionBarSlot = draggedButtons[j].GetComponentInParent<ActionBarSlot>();
@@ -43,9 +43,7 @@ public class HealthPack : MonoBehaviour
                         }
                         Destroy(draggedButtons[j].gameObject);
                     }
-                    
-
-                    
+                    Destroy(gameObject);
                 }
                     
                 return;

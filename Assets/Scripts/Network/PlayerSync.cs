@@ -14,8 +14,8 @@ public class PlayerSync : NetworkBehaviour
 	{
 		if (isLocalPlayer) // change object color to green if this is the player's own cube
 		{
-			var renderer = GetComponent<MeshRenderer>();
-			renderer.material.color = new Color(0, 1, 0);
+			//var renderer = GetComponent<MeshRenderer>();
+			//renderer.material.color = new Color(0, 1, 0);
 
 			var mainCameraController = FindObjectOfType<MainCameraController>();
 			mainCameraController.SetTarget(transform, true);

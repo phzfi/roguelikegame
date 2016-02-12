@@ -8,6 +8,9 @@ public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject m_tooltip;
 
+    [HideInInspector]
+    public static bool sm_tooltipOpen = false;
+
     private Text m_itemName;
     private Text m_infoText;
 
@@ -35,10 +38,10 @@ public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     Vector3 pos = GetComponent<RectTransform>().localPosition;
                     m_tooltip.transform.localPosition = new Vector3(pos.x + 10, pos.y, pos.z);
                     m_tooltip.SetActive(true);
+                    sm_tooltipOpen = true;
                 }
             }
         }
-        
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -46,5 +49,4 @@ public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         m_tooltip.SetActive(false);
     }
 
-    
 }

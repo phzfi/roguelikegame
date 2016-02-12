@@ -84,8 +84,12 @@ public class UIManager : MonoBehaviour
             {
                 m_inventoryPanel.SetActive(false);
                 sm_inventoryOpen = false;
-                if (m_tooltip.activeInHierarchy)
+                if (Tooltip.sm_tooltipOpen)
+                {
                     m_tooltip.SetActive(false);
+                    Tooltip.sm_tooltipOpen = false;
+                }
+                    
             }
         }
         

@@ -62,7 +62,7 @@ public class InputHandler : Singleton<InputHandler>
                 for (int i = 0; i < CharManager.Objects.Count; ++i)
                 {
                     var target = CharManager.Objects[i];
-                    if (mouseGridPos == target.m_mover.m_gridPos)
+                    if (mouseGridPos == target.m_mover.m_gridPos && target != mover)
                     {
                         Cursor.SetCursor(m_swordCursor, Vector2.zero, CursorMode.Auto);
                         break;
