@@ -1379,7 +1379,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162936}
-  m_LocalRotation: {x: .733087718, y: -.287658453, z: -.611732781, w: -.0749545395}
+  m_LocalRotation: {x: .733087659, y: -.287658423, z: -.611732721, w: -.0749545321}
   m_LocalPosition: {x: -.0189039875, y: .0134009998, z: -.0589309335}
   m_LocalScale: {x: .999999821, y: .999999762, z: .999999821}
   m_Children: []
@@ -1603,8 +1603,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eabba29f0c98c934ab7d1e58648e567a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_currentHp: 10
-  m_maxHp: 10
+  m_currentHp: 3
+  m_maxHp: 3
   m_damage: 1
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
@@ -1614,6 +1614,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
+  m_deathSounds:
+  - {fileID: 8300000, guid: 29729708921e4ad48809f0e08ff4f5c2, type: 3}
+  - {fileID: 8300000, guid: 3fa8935e57564aa4d8d396091cfcc22d, type: 3}
 --- !u!114 &11494126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1814,6 +1817,10 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: m_deathSounds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1835,6 +1842,26 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_maxHp
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_currentHp
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: Loop
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

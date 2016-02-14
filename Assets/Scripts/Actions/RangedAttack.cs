@@ -6,12 +6,16 @@ public class RangedAttack : MonoBehaviour {
 	public float m_maxRange;
 	public int m_damage;
 	public ActionDelegate m_useDelegate;
+    public AudioClip m_rangedSound;
+
+    private AudioSource m_audioSource;
 
 	public void Start()
 	{
 		m_useDelegate = new ActionDelegate(Attack);
 		var action = GetComponent<Action>();
 		action.m_useDelegate = m_useDelegate;
+        m_audioSource = GetComponent<AudioSource>();
 	}
 
 	public void Attack(ActionTargetData targetData)
@@ -42,7 +46,7 @@ public class RangedAttack : MonoBehaviour {
 		if (!LineOfSight.CheckLOS(source.m_mover.m_navAgent, source.m_mover.m_gridPos, target.m_mover.m_gridPos, m_maxRange).blocked) // Check that target is visible
 		{
 			target.m_combatSystem.ChangeHP(-m_damage);
-
+            m_audioSource.PlayOneShot(m_rangedSound);
 			//TODO: Effects etc.
 		}
 	}

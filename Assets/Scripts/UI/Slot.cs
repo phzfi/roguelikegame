@@ -8,10 +8,12 @@ public class Slot : MonoBehaviour, IDropHandler
     public bool m_isInventory = false;
     public Item.ItemType m_itemType = Item.ItemType.OTHER;
     public bool m_containsItem = false;
+    public AudioClip m_equipSound;
 
     private Equipment m_equipment;
 	private Inventory m_inventory;
     private int m_playerID;
+    private AudioSource m_audioSource;
 
     public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
@@ -25,6 +27,7 @@ public class Slot : MonoBehaviour, IDropHandler
         m_playerID = player.ID;
         if (m_equipment == null)
             Debug.LogError("Could not find equipment for slot");
+        m_audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void EquipItem(GameObject itemName)
@@ -33,6 +36,7 @@ public class Slot : MonoBehaviour, IDropHandler
         SyncManager.AddEquipOrder(item.ID, m_playerID, true);
 		m_inventory.m_items.Remove(itemName);
         m_equipment.m_playerStrength += item.m_strength;
+        m_audioSource.PlayOneShot(m_equipSound);
     }
 
     public void UnequipItem(GameObject itemName)

@@ -16,6 +16,7 @@ public class CombatSystem : NetworkBehaviour
     public List<AudioClip> m_barehandSounds;
     public AudioClip m_mageAudio;
     public AudioClip m_rangedAudio;
+    public List<AudioClip> m_deathSounds;
 
     private GameObject m_textCanvas;
 	private Text m_label;
@@ -113,7 +114,8 @@ public class CombatSystem : NetworkBehaviour
 
 	public void Die()
 	{
-		m_controller.Unregister();
+        m_audioSource.PlayOneShot(m_deathSounds[0]);
+        m_controller.Unregister();
 		m_label.enabled = false;
 		gameObject.SetActive(false);
 		Debug.Log("player killed");

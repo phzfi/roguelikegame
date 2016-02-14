@@ -38,7 +38,6 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 				m_isEmpty = false;
 				var rectTransform = addButton.GetComponent<RectTransform>();
 				rectTransform.localScale = Vector3.one;
-                Debug.Log(ActionDraggedButton.m_draggedButtons.Count);
 			}
 
 		}
@@ -61,8 +60,11 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
 		var action = original.GetComponent<Action>();
 		if (action != null)
 			button.onClick.AddListener(() => { action.OnMouseClick(); });
-        ActionDraggedButton.m_draggedButtons.Add(usableButton);        
-		//m_draggedButton = usableButton;
+        var originalDraggedButton = original.GetComponent<ActionDraggedButton>().m_draggedButton;
+        if (originalDraggedButton != null)
+            Destroy(originalDraggedButton.gameObject);
+        originalDraggedButton = usableButton;     
+		m_draggedButton = usableButton;
 
 		var image = usableButton.AddComponent<Image>();
 		image.sprite = original.GetComponent<Image>().sprite;

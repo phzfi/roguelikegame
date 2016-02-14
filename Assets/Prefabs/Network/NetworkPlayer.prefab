@@ -1271,6 +1271,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
+  m_deathSounds:
+  - {fileID: 8300000, guid: 29729708921e4ad48809f0e08ff4f5c2, type: 3}
+  - {fileID: 8300000, guid: 3fa8935e57564aa4d8d396091cfcc22d, type: 3}
 --- !u!114 &11415356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1555,6 +1558,10 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_meleeSounds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_deathSounds.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
