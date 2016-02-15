@@ -30,13 +30,25 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
                     var oldSlottedItem = GetComponentInChildren<Draggable>();
                     Destroy(oldSlottedItem.gameObject);
                 }
-                var drag = button.GetComponent<Draggable>();
+                if(item.m_isDraggedButton)
+                {
+                    item.m_returnTo = transform;
+                    item.transform.SetParent(item.m_returnTo);
+                    Debug.Log("itemdrag");
+                    var rectTransform = item.GetComponent<RectTransform>();
+                    rectTransform.localScale = Vector3.one;
+                }
+                else
+                {
+                    var drag = button.GetComponent<Draggable>();
 
-                drag.m_returnTo = transform;
-                drag.transform.SetParent(drag.m_returnTo);
+                    drag.m_returnTo = transform;
+                    drag.transform.SetParent(drag.m_returnTo);
+
+                    var rectTransform = button.GetComponent<RectTransform>();
+                    rectTransform.localScale = Vector3.one;
+                }
                 m_isEmpty = false;
-                var rectTransform = button.GetComponent<RectTransform>();
-                rectTransform.localScale = Vector3.one;
             }
 
         }
@@ -60,9 +72,8 @@ public class ActionBarSlot : MonoBehaviour, IDropHandler
         if (action != null)
             button.onClick.AddListener(() => { action.OnMouseClick(); });
         original.GetComponent<ActionDraggedButton>().m_draggedButtons.Add(usableButton);
-        Debug.Log(original.GetComponent<ActionDraggedButton>().m_draggedButtons.Count);
         m_draggedButton = usableButton;
-
+        usableButton.AddComponent<CanvasGroup>();
         var image = usableButton.AddComponent<Image>();
         image.sprite = original.GetComponent<Image>().sprite;
         button.targetGraphic = image;

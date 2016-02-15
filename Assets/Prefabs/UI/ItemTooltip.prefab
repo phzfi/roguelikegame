@@ -59,6 +59,7 @@ GameObject:
   - 224: {fileID: 22490928}
   - 222: {fileID: 22271600}
   - 114: {fileID: 11430694}
+  - 225: {fileID: 22522284}
   m_Layer: 5
   m_Name: Tooltip
   m_TagString: Untagged
@@ -246,13 +247,28 @@ RectTransform:
   m_AnchoredPosition: {x: 411, y: 318}
   m_SizeDelta: {x: 150, y: 125}
   m_Pivot: {x: .5, y: .5}
+--- !u!225 &22522284
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 194294}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 175626}

@@ -50,7 +50,7 @@ public class Slot : MonoBehaviour, IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         Draggable item = eventData.pointerDrag.GetComponent<Draggable>();
-        if (item != null)
+        if (item != null && !item.m_isDraggedButton)
         {
             if (m_itemType == item.m_itemType)
             {

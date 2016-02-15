@@ -34,12 +34,14 @@ public class HealthPack : MonoBehaviour
                     GetComponentInParent<Slot>().m_containsItem = false;
                     Destroy(gameObject);
                     var draggedButtons = GetComponent<ActionDraggedButton>().m_draggedButtons;
-                    for (int j = 0; i < draggedButtons.Count; ++i)
+                    for (int j = 0; j < draggedButtons.Count; ++j)
                     {
                         var actionBarSlot = draggedButtons[j].GetComponentInParent<ActionBarSlot>();
                         if (actionBarSlot != null)
                         {
                             actionBarSlot.m_isEmpty = true;
+                            var button = actionBarSlot.GetComponentInChildren<Draggable>();
+                            Destroy(button.gameObject);
                         }
                         Destroy(draggedButtons[j].gameObject);
                     }

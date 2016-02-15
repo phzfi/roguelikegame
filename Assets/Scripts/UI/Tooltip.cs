@@ -34,9 +34,10 @@ public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 {
                     m_itemName.text = item.m_name;
                     m_infoText.text = item.ToString();
-                    
-                    Vector3 pos = GetComponent<RectTransform>().localPosition;
-                    m_tooltip.transform.localPosition = new Vector3(pos.x + 10, pos.y, pos.z);
+
+                    Vector3 pos = item.GetComponent<RectTransform>().position;
+                    Debug.Log(pos);
+                    m_tooltip.transform.localPosition = new Vector3(pos.x-475, pos.y-250, pos.z);
                     m_tooltip.SetActive(true);
                     sm_tooltipOpen = true;
                 }
