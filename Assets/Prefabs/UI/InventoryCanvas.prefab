@@ -646,6 +646,7 @@ GameObject:
   - 224: {fileID: 22481536}
   - 222: {fileID: 22240762}
   - 114: {fileID: 11453626}
+  - 225: {fileID: 22512384}
   m_Layer: 5
   m_Name: Tooltip
   m_TagString: Untagged
@@ -1196,7 +1197,7 @@ MonoBehaviour:
   m_isInventory: 0
   m_itemType: 0
   m_containsItem: 0
-  m_equipSound: {fileID: 0}
+  m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
   m_warningSign: {fileID: 112604}
 --- !u!114 &11410794
 MonoBehaviour:
@@ -1443,7 +1444,7 @@ MonoBehaviour:
   m_isInventory: 0
   m_itemType: 5
   m_containsItem: 0
-  m_equipSound: {fileID: 0}
+  m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
   m_warningSign: {fileID: 112604}
 --- !u!114 &11423184
 MonoBehaviour:
@@ -2814,7 +2815,7 @@ MonoBehaviour:
   m_isInventory: 0
   m_itemType: 1
   m_containsItem: 0
-  m_equipSound: {fileID: 0}
+  m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
   m_warningSign: {fileID: 112604}
 --- !u!114 &11471446
 MonoBehaviour:
@@ -2918,7 +2919,7 @@ MonoBehaviour:
   m_isInventory: 0
   m_itemType: 2
   m_containsItem: 0
-  m_equipSound: {fileID: 0}
+  m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
   m_warningSign: {fileID: 112604}
 --- !u!114 &11472780
 MonoBehaviour:
@@ -3289,7 +3290,7 @@ MonoBehaviour:
   m_isInventory: 0
   m_itemType: 3
   m_containsItem: 0
-  m_equipSound: {fileID: 0}
+  m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
   m_warningSign: {fileID: 112604}
 --- !u!114 &11486610
 MonoBehaviour:
@@ -4935,6 +4936,17 @@ CanvasGroup:
   m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &22512384
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 177986}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!225 &22573610
 CanvasGroup:
