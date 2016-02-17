@@ -503,6 +503,7 @@ GameObject:
   - 95: {fileID: 9559828}
   - 114: {fileID: 11424260}
   - 114: {fileID: 11430730}
+  - 114: {fileID: 11499844}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -1242,7 +1243,7 @@ Animator:
   m_GameObject: {fileID: 180150}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4736d25587e557340a93f5c0511ae2ed, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1273,8 +1274,8 @@ MonoBehaviour:
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
   m_deathSounds:
-  - {fileID: 8300000, guid: 29729708921e4ad48809f0e08ff4f5c2, type: 3}
-  - {fileID: 8300000, guid: 3fa8935e57564aa4d8d396091cfcc22d, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &11415356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1415,6 +1416,17 @@ MonoBehaviour:
   m_combatSystem: {fileID: 0}
   m_enemyAI: {fileID: 0}
   m_isPlayer: 1
+--- !u!114 &11499844
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0363d3c39c609ed4f9ad29b148931cec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!137 &13733540
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
