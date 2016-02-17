@@ -47,7 +47,7 @@ public class InputHandler : Singleton<InputHandler>
 		}
 
 		// Visualize potential movement path to target tile
-		if (pathVisualization && !m_actionManager.m_currentlyTargeting)
+		if (pathVisualization /*&& !m_actionManager.m_currentlyTargeting*/)
 		{
 			List<Vector3> worldSpacePath = new List<Vector3>();
 			

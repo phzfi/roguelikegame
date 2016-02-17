@@ -25,7 +25,7 @@ public class InputOrderMessage : MessageBase
     public bool m_clearStack;
 }
 
-public class MovementInputOrder
+public class MovementInputOrder : InputOrder
 {
     MovementInputOrder(Vector2i targetPosition)
     {
@@ -33,8 +33,8 @@ public class MovementInputOrder
     }
     private Vector2i m_targetGridPos;
 
-    public void ExecuteOrder()
+    public override void ExecuteOrder()
     {
-        DummyGameLogic.Instance.ExecuteMovement();
+        //DummyGameLogic.Instance.ExecuteMovement();
     }
 }

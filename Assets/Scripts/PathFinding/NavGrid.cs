@@ -11,7 +11,7 @@ public class NavGridCell
 	{
 		m_accessible = false;
 		m_movementCost = 1.0f;
-		m_maxAgentRadius = 0.0f;
+		m_maxAgentRadius = 30.0f;
 	}
 };
 
@@ -22,19 +22,27 @@ public class NavGrid
 	public NavGridCell[,] m_navigationGrid;
 
 	private Vector2i m_size = new Vector2i();
+    private bool m_doSpiral = false;
 
 	public int Width { get { return m_size.x; } }
 	public int Height { get { return m_size.y; } }
 	public Vector2i Size { get { return m_size; } }
 
-	public NavGrid(LevelMap map)
+	public NavGrid(LevelMap map, bool doSpiral)
 	{
 		m_size = map.Size;
-		m_navigationGrid = new NavGridCell[m_size.x, m_size.y];
+        m_doSpiral = doSpiral;
+        m_navigationGrid = new NavGridCell[m_size.x, m_size.y];
 		GenerateFromMap(map);
 	}
 
-	public bool IsAccessible(Vector2i gridPos)
+    public NavGrid(Vector2i size)
+    {
+        m_size = size;
+        m_navigationGrid = new NavGridCell[m_size.x, m_size.y];
+    }
+
+    public bool IsAccessible(Vector2i gridPos)
 	{
 		return IsAccessible(gridPos.x, gridPos.y);
 	}
@@ -95,9 +103,16 @@ public class NavGrid
 				m_navigationGrid[x, y] = cell;
 			}
 		}
-
-		RunPostProcessSpiral();
+        if(m_doSpiral)
+		    RunPostProcessSpiral();
 	}
+
+    public void SetCellAccessable(Vector2i gridPos, bool isAccessable)
+    {
+        NavGridCell cell = new NavGridCell();
+        cell.m_accessible = isAccessable;
+        m_navigationGrid[gridPos.x, gridPos.y] = cell;
+    }
 
 	private void RunPostProcessSpiral()
 	{

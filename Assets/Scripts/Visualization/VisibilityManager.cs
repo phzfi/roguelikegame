@@ -33,8 +33,8 @@ public class VisibilityManager : MonoBehaviour
 				sm_closedLosRenderer = renderers[i];
 		}
 
-		w = sm_mapManager.m_width;
-		h = sm_mapManager.m_height;
+        w = 10; // sm_mapManager.;
+        h = 10; // sm_mapManager.m_height;
 
 		sm_visibilityGrid = new VisibilityState[w * h];
 		sm_openTiles = new Dictionary<Vector2i, bool>();

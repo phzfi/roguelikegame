@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 
+[Serializable]
 public enum MapTileType
 {
 	Empty = 0,
@@ -10,16 +11,22 @@ public enum MapTileType
 	Count = 3
 }
 
+[Serializable]
 public struct MapTile
 {
-	public MapTileType m_tileType;
+    public MapTileType m_tileType;
 	public int m_visualizationIndex;
 	public bool m_isAccessible;
 }
 
-public class LevelMap : MonoBehaviour
+public class LevelMap
 {
-	public bool m_useRandomSeed;
+    public LevelMap(bool isComplete)
+    {
+        m_isComplete = isComplete;
+    }
+
+    public bool m_useRandomSeed;
 	public string m_seed = System.DateTime.Now.ToString();
 
     [Range(0, 100)]
@@ -37,6 +44,7 @@ public class LevelMap : MonoBehaviour
     public int m_meanSpaceSize;
     public float m_standardDeviation;
 
+    private bool m_isComplete;
 	private Vector2i m_size = new Vector2i(0, 0);
 	private MapTile[,] m_map;
 	private NavGrid m_navGrid = null;
@@ -85,10 +93,42 @@ public class LevelMap : MonoBehaviour
 
 		UpdateAccessibility ();
 
-		m_navGrid = new NavGrid(this);
+		m_navGrid = new NavGrid(this, true);
 	}
 
-	private void RandomFillMap()
+    public void GenerateEmpty(int width, int height)
+    {
+        m_size.x = width;
+        m_size.y = height;
+        m_map = new MapTile[m_size.x, m_size.y];
+        m_navGrid = new NavGrid(m_size);
+    }
+
+    public void AddToMap(Vector2i p, MapTileType type, int visualizationIndex)
+    {
+        m_map[p.x, p.y].m_tileType = type;
+        m_map[p.x, p.y].m_visualizationIndex = visualizationIndex;
+        m_map[p.x, p.y].m_isAccessible = type == MapTileType.Floor;
+    }
+
+    public void GetAllVisibleTiles(Vector2i p, ref List<Vector2i> positions, 
+        ref List<int> tiles, ref List<int> visualizationIndices)
+    {
+        for(int x = 0; x < m_size.x; ++x)
+        {
+            for (int y = 0; y < m_size.y; ++y)
+            {
+                Vector2i position;
+                position.x = x;
+                position.y = y;
+                positions.Add(position);
+                tiles.Add((int)m_map[x, y].m_tileType);
+                visualizationIndices.Add(m_map[x,y].m_visualizationIndex);
+            }
+        }
+    }
+
+    private void RandomFillMap()
 	{
 		System.Random pseudoRandom = new System.Random(m_seed.GetHashCode());
 

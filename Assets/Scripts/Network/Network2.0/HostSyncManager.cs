@@ -9,7 +9,7 @@ public class HostSyncManager : NetworkBehaviour
     private float m_lastSync = -99.0f;
     public float m_syncRate = 2.0f;
 
-    private Dictionary<int, HostPlayerData> InputStacks = new Dictionary<int, HostPlayerData>();
+    private Dictionary<int, HostPlayerData> m_stacks = new Dictionary<int, HostPlayerData>();
     private int playerIdCounter = 0;
 
     void Start ()
@@ -22,23 +22,44 @@ public class HostSyncManager : NetworkBehaviour
         {
             //TODO GAME LOGIC
             m_lastSync = Time.realtimeSinceStartup;
+            SendOutputStacks();
+        }
+    }
+
+    void SendOutputStacks()
+    {
+        foreach (var item in m_stacks.Values)
+        {
+            if (item.m_outputStack.Count == 0)
+                return;
+
+            VisibilityOutputMessage msg = new VisibilityOutputMessage();
+            msg.SetOrders(item.m_outputStack);
+            NetworkServer.SendToClient(item.m_connectionId, (short)networkMsgType.visibilityOutputMessage, msg);
+            item.ClearOutput();
         }
     }
 
     public void InitOnServer() // initialize server side sync logic
     {
         NetworkServer.RegisterHandler((short)networkMsgType.connectPlayer, ConnectNewPlayer);
+        NetworkServer.RegisterHandler((short)networkMsgType.inputMessage, HandleInputMessage);
+        NetworkServer.RegisterHandler((short)networkMsgType.visibilityOutputMessage, ErrorMessageHandler);
         enabled = true;
         Debug.Log("Initialized at server");
 
         playerIdCounter = 0;
-        InputStacks.Clear();
-        DummyGameLogic.Instance.Inititialize();
+        m_stacks.Clear();
+
+        //TODO Actual player count
+        GameLogic.Instance.Initialize(4);
     }
 
     public void StopOnServer()
     {
         NetworkServer.UnregisterHandler((short)networkMsgType.connectPlayer);
+        NetworkServer.UnregisterHandler((short)networkMsgType.inputMessage);
+        NetworkServer.UnregisterHandler((short)networkMsgType.visibilityOutputMessage);
     }
 
     void ConnectNewPlayer(NetworkMessage msg)
@@ -48,20 +69,31 @@ public class HostSyncManager : NetworkBehaviour
         int connectionId = connectMessage.m_connectionIndex;
         if (playerId == -1)
         {
-            InputStacks.Add(playerIdCounter, new HostPlayerData(connectionId));
-            playerIdCounter++;
-            DummyGameLogic.Instance.AddPlayer();
+            HostPlayerData stackData = new HostPlayerData(connectionId);
+            m_stacks.Add(playerIdCounter, stackData);
+            VisibilityOutputOrder visibilityOrder = new VisibilityOutputOrder();
+            var outputMsg = GameLogic.Instance.AddPlayer(++playerIdCounter, ref visibilityOrder);
+            stackData.m_outputStack.Add(visibilityOrder);
 
-            var outputMsg = new OutputConnectMessage();
             NetworkServer.SendToClient(connectionId, (short)networkMsgType.connectPlayer, outputMsg);
             Debug.Log("Send initialized at client to server");
         }
         else
         {
-            if (!InputStacks.ContainsKey(playerId))
+            if (!m_stacks.ContainsKey(playerId))
                 Debug.LogError("Reconnecting player with invalid id");
-            InputStacks[playerId].Clear();
-            DummyGameLogic.Instance.ReconnectPlayer(playerId);
+            m_stacks[playerId].Clear();
+            //DummyGameLogic.Instance.ReconnectPlayer(playerId);
         }
+    }
+
+    public void HandleInputMessage(NetworkMessage msg)
+    {
+        //TODO 
+    }
+
+    public void ErrorMessageHandler(NetworkMessage msg)
+    {
+        Debug.LogError("Host syncmanager got invalid message");
     }
 }

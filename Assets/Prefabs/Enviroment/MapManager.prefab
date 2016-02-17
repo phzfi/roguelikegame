@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 485898}
   - 114: {fileID: 11409172}
-  - 114: {fileID: 11479710}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -42,36 +41,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_width: 50
   m_height: 50
-  m_mapVisualization: {fileID: 0}
   m_coinsPrefab: {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
   m_coinCount: 5
   m_itemCount: 5
   m_items:
   - {fileID: 129782, guid: cab6cda1137c36f478393a42a6d0c2ee, type: 2}
   - {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
---- !u!114 &11479710
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 183562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 742e3df8ced192d45a97f0d09023d885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_useRandomSeed: 1
-  m_seed: 123
-  m_randomFillPercent: 0
-  m_smoothingIterations: 0
-  m_frequency: 0
-  m_roomThresholdSize: 0
-  m_passageWidth: 0
-  m_spaceCount: 0
-  m_maxSpaceSize: 0
-  m_minSpaceSize: 0
-  m_meanSpaceSize: 0
-  m_standardDeviation: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

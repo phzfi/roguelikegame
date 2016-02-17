@@ -26,7 +26,7 @@ public class CustomNetworkManager : NetworkManager
 		base.OnClientConnect(conn);
         if (m_clientSyncManager)
         {
-            m_hostSyncManager.enabled = true;
+            m_clientSyncManager.enabled = true;
             m_clientSyncManager.InitOnClient(conn);
         }
         else if (m_syncManager)
