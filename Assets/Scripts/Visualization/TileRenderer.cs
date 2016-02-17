@@ -7,8 +7,9 @@ using System.Collections.Generic;
 public class TileRenderer : MonoBehaviour {
 
 	public string m_name;
-	public enum TileRendererType { FogOfWarOpen = 0, Movement, FogOfWarClosed};
+	public enum TileRendererType { FogOfWarOpen = 0, Movement, FogOfWarClosed, MinimapWalls, MinimapItems, MinimapPlayers};
 	public TileRendererType m_type;
+	public float m_tileSize = .5f;
 
 	private List<int> m_indices = new List<int>();
 	private List<Vector3> m_vertices = new List<Vector3>();
@@ -66,16 +67,16 @@ public class TileRenderer : MonoBehaviour {
 			Vector3 currentPos = tileCoords[i];
 			quad[0].normal = quad[1].normal = quad[2].normal = quad[3].normal = sm_up;
 
-			quad[0].position = currentPos + new Vector3(1, 1, 0) * .5f;
+			quad[0].position = currentPos + new Vector3(1, 1, 0) * m_tileSize;
 			quad[0].uv = new Vector3(1, 1, 0);
 
-			quad[1].position = currentPos + new Vector3(-1, 1, 0) * .5f;
+			quad[1].position = currentPos + new Vector3(-1, 1, 0) * m_tileSize;
 			quad[1].uv = new Vector3(0, 1, 0);
 
-			quad[2].position = currentPos + new Vector3(1, -1, 0) * .5f;
+			quad[2].position = currentPos + new Vector3(1, -1, 0) * m_tileSize;
 			quad[2].uv = new Vector3(1, 0, 0);
 
-			quad[3].position = currentPos + new Vector3(-1, -1, 0) * .5f;
+			quad[3].position = currentPos + new Vector3(-1, -1, 0) * m_tileSize;
 			quad[3].uv = new Vector3(0, 0, 0);
 
 			WriteQuad(quad);
