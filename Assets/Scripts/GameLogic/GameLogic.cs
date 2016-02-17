@@ -11,17 +11,37 @@ public class GameLogic : Singleton<GameLogic>
     public int m_coinCount;
     public int m_itemCount;
     public List<GameObject> m_items;
+    public bool m_drawDebug = false;
+
+    [Header("Map randomization parameters")]
+    public bool m_useRandomSeed;
+    public string m_seed = System.DateTime.Now.ToString();
+
+    [Range(0, 100)]
+    public int m_randomFillPercent;
+    public int m_smoothingIterations;
+
+    public float m_frequency;
+    public int m_roomThresholdSize;
+    public int m_passageWidth;
+
+    [Range(0, 25)]
+    public int m_spaceCount;
+    public int m_maxSpaceSize;
+    public int m_minSpaceSize;
+    public int m_meanSpaceSize;
+    public float m_standardDeviation;
 
     protected GameLogic() { }
 
     private LevelMap m_map = null;
     private List<Vector2i> m_playerStartingPositions = new List<Vector2i>();
-    
+
     public void Initialize(int numberOfPlayers)
     {
         LevelMapManager mapManager = FindObjectOfType<LevelMapManager>();
         m_map = new LevelMap(true);
-        m_map.Generate(m_width, m_height);
+        m_map.Generate(this);
         GeneratePlayerStartPositions(numberOfPlayers);
     }
 
@@ -111,6 +131,33 @@ public class GameLogic : Singleton<GameLogic>
             playerStartPosGo.AddComponent<NetworkStartPosition>();
             playerStartPosGo.transform.parent = m_mapVisualization.transform;
             playerStartPosGo.transform.position = MapGrid.GridToWorldPoint(gridPos, -0.5f);*/
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if (!m_drawDebug)
+            return;
+
+        for(int y = 0; y < m_map.Height; ++y)
+        {
+            for (int x = 0; x <m_map.Width; ++x)
+            {
+                MapTileType tile = m_map.GetTileType(x, y);
+                switch (tile)
+                {
+                    case MapTileType.Wall:
+                        Gizmos.color = Color.blue;
+                        break;
+                    case MapTileType.Floor:
+                        Gizmos.color = Color.green;
+                        break;
+                    default:
+                        Gizmos.color = Color.red;
+                        break;
+                }
+                Gizmos.DrawSphere(new Vector3(x*1.5f + .75f, y * 1.5f + .75f, .0f), .35f);
+            }
         }
     }
 }

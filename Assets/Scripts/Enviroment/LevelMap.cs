@@ -19,6 +19,28 @@ public struct MapTile
 	public bool m_isAccessible;
 }
 
+public struct MapRandomizationData
+{
+    public bool useRandomSeed;
+    public int width;
+    public int height;
+
+    [Range(0, 100)]
+    public int randomFillPercent;
+    public int smoothingIterations;
+
+    public float frequency;
+    public int roomThresholdSize;
+    public int passageWidth;
+
+    [Range(0, 25)]
+    public int spaceCount;
+    public int maxSpaceSize;
+    public int minSpaceSize;
+    public int meanSpaceSize;
+    public float standardDeviation;
+}
+
 public class LevelMap
 {
     public LevelMap(bool isComplete)
@@ -27,22 +49,22 @@ public class LevelMap
     }
 
     public bool m_useRandomSeed;
-	public string m_seed = System.DateTime.Now.ToString();
+    public string m_seed = "0";
 
     [Range(0, 100)]
-	public int m_randomFillPercent;
-    public int m_smoothingIterations;
-
-    public float m_frequency;
-    public int m_roomThresholdSize;
-    public int m_passageWidth;
+	private int m_randomFillPercent;
+    private int m_smoothingIterations;
+    
+    private float m_frequency;
+    private int m_roomThresholdSize;
+    private int m_passageWidth;
 
     [Range(0, 25)]
-    public int m_spaceCount;
-    public int m_maxSpaceSize;
-    public int m_minSpaceSize;
-    public int m_meanSpaceSize;
-    public float m_standardDeviation;
+    private int m_spaceCount;
+    private int m_maxSpaceSize;
+    private int m_minSpaceSize;
+    private int m_meanSpaceSize;
+    private float m_standardDeviation;
 
     private bool m_isComplete;
 	private Vector2i m_size = new Vector2i(0, 0);
@@ -70,10 +92,22 @@ public class LevelMap
 		return m_navGrid;
 	}
 
-	public void Generate(int width, int height)
+	public void Generate(GameLogic data)
 	{
-		m_size.x = width;
-		m_size.y = height;
+        m_useRandomSeed = data.m_useRandomSeed;
+        m_size = new Vector2i(data.m_width, data.m_height);
+        m_randomFillPercent = data.m_randomFillPercent;
+        m_smoothingIterations = data.m_smoothingIterations;
+        m_frequency = data.m_frequency;
+        m_roomThresholdSize = data.m_roomThresholdSize;
+        m_passageWidth = data.m_passageWidth;
+
+        m_spaceCount = data.m_spaceCount;
+        m_maxSpaceSize = data.m_maxSpaceSize;
+        m_minSpaceSize = data.m_minSpaceSize;
+        m_meanSpaceSize = data.m_meanSpaceSize;
+        m_standardDeviation = data.m_standardDeviation;
+
 		m_map = new MapTile[m_size.x, m_size.y];
 
         if (m_useRandomSeed) m_seed = System.DateTime.Now.ToString();
