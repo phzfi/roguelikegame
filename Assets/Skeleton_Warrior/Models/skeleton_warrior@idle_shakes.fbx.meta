@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: f7baf909d10aa024cb931a921316c4bc
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 18
   fileIDToRecycleName:
     100000: Character1_Head
     100002: Character1_Hips
@@ -115,17 +115,23 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nInbetween bone default rotation found in this file
+      is different from the one found in the source avatar:\n\t'Character1_LeftShoulder'
+      : rotation error = 21.728991 deg\n\t'Character1_RightShoulder' : rotation error
+      = 24.490831 deg\n\nClip 'idleVariation' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'Character1_LeftShoulder' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\t'Character1_RightShoulder'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     animationCompression: 1
-    animationRotationError: 0.5
-    animationPositionError: 0.5
-    animationScaleError: 0.5
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
     clipAnimations:
@@ -139,9 +145,8 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
+      loopTime: 1
+      loopBlend: 1
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1
@@ -156,11 +161,10 @@ ModelImporter:
       transformMask: []
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.01
+    globalScale: .00999999978
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -177,6 +181,7 @@ ModelImporter:
     useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 4
   importAnimation: 1
@@ -188,517 +193,517 @@ ModelImporter:
       limit:
         min: {x: -40, y: -40, z: -40}
         max: {x: 40, y: 40, z: 40}
-        value: {x: 0.16804117, y: 0, z: 0.084020585}
-        length: 0.21005154
+        value: {x: .16804117, y: 0, z: .0840205848}
+        length: .210051537
         modified: 1
     - boneName: Character1_LeftUpLeg
       humanName: LeftUpperLeg
       limit:
-        min: {x: -60.000004, y: -60.000004, z: -90}
-        max: {x: 60.000004, y: 60.000004, z: 50}
-        value: {x: 0.16152935, y: 0, z: 0.08076467}
-        length: 0.20191175
+        min: {x: -60.0000038, y: -60.0000038, z: -90}
+        max: {x: 60.0000038, y: 60.0000038, z: 50}
+        value: {x: .161529347, y: 0, z: .0807646737}
+        length: .201911747
         modified: 1
     - boneName: Character1_RightUpLeg
       humanName: RightUpperLeg
       limit:
-        min: {x: -60.000004, y: -60.000004, z: -90}
-        max: {x: 60.000004, y: 60.000004, z: 50}
-        value: {x: 0.1615292, y: 0, z: 0.0807646}
-        length: 0.20191157
+        min: {x: -60.0000038, y: -60.0000038, z: -90}
+        max: {x: 60.0000038, y: 60.0000038, z: 50}
+        value: {x: .161529198, y: 0, z: .0807645991}
+        length: .201911569
         modified: 1
     - boneName: Character1_LeftLeg
       humanName: LeftLowerLeg
       limit:
         min: {x: -90, y: 0, z: -80}
         max: {x: 90, y: 0, z: 80}
-        value: {x: 0.14879672, y: 0, z: 0.07439836}
-        length: 0.18599598
+        value: {x: .148796722, y: 0, z: .0743983611}
+        length: .185995981
         modified: 1
     - boneName: Character1_RightLeg
       humanName: RightLowerLeg
       limit:
         min: {x: -90, y: 0, z: -80}
         max: {x: 90, y: 0, z: 80}
-        value: {x: 0.14879674, y: 0, z: 0.07439837}
-        length: 0.185996
+        value: {x: .148796737, y: 0, z: .0743983686}
+        length: .185995996
         modified: 1
     - boneName: Character1_LeftFoot
       humanName: LeftFoot
       limit:
-        min: {x: 0, y: -30.000002, z: -50}
-        max: {x: 0, y: 30.000002, z: 50}
-        value: {x: 0.060476575, y: 0, z: 0.030238288}
-        length: 0.07559574
+        min: {x: 0, y: -30.0000019, z: -50}
+        max: {x: 0, y: 30.0000019, z: 50}
+        value: {x: .060476575, y: 0, z: .0302382875}
+        length: .0755957365
         modified: 1
     - boneName: Character1_RightFoot
       humanName: RightFoot
       limit:
-        min: {x: 0, y: -30.000002, z: -50}
-        max: {x: 0, y: 30.000002, z: 50}
-        value: {x: 0.060476515, y: 0, z: 0.030238258}
-        length: 0.07559566
+        min: {x: 0, y: -30.0000019, z: -50}
+        max: {x: 0, y: 30.0000019, z: 50}
+        value: {x: .0604765154, y: 0, z: .0302382577}
+        length: .075595662
         modified: 1
     - boneName: Character1_Spine
       humanName: Spine
       limit:
         min: {x: -40, y: -40, z: -40}
         max: {x: 40, y: 40, z: 40}
-        value: {x: 0.19580738, y: 0, z: 0.09790369}
-        length: 0.2447593
+        value: {x: .195807382, y: 0, z: .0979036912}
+        length: .244759306
         modified: 1
     - boneName: Character1_Spine1
       humanName: Chest
       limit:
         min: {x: -40, y: -40, z: -40}
         max: {x: 40, y: 40, z: 40}
-        value: {x: 0.20144078, y: 0, z: 0.10072039}
-        length: 0.25180104
+        value: {x: .201440781, y: 0, z: .100720391}
+        length: .251801044
         modified: 1
     - boneName: Character1_Neck
       humanName: Neck
       limit:
         min: {x: -40, y: -40, z: -40}
         max: {x: 40, y: 40, z: 40}
-        value: {x: 0.12248535, y: 0, z: 0.061242674}
-        length: 0.15310672
+        value: {x: .122485347, y: 0, z: .0612426735}
+        length: .153106719
         modified: 1
     - boneName: Character1_Head
       humanName: Head
       limit:
         min: {x: -40, y: -40, z: -40}
         max: {x: 40, y: 40, z: 40}
-        value: {x: 0.12248535, y: 0, z: 0.061242674}
-        length: 0.15310672
+        value: {x: .122485347, y: 0, z: .0612426735}
+        length: .153106719
         modified: 1
     - boneName: Character1_LeftArm
       humanName: LeftUpperArm
       limit:
-        min: {x: -90, y: -100, z: -60.000004}
+        min: {x: -90, y: -100, z: -60.0000038}
         max: {x: 90, y: 100, z: 100}
-        value: {x: 0.23952524, y: 0, z: 0.11976262}
-        length: 0.29940662
+        value: {x: .239525244, y: 0, z: .119762622}
+        length: .299406618
         modified: 1
     - boneName: Character1_RightArm
       humanName: RightUpperArm
       limit:
-        min: {x: -90, y: -100, z: -60.000004}
+        min: {x: -90, y: -100, z: -60.0000038}
         max: {x: 90, y: 100, z: 100}
-        value: {x: 0.23952574, y: 0, z: 0.11976287}
-        length: 0.29940724
+        value: {x: .239525735, y: 0, z: .119762868}
+        length: .299407244
         modified: 1
     - boneName: Character1_LeftForeArm
       humanName: LeftLowerArm
       limit:
         min: {x: -90, y: 0, z: -80}
         max: {x: 90, y: 0, z: 80}
-        value: {x: 0.18976204, y: 0, z: 0.09488102}
-        length: 0.23720261
+        value: {x: .189762041, y: 0, z: .0948810205}
+        length: .237202615
         modified: 1
     - boneName: Character1_RightForeArm
       humanName: RightLowerArm
       limit:
         min: {x: -90, y: 0, z: -80}
         max: {x: 90, y: 0, z: 80}
-        value: {x: 0.1897615, y: 0, z: 0.09488075}
-        length: 0.23720196
+        value: {x: .189761505, y: 0, z: .0948807523}
+        length: .237201959
         modified: 1
     - boneName: Character1_LeftHand
       humanName: LeftHand
       limit:
         min: {x: 0, y: -40, z: -80}
         max: {x: 0, y: 40, z: 80}
-        value: {x: 0.09488102, y: 0, z: 0.04744051}
-        length: 0.11860131
+        value: {x: .0948810205, y: 0, z: .0474405102}
+        length: .118601307
         modified: 1
     - boneName: Character1_RightHand
       humanName: RightHand
       limit:
         min: {x: 0, y: -40, z: -80}
         max: {x: 0, y: 40, z: 80}
-        value: {x: 0.09488075, y: 0, z: 0.047440376}
-        length: 0.11860098
+        value: {x: .0948807523, y: 0, z: .0474403761}
+        length: .118600979
         modified: 1
     - boneName: Character1_LeftToeBase
       humanName: LeftToes
       limit:
         min: {x: 0, y: 0, z: -50}
         max: {x: 0, y: 0, z: 50}
-        value: {x: 0.045105465, y: 0, z: 0.022552732}
-        length: 0.056381848
+        value: {x: .0451054648, y: 0, z: .0225527324}
+        length: .0563818477
         modified: 1
     - boneName: Character1_RightToeBase
       humanName: RightToes
       limit:
         min: {x: 0, y: 0, z: -50}
         max: {x: 0, y: 0, z: 50}
-        value: {x: 0.045105442, y: 0, z: 0.022552721}
-        length: 0.05638182
+        value: {x: .0451054424, y: 0, z: .0225527212}
+        length: .0563818216
         modified: 1
     - boneName: eyes 1
       humanName: RightEye
       limit:
         min: {x: 0, y: -20, z: -10}
         max: {x: 0, y: 20, z: 15.000001}
-        value: {x: 0.079999976, y: 0, z: 0.039999988}
-        length: 0.1
+        value: {x: .0799999759, y: 0, z: .0399999879}
+        length: .100000001
         modified: 1
     - boneName: jaw
       humanName: Jaw
       limit:
         min: {x: 0, y: -10, z: -10}
         max: {x: 0, y: 10, z: 10}
-        value: {x: 0.079999976, y: 0, z: 0.039999988}
-        length: 0.1
+        value: {x: .0799999759, y: 0, z: .0399999879}
+        length: .100000001
         modified: 1
     - boneName: Character1_LeftHandThumb1
       humanName: Left Thumb Proximal
       limit:
         min: {x: 0, y: -25, z: -20}
         max: {x: 0, y: 25, z: 20}
-        value: {x: 0.07033052, y: 0, z: 0.03516526}
-        length: 0.087913185
+        value: {x: .070330523, y: 0, z: .0351652615}
+        length: .0879131854
         modified: 1
     - boneName: Character1_LeftHandThumb2
       humanName: Left Thumb Intermediate
       limit:
         min: {x: 0, y: 0, z: -40}
         max: {x: 0, y: 0, z: 35}
-        value: {x: 0.052747898, y: 0, z: 0.026373949}
-        length: 0.06593489
+        value: {x: .0527478978, y: 0, z: .0263739489}
+        length: .065934889
         modified: 1
     - boneName: Character1_LeftHandIndex1
       humanName: Left Index Proximal
       limit:
         min: {x: 0, y: -20, z: -50}
         max: {x: 0, y: 20, z: 50}
-        value: {x: 0.0826368, y: 0, z: 0.0413184}
-        length: 0.10329604
+        value: {x: .0826368034, y: 0, z: .0413184017}
+        length: .103296041
         modified: 1
     - boneName: Character1_LeftHandIndex2
       humanName: Left Index Intermediate
       limit:
         min: {x: 0, y: 0, z: -45}
         max: {x: 0, y: 0, z: 45}
-        value: {x: 0.06197761, y: 0, z: 0.030988805}
-        length: 0.07747203
+        value: {x: .06197761, y: 0, z: .030988805}
+        length: .0774720311
         modified: 1
     - boneName: Character1_LeftHandRing1
       humanName: Left Ring Proximal
       limit:
-        min: {x: 0, y: -7.5000005, z: -50}
-        max: {x: 0, y: 7.5000005, z: 50}
-        value: {x: 0.06539352, y: 0, z: 0.03269676}
-        length: 0.08174194
+        min: {x: 0, y: -7.50000048, z: -50}
+        max: {x: 0, y: 7.50000048, z: 50}
+        value: {x: .0653935224, y: 0, z: .0326967612}
+        length: .0817419365
         modified: 1
     - boneName: Character1_LeftHandRing2
       humanName: Left Ring Intermediate
       limit:
         min: {x: 0, y: 0, z: -45}
         max: {x: 0, y: 0, z: 45}
-        value: {x: 0.04904515, y: 0, z: 0.024522575}
-        length: 0.061306454
+        value: {x: .0490451492, y: 0, z: .0245225746}
+        length: .0613064542
         modified: 1
     - boneName: Character1_RightHandThumb1
       humanName: Right Thumb Proximal
       limit:
         min: {x: 0, y: -25, z: -20}
         max: {x: 0, y: 25, z: 20}
-        value: {x: 0.07033022, y: 0, z: 0.03516511}
-        length: 0.087912805
+        value: {x: .0703302175, y: 0, z: .0351651087}
+        length: .0879128054
         modified: 1
     - boneName: Character1_RightHandThumb2
       humanName: Right Thumb Intermediate
       limit:
         min: {x: 0, y: 0, z: -40}
         max: {x: 0, y: 0, z: 35}
-        value: {x: 0.05274767, y: 0, z: 0.026373835}
-        length: 0.065934606
+        value: {x: .0527476706, y: 0, z: .0263738353}
+        length: .0659346059
         modified: 1
     - boneName: Character1_RightHandIndex1
       humanName: Right Index Proximal
       limit:
         min: {x: 0, y: -20, z: -50}
         max: {x: 0, y: 20, z: 50}
-        value: {x: 0.082637444, y: 0, z: 0.041318722}
-        length: 0.10329684
+        value: {x: .0826374441, y: 0, z: .0413187221}
+        length: .103296839
         modified: 1
     - boneName: Character1_RightHandIndex2
       humanName: Right Index Intermediate
       limit:
         min: {x: 0, y: 0, z: -45}
         max: {x: 0, y: 0, z: 45}
-        value: {x: 0.061978087, y: 0, z: 0.030989043}
-        length: 0.07747263
+        value: {x: .0619780868, y: 0, z: .0309890434}
+        length: .0774726272
         modified: 1
     - boneName: Character1_RightHandRing1
       humanName: Right Ring Proximal
       limit:
-        min: {x: 0, y: -7.5000005, z: -50}
-        max: {x: 0, y: 7.5000005, z: 50}
-        value: {x: 0.06539351, y: 0, z: 0.032696754}
-        length: 0.08174192
+        min: {x: 0, y: -7.50000048, z: -50}
+        max: {x: 0, y: 7.50000048, z: 50}
+        value: {x: .0653935075, y: 0, z: .0326967537}
+        length: .0817419216
         modified: 1
     - boneName: Character1_RightHandRing2
       humanName: Right Ring Intermediate
       limit:
         min: {x: 0, y: 0, z: -45}
         max: {x: 0, y: 0, z: 45}
-        value: {x: 0.049045138, y: 0, z: 0.024522569}
-        length: 0.06130644
+        value: {x: .0490451381, y: 0, z: .024522569}
+        length: .0613064393
         modified: 1
     skeleton:
     - name: skeleton_warrior
       position: {x: 0, y: 0, z: 0}
-      rotation: {x: 0, y: 0, z: 0, w: 0.99999994}
+      rotation: {x: 0, y: 0, z: 0, w: .99999994}
       scale: {x: 1, y: 1, z: 1}
       transformModified: 1
     - name: Character1_Reference
       position: {x: 0, y: 0, z: 0}
-      rotation: {x: 0, y: -0, z: 0, w: 0.99999994}
+      rotation: {x: 0, y: -0, z: 0, w: .99999994}
       scale: {x: 1, y: 1, z: 1}
       transformModified: 1
     - name: Character1_Hips
-      position: {x: -0.0000000049664366, y: 0.48821935, z: -0.07568995}
-      rotation: {x: 0.004515231, y: 0.037229985, z: 0.120312534, w: 0.9920274}
-      scale: {x: 1, y: 0.9999998, z: 0.9999998}
+      position: {x: -4.9664366e-09, y: .488219351, z: -.0756899491}
+      rotation: {x: .00451523112, y: .037229985, z: .120312534, w: .992027402}
+      scale: {x: 1, y: .999999821, z: .999999821}
       transformModified: 1
     - name: Character1_LeftUpLeg
-      position: {x: -0.118536204, y: 0.00000017818773, z: -0.000000025146157}
-      rotation: {x: 0.54835546, y: -0.20445748, z: -0.09546054, w: 0.80522704}
-      scale: {x: 1.0000001, y: 0.9999997, z: 0.9999998}
+      position: {x: -.118536204, y: 1.78187733e-07, z: -2.51461572e-08}
+      rotation: {x: .54835546, y: -.204457477, z: -.0954605415, w: .805227041}
+      scale: {x: 1.00000012, y: .999999702, z: .999999821}
       transformModified: 1
     - name: Character1_LeftLeg
-      position: {x: 0.03536135, y: -0.039380334, z: 0.19485159}
-      rotation: {x: -0.26144013, y: -0.04659862, z: 0.27479497, w: 0.9241024}
-      scale: {x: 0.9999998, y: 1.0000004, z: 0.99999994}
+      position: {x: .0353613496, y: -.0393803343, z: .194851592}
+      rotation: {x: -.261440128, y: -.0465986207, z: .274794966, w: .924102426}
+      scale: {x: .999999821, y: 1.00000036, z: .99999994}
       transformModified: 1
     - name: Character1_LeftFoot
-      position: {x: -0.031734895, y: -0.15472908, z: 0.09821588}
-      rotation: {x: 0.2719935, y: 0.6342465, z: 0.3542745, w: 0.6310628}
-      scale: {x: 0.99999917, y: 0.99999905, z: 1}
+      position: {x: -.031734895, y: -.154729083, z: .098215878}
+      rotation: {x: .271993488, y: .634246528, z: .354274511, w: .631062806}
+      scale: {x: .999999166, y: .999999046, z: 1}
       transformModified: 1
     - name: Character1_LeftToeBase
-      position: {x: -0.08371979, y: 0.061365303, z: 0.044056434}
-      rotation: {x: 0.2583955, y: -0.70738053, z: -0.37061453, w: 0.5435893}
-      scale: {x: 0.9999995, y: 1.0000008, z: 1.000001}
+      position: {x: -.08371979, y: .0613653027, z: .0440564342}
+      rotation: {x: .258395493, y: -.707380533, z: -.370614529, w: .543589294}
+      scale: {x: .999999523, y: 1.00000083, z: 1.00000095}
       transformModified: 1
     - name: Character1_LeftFootMiddle1
-      position: {x: -0.013863733, y: 0.09779992, z: 0.019280042}
-      rotation: {x: -0.6472986, y: 0.56575775, z: 0.3365597, w: 0.3842528}
-      scale: {x: 1, y: 0.99999964, z: 0.99999917}
+      position: {x: -.013863733, y: .0977999195, z: .0192800425}
+      rotation: {x: -.647298574, y: .565757751, z: .336559713, w: .384252787}
+      scale: {x: 1, y: .999999642, z: .999999166}
       transformModified: 1
     - name: Character1_LeftFootMiddle2
-      position: {x: -0.043134023, y: 0.003396877, z: 0.050935674}
-      rotation: {x: -0.10919155, y: -0.119012654, z: -0.5920156, w: 0.7895762}
-      scale: {x: 0.99999964, y: 0.9999997, z: 1.0000004}
+      position: {x: -.0431340225, y: .00339687709, z: .0509356745}
+      rotation: {x: -.109191552, y: -.119012654, z: -.592015624, w: .789576173}
+      scale: {x: .999999642, y: .999999702, z: 1.00000036}
       transformModified: 1
     - name: Character1_RightUpLeg
-      position: {x: 0.10373374, y: -0.05471849, z: 0.017205592}
-      rotation: {x: -0.030357512, y: -0.25031045, z: -0.80890393, w: 0.53112847}
-      scale: {x: 1.0000001, y: 1.0000001, z: 0.99999934}
+      position: {x: .103733741, y: -.0547184907, z: .0172055922}
+      rotation: {x: -.0303575117, y: -.250310451, z: -.808903933, w: .531128466}
+      scale: {x: 1.00000012, y: 1.00000012, z: .999999344}
       transformModified: 1
     - name: Character1_RightLeg
-      position: {x: 0.19485138, y: 0.028427107, z: -0.04464438}
-      rotation: {x: 0.0138345985, y: 0.11407236, z: 0.36863646, w: 0.9224441}
-      scale: {x: 0.9999998, y: 0.9999997, z: 1.0000002}
+      position: {x: .194851384, y: .0284271073, z: -.0446443819}
+      rotation: {x: .0138345985, y: .11407236, z: .368636459, w: .922444105}
+      scale: {x: .999999821, y: .999999702, z: 1.00000024}
       transformModified: 1
     - name: Character1_RightFoot
-      position: {x: 0.1408106, y: -0.1125186, z: -0.04589633}
-      rotation: {x: 0.02552331, y: 0.21045077, z: 0.6800932, w: -0.70180637}
-      scale: {x: 0.99999994, y: 0.9999999, z: 1.0000001}
+      position: {x: .140810594, y: -.112518601, z: -.045896329}
+      rotation: {x: .0255233105, y: .210450768, z: .680093229, w: -.701806366}
+      scale: {x: .99999994, y: .999999881, z: 1.00000012}
       transformModified: 1
     - name: Character1_RightToeBase
-      position: {x: 0.05686129, y: 0.092827186, z: 0.029420335}
-      rotation: {x: -0.019626543, y: -0.16182888, z: -0.52296644, w: 0.8366195}
-      scale: {x: 0.9999994, y: 0.99999976, z: 0.9999997}
+      position: {x: .0568612888, y: .092827186, z: .0294203348}
+      rotation: {x: -.0196265429, y: -.161828876, z: -.522966444, w: .836619496}
+      scale: {x: .999999404, y: .999999762, z: .999999702}
       transformModified: 1
     - name: Character1_RightFootMiddle1
-      position: {x: -0.01002012, y: 0.054073736, z: 0.08428738}
-      rotation: {x: -0.025523294, y: -0.21045054, z: -0.68009305, w: 0.70180655}
-      scale: {x: 1.0000001, y: 1.0000005, z: 1.0000001}
+      position: {x: -.0100201201, y: .0540737361, z: .0842873827}
+      rotation: {x: -.0255232938, y: -.210450545, z: -.68009305, w: .701806545}
+      scale: {x: 1.00000012, y: 1.00000048, z: 1.00000012}
       transformModified: 1
     - name: Character1_RightFootMiddle2
-      position: {x: -0.015349419, y: 0.01027306, z: 0.06422916}
-      rotation: {x: 0.013834612, y: 0.11407158, z: 0.3686364, w: 0.9224442}
-      scale: {x: 0.99999917, y: 0.99999934, z: 0.9999995}
+      position: {x: -.0153494189, y: .0102730598, z: .0642291605}
+      rotation: {x: .0138346124, y: .114071578, z: .3686364, w: .922444224}
+      scale: {x: .999999166, y: .999999344, z: .999999523}
       transformModified: 1
     - name: Character1_Spine
-      position: {x: 0.052363247, y: 0.19788988, z: -0.047110077}
-      rotation: {x: -0.16278702, y: 0.16278702, z: 0.9543223, w: 0.19044599}
-      scale: {x: 0.99999875, y: 0.9999989, z: 0.99999946}
+      position: {x: .0523632467, y: .197889879, z: -.047110077}
+      rotation: {x: -.16278702, y: .16278702, z: .954322278, w: .190445989}
+      scale: {x: .999998748, y: .999998927, z: .999999464}
       transformModified: 1
     - name: Character1_Spine1
-      position: {x: 0.026643094, y: -0.23536281, z: 0.061658252}
-      rotation: {x: -0.3502127, y: 0.26337084, z: -0.1862697, w: 0.8793693}
-      scale: {x: 1.0000014, y: 1.0000007, z: 1.0000002}
+      position: {x: .0266430937, y: -.235362813, z: .061658252}
+      rotation: {x: -.350212693, y: .263370842, z: -.186269701, w: .879369318}
+      scale: {x: 1.00000143, y: 1.00000072, z: 1.00000024}
       transformModified: 1
     - name: Character1_LeftShoulder
-      position: {x: 0.03790672, y: -0.19321306, z: 0.075452805}
-      rotation: {x: 0.3111245, y: -0.6560119, z: -0.61226594, w: 0.31301787}
-      scale: {x: 0.9999996, y: 0.99999964, z: 0.99999917}
+      position: {x: .0379067212, y: -.19321306, z: .0754528046}
+      rotation: {x: .311124504, y: -.656011879, z: -.612265944, w: .313017875}
+      scale: {x: .999999583, y: .999999642, z: .999999166}
       transformModified: 1
     - name: Character1_LeftArm
-      position: {x: -0.14147651, y: 0.13880338, z: -0.11263498}
-      rotation: {x: -0.12620756, y: 0.64961237, z: 0.25726217, w: 0.70419556}
-      scale: {x: 0.99999994, y: 1.0000002, z: 0.9999995}
+      position: {x: -.141476512, y: .138803378, z: -.112634979}
+      rotation: {x: -.12620756, y: .649612367, z: .25726217, w: .704195559}
+      scale: {x: .99999994, y: 1.00000024, z: .999999523}
       transformModified: 1
     - name: Character1_LeftForeArm
-      position: {x: 0.17697604, y: 0.23946863, z: 0.03128399}
-      rotation: {x: -0.661322, y: -0.51364607, z: -0.24156822, w: 0.49037302}
-      scale: {x: 0.9999998, y: 1.0000002, z: 0.9999994}
+      position: {x: .17697604, y: .239468634, z: .0312839895}
+      rotation: {x: -.661321998, y: -.513646066, z: -.241568223, w: .490373015}
+      scale: {x: .999999821, y: 1.00000024, z: .999999404}
       transformModified: 1
     - name: Character1_LeftHand
-      position: {x: 0.15394737, y: 0.120349586, z: 0.13446714}
-      rotation: {x: 0.3034012, y: -0.31668356, z: 0.82336664, w: 0.36017558}
-      scale: {x: 0.99999905, y: 0.9999996, z: 1.0000006}
+      position: {x: .153947368, y: .120349586, z: .13446714}
+      rotation: {x: .303401202, y: -.316683561, z: .823366642, w: .36017558}
+      scale: {x: .999999046, y: .999999583, z: 1.0000006}
       transformModified: 1
     - name: Character1_LeftHandIndex1
-      position: {x: -0.020074317, y: -0.17366691, z: 0.017247831}
-      rotation: {x: 0.031846736, y: -0.648809, z: -0.7573606, w: -0.0666146}
-      scale: {x: 1.0000007, y: 0.99999934, z: 0.9999998}
+      position: {x: -.0200743172, y: -.173666909, z: .0172478314}
+      rotation: {x: .0318467356, y: -.648809016, z: -.757360578, w: -.066614598}
+      scale: {x: 1.00000072, y: .999999344, z: .999999821}
       transformModified: 1
     - name: Character1_LeftHandIndex2
-      position: {x: -0.04374344, y: 0.028481042, z: -0.08913727}
-      rotation: {x: -0.8726754, y: -0.19304626, z: 0.44252756, w: -0.0730756}
-      scale: {x: 1.0000021, y: 1.0000007, z: 0.9999994}
+      position: {x: -.043743439, y: .028481042, z: -.089137271}
+      rotation: {x: -.872675419, y: -.193046257, z: .442527562, w: -.0730756}
+      scale: {x: 1.00000215, y: 1.00000072, z: .999999404}
       transformModified: 1
     - name: Character1_LeftHandIndex3
-      position: {x: 0.04995613, y: -0.04468107, z: 0.07261876}
-      rotation: {x: 0.04294473, y: 0.55845886, z: 0.2810381, w: -0.7792926}
-      scale: {x: 1.0000002, y: 0.99999917, z: 0.9999988}
+      position: {x: .0499561317, y: -.0446810685, z: .0726187602}
+      rotation: {x: .0429447293, y: .558458865, z: .281038105, w: -.779292583}
+      scale: {x: 1.00000024, y: .999999166, z: .999998808}
       transformModified: 1
     - name: Character1_LeftHandRing1
-      position: {x: 0.06941747, y: -0.13156345, z: 0.00010984057}
-      rotation: {x: -0.18853346, y: -0.5603035, z: -0.79848707, w: -0.11372508}
-      scale: {x: 0.9999993, y: 1, z: 0.99999994}
+      position: {x: .0694174692, y: -.131563455, z: .00010984057}
+      rotation: {x: -.188533455, y: -.560303509, z: -.798487067, w: -.113725081}
+      scale: {x: .999999285, y: 1, z: .99999994}
       transformModified: 1
     - name: Character1_LeftHandRing2
-      position: {x: -0.057401508, y: 0.041763585, z: -0.040529445}
-      rotation: {x: -0.9368754, y: -0.12474293, z: 0.23547047, w: 0.22640076}
-      scale: {x: 1.0000006, y: 1.0000004, z: 1.0000014}
+      position: {x: -.0574015081, y: .0417635851, z: -.0405294448}
+      rotation: {x: -.936875403, y: -.124742933, z: .235470474, w: .226400763}
+      scale: {x: 1.0000006, y: 1.00000036, z: 1.00000143}
       transformModified: 1
     - name: Character1_LeftHandRing3
-      position: {x: -0.020220144, y: -0.023566939, z: 0.078566134}
-      rotation: {x: -0.06676161, y: 0.9374448, z: -0.13976736, w: -0.3117773}
-      scale: {x: 0.999999, y: 0.99999976, z: 0.9999998}
+      position: {x: -.0202201437, y: -.0235669389, z: .078566134}
+      rotation: {x: -.0667616129, y: .937444806, z: -.139767364, w: -.311777294}
+      scale: {x: .999998987, y: .999999762, z: .999999821}
       transformModified: 1
     - name: Character1_LeftHandThumb1
-      position: {x: -0.06258354, y: -0.13117406, z: 0.057717986}
-      rotation: {x: 0.2315703, y: -0.65761787, z: -0.6961236, w: 0.17124784}
-      scale: {x: 0.99999994, y: 0.9999993, z: 0.99999976}
+      position: {x: -.0625835434, y: -.131174058, z: .0577179864}
+      rotation: {x: .231570303, y: -.657617867, z: -.6961236, w: .17124784}
+      scale: {x: .99999994, y: .999999285, z: .999999762}
       transformModified: 1
     - name: Character1_LeftHandThumb2
-      position: {x: 0.05951505, y: 0.046898548, z: -0.044578455}
-      rotation: {x: 0.33158386, y: -0.03003902, z: -0.941722, w: 0.04805648}
-      scale: {x: 0.9999995, y: 1.0000008, z: 1.0000014}
+      position: {x: .0595150515, y: .0468985476, z: -.0445784554}
+      rotation: {x: .331583858, y: -.0300390199, z: -.941721976, w: .0480564795}
+      scale: {x: .999999523, y: 1.00000083, z: 1.00000143}
       transformModified: 1
     - name: Character1_LeftHandThumb3
-      position: {x: -0.014494215, y: -0.039383017, z: -0.057916958}
-      rotation: {x: 0.15783574, y: -0.942652, z: 0.054447293, w: 0.28901652}
-      scale: {x: 0.9999995, y: 1, z: 1}
+      position: {x: -.0144942151, y: -.0393830165, z: -.0579169579}
+      rotation: {x: .157835737, y: -.942651987, z: .0544472933, w: .289016515}
+      scale: {x: .999999523, y: 1, z: 1}
       transformModified: 1
     - name: shield
-      position: {x: -0.005841549, y: 0.0011948872, z: 0.013313802}
-      rotation: {x: -0.29413342, y: -0.48886102, z: 0.7234667, w: 0.38871104}
-      scale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
+      position: {x: -.00584154902, y: .00119488721, z: .013313802}
+      rotation: {x: -.294133425, y: -.488861024, z: .723466694, w: .388711035}
+      scale: {x: 1.00000012, y: 1.00000012, z: 1.00000012}
       transformModified: 1
     - name: Character1_Neck
-      position: {x: 0.070867844, y: -0.23981085, z: -0.02953489}
-      rotation: {x: 0.67804086, y: 0.24747287, z: -0.3679214, w: 0.5862179}
-      scale: {x: 1.0000002, y: 0.99999976, z: 1.0000002}
+      position: {x: .0708678439, y: -.239810854, z: -.0295348894}
+      rotation: {x: .678040862, y: .247472867, z: -.367921412, w: .58621788}
+      scale: {x: 1.00000024, y: .999999762, z: 1.00000024}
       transformModified: 1
     - name: Character1_Head
-      position: {x: 0.01940892, y: 0.041246098, z: 0.14616342}
-      rotation: {x: -0.66377115, y: 0.07512166, z: 0.29750285, w: 0.68209714}
-      scale: {x: 0.9999997, y: 1.0000005, z: 1.0000008}
+      position: {x: .0194089208, y: .0412460975, z: .146163419}
+      rotation: {x: -.663771152, y: .0751216635, z: .297502846, w: .682097137}
+      scale: {x: .999999702, y: 1.00000048, z: 1.00000083}
       transformModified: 1
     - name: eyes 1
-      position: {x: 0.010615587, y: -0.22852172, z: 0.06833309}
-      rotation: {x: 0.6179488, y: 0.022694983, z: -0.7573901, w: 0.20972456}
-      scale: {x: 0.99999964, y: 0.99999917, z: 0.99999917}
+      position: {x: .0106155872, y: -.22852172, z: .0683330894}
+      rotation: {x: .617948771, y: .0226949826, z: -.757390082, w: .20972456}
+      scale: {x: .999999642, y: .999999166, z: .999999166}
       transformModified: 1
     - name: jaw
-      position: {x: -0.15160304, y: -0.025968773, z: 0.031732794}
-      rotation: {x: 0.6179488, y: 0.022694983, z: -0.7573901, w: 0.20972456}
-      scale: {x: 0.99999964, y: 0.99999917, z: 0.99999917}
+      position: {x: -.151603043, y: -.0259687733, z: .0317327939}
+      rotation: {x: .617948771, y: .0226949826, z: -.757390082, w: .20972456}
+      scale: {x: .999999642, y: .999999166, z: .999999166}
       transformModified: 1
     - name: Character1_RightShoulder
-      position: {x: -0.042399354, y: -0.20287198, z: -0.038817257}
-      rotation: {x: 0.40277803, y: -0.5991863, z: -0.55626935, w: 0.41147286}
-      scale: {x: 0.9999997, y: 0.9999991, z: 0.99999964}
+      position: {x: -.0423993543, y: -.202871978, z: -.0388172567}
+      rotation: {x: .402778029, y: -.599186301, z: -.556269348, w: .411472857}
+      scale: {x: .999999702, y: .999999106, z: .999999642}
       transformModified: 1
     - name: Character1_RightArm
-      position: {x: -0.0038604639, y: -0.21006212, z: 0.08847296}
-      rotation: {x: 0.74689186, y: -0.32184383, z: -0.043161884, w: 0.58026373}
-      scale: {x: 0.99999964, y: 0.9999995, z: 0.99999875}
+      position: {x: -.00386046385, y: -.210062116, z: .0884729624}
+      rotation: {x: .746891856, y: -.321843833, z: -.043161884, w: .580263734}
+      scale: {x: .999999642, y: .999999523, z: .999998748}
       transformModified: 1
     - name: Character1_RightForeArm
-      position: {x: 0.24041641, y: 0.14790376, z: 0.099846445}
-      rotation: {x: -0.090913445, y: 0.993926, z: -0.008252462, w: -0.061463095}
-      scale: {x: 1.0000001, y: 1.0000018, z: 1.000002}
+      position: {x: .240416408, y: .147903755, z: .099846445}
+      rotation: {x: -.0909134448, y: .993925989, z: -.00825246237, w: -.0614630952}
+      scale: {x: 1.00000012, y: 1.00000179, z: 1.00000203}
       transformModified: 1
     - name: Character1_RightHand
-      position: {x: -0.19698374, y: 0.0802232, z: -0.10500689}
-      rotation: {x: -0.33161834, y: -0.37834996, z: -0.47615582, w: 0.7212185}
-      scale: {x: 0.9999995, y: 0.9999989, z: 0.9999987}
+      position: {x: -.19698374, y: .0802232027, z: -.105006889}
+      rotation: {x: -.331618339, y: -.37834996, z: -.476155818, w: .721218526}
+      scale: {x: .999999523, y: .999998927, z: .999998689}
       transformModified: 1
     - name: Character1_RightHandIndex1
-      position: {x: -0.07979773, y: -0.14958641, z: 0.046011645}
-      rotation: {x: 0.41187537, y: -0.7898836, z: -0.43727225, w: 0.12343195}
-      scale: {x: 1.0000006, y: 0.99999905, z: 0.99999994}
+      position: {x: -.0797977298, y: -.149586409, z: .0460116453}
+      rotation: {x: .411875367, y: -.789883614, z: -.437272251, w: .123431951}
+      scale: {x: 1.0000006, y: .999999046, z: .99999994}
       transformModified: 1
     - name: Character1_RightHandIndex2
-      position: {x: 0.0888079, y: 0.052670192, z: -0.0030424902}
-      rotation: {x: -0.41357824, y: -0.8358744, z: -0.32658467, w: 0.15365344}
-      scale: {x: 1.0000006, y: 0.9999992, z: 1.0000006}
+      position: {x: .0888079032, y: .052670192, z: -.00304249022}
+      rotation: {x: -.413578242, y: -.835874379, z: -.326584667, w: .153653443}
+      scale: {x: 1.0000006, y: .999999225, z: 1.0000006}
       transformModified: 1
     - name: Character1_RightHandIndex3
-      position: {x: -0.017220106, y: 0.0881452, z: 0.041220613}
-      rotation: {x: 0.15212114, y: -0.31388795, z: 0.93177015, w: 0.10068687}
-      scale: {x: 1.0000001, y: 0.9999995, z: 1.0000005}
+      position: {x: -.017220106, y: .0881451964, z: .0412206128}
+      rotation: {x: .152121142, y: -.313887954, z: .931770146, w: .100686871}
+      scale: {x: 1.00000012, y: .999999523, z: 1.00000048}
       transformModified: 1
     - name: Character1_RightHandRing1
-      position: {x: -0.1305142, y: -0.070601486, z: 0.01045267}
-      rotation: {x: 0.50137776, y: -0.72849727, z: -0.44756547, w: 0.13265419}
-      scale: {x: 1.0000006, y: 0.99999905, z: 0.99999994}
+      position: {x: -.130514205, y: -.0706014857, z: .01045267}
+      rotation: {x: .501377761, y: -.728497267, z: -.447565466, w: .13265419}
+      scale: {x: 1.0000006, y: .999999046, z: .99999994}
       transformModified: 1
     - name: Character1_RightHandRing2
-      position: {x: 0.057113107, y: 0.056923635, z: 0.013399314}
-      rotation: {x: -0.35627225, y: -0.8607487, z: -0.31847087, w: 0.17537963}
-      scale: {x: 1.0000006, y: 0.99999934, z: 1.0000007}
+      position: {x: .0571131073, y: .0569236353, z: .0133993141}
+      rotation: {x: -.35627225, y: -.860748708, z: -.318470865, w: .175379634}
+      scale: {x: 1.0000006, y: .999999344, z: 1.00000072}
       transformModified: 1
     - name: Character1_RightHandRing3
-      position: {x: -0.0044479594, y: 0.08081514, z: 0.024206407}
-      rotation: {x: 0.15212113, y: -0.31388798, z: 0.93177015, w: 0.10068695}
-      scale: {x: 0.99999994, y: 0.99999934, z: 0.9999996}
+      position: {x: -.00444795936, y: .0808151364, z: .0242064074}
+      rotation: {x: .152121127, y: -.313887984, z: .931770146, w: .100686952}
+      scale: {x: .99999994, y: .999999344, z: .999999583}
       transformModified: 1
     - name: Character1_RightHandThumb1
-      position: {x: -0.022218551, y: -0.12932888, z: 0.0850598}
-      rotation: {x: 0.43828756, y: -0.7491967, z: -0.4821488, w: 0.11891481}
-      scale: {x: 1.0000006, y: 0.99999905, z: 0.99999994}
+      position: {x: -.0222185515, y: -.129328877, z: .0850597993}
+      rotation: {x: .438287556, y: -.749196708, z: -.482148796, w: .118914813}
+      scale: {x: 1.0000006, y: .999999046, z: .99999994}
       transformModified: 1
     - name: Character1_RightHandThumb2
-      position: {x: 0.049258333, y: 0.04418524, z: -0.05787887}
-      rotation: {x: -0.42846113, y: -0.8611657, z: -0.20588844, w: 0.18006812}
-      scale: {x: 1.0000008, y: 0.99999994, z: 1.0000007}
+      position: {x: .0492583327, y: .0441852398, z: -.0578788705}
+      rotation: {x: -.428461134, y: -.861165702, z: -.205888435, w: .18006812}
+      scale: {x: 1.00000083, y: .99999994, z: 1.00000072}
       transformModified: 1
     - name: Character1_RightHandThumb3
-      position: {x: -0.01823942, y: 0.046057582, z: 0.05159022}
-      rotation: {x: 0.15221944, y: -0.3139059, z: 0.93175304, w: 0.10064071}
-      scale: {x: 1.0000004, y: 0.9999993, z: 1.0000004}
+      position: {x: -.0182394199, y: .0460575819, z: .0515902191}
+      rotation: {x: .152219445, y: -.313905895, z: .931753039, w: .100640707}
+      scale: {x: 1.00000036, y: .999999285, z: 1.00000036}
       transformModified: 1
     - name: sword
-      position: {x: 7.105427e-17, y: 8.198858e-32, z: 4.7087042e-32}
-      rotation: {x: 0.14437915, y: -0.46503204, z: 0.85898304, w: -0.15826546}
-      scale: {x: 1.0000001, y: 1.0000002, z: 1.0000001}
+      position: {x: 7.1054272e-17, y: 8.19885798e-32, z: 4.70870417e-32}
+      rotation: {x: .144379154, y: -.465032041, z: .85898304, w: -.158265457}
+      scale: {x: 1.00000012, y: 1.00000024, z: 1.00000012}
       transformModified: 1
-    armTwist: 0.5
-    foreArmTwist: 0.5
-    upperLegTwist: 0.5
-    legTwist: 0.5
-    armStretch: 0.05
-    legStretch: 0.05
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
     feetSpacing: 0
     rootMotionBoneName: 
     hasTranslationDoF: 0

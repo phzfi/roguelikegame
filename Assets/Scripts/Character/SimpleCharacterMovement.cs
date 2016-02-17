@@ -26,7 +26,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 
 	private CombatSystem m_combatSystem;
 	private CharController m_controller;
-    private Animator m_animator;
+    private CharacterAnimation m_animator;
 
 	bool m_onGoingMovement = false;
 	float m_distanceOnStep = 0.0f;
@@ -39,7 +39,6 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		m_audioSource = GetComponent<AudioSource>();
 		m_syncer = GetComponent<PlayerSync>();
 		m_combatSystem = GetComponent<CombatSystem>();
-        m_animator = GetComponent<Animator>();
 
 		LevelMapManager mapManager = FindObjectOfType<LevelMapManager>();
 		LevelMap map = mapManager.GetMap();
@@ -51,7 +50,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		Debug.Assert(m_navAgent.CanAccess(m_gridPos), "Character " + gameObject.name + " is in unaccessable location");
 		
 		transform.position = MapGrid.GridToWorldPoint(m_gridPos, transform.position.z);
-
+        m_animator = GetComponent<CharacterAnimation>();
 
 		m_controller = GetComponent<CharController>();
 	}
@@ -115,7 +114,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		m_onGoingMovement = true;
 
 		StopAllCoroutines(); // kill previous interpolations if they're still going
-
+        m_animator.ToggleWalkAnimation(true); //TODO: make it work
 		if (currentPath.Count >= 2)
 		{
 			List<Vector3> worldSpacePath = MapGrid.NavPathToWorldSpacePath(currentPath, transform.position.z);
@@ -128,7 +127,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			Vector3 endWorldPos = MapGrid.GridToWorldPoint(targetGridPos, transform.position.z);
 			StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(startWorldPos, endWorldPos, true));
 		}
-        
+        m_animator.ToggleWalkAnimation(false);
     }
 
 	IEnumerator InterpolateCurveMovementCoroutine(CatmullRomSpline spline, int pathPointCount)
