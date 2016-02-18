@@ -383,6 +383,7 @@ GameObject:
   - 114: {fileID: 11419110}
   - 114: {fileID: 11476100}
   - 114: {fileID: 11421756}
+  - 114: {fileID: 11418020}
   m_Layer: 0
   m_Name: NetworkSkeletonKing
   m_TagString: Untagged
@@ -993,7 +994,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 194426}
-  m_LocalRotation: {x: .634646297, y: .363188475, z: .332055509, w: .595866859}
+  m_LocalRotation: {x: .634646356, y: .363188505, z: .332055539, w: .595866919}
   m_LocalPosition: {x: -.421166986, y: -8.88178367e-17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1723,7 +1724,7 @@ Animator:
   m_GameObject: {fileID: 155062}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 9e9e3d975b8dfb14d9966b6bc996f6dc, type: 3}
-  m_Controller: {fileID: 9100000, guid: d751134d73192d74a90a61776547a6c9, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1731,6 +1732,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11418020
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 155062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f06e7732d8acd054385bbfa30a38c6e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11419110
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1782,8 +1794,8 @@ MonoBehaviour:
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
   m_deathSounds:
-  - {fileID: 8300000, guid: 29729708921e4ad48809f0e08ff4f5c2, type: 3}
-  - {fileID: 8300000, guid: 3fa8935e57564aa4d8d396091cfcc22d, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &11433872
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1798,22 +1810,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 181
-    i1: 62
-    i2: 166
-    i3: 219
-    i4: 232
-    i5: 114
-    i6: 165
-    i7: 68
-    i8: 184
-    i9: 184
-    i10: 86
-    i11: 90
-    i12: 251
-    i13: 162
-    i14: 105
-    i15: 94
+    i0: 211
+    i1: 50
+    i2: 66
+    i3: 101
+    i4: 128
+    i5: 91
+    i6: 231
+    i7: 180
+    i8: 217
+    i9: 39
+    i10: 156
+    i11: 24
+    i12: 173
+    i13: 223
+    i14: 201
+    i15: 247
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &11435776

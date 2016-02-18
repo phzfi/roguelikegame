@@ -743,6 +743,7 @@ GameObject:
   - 114: {fileID: 11484940}
   - 114: {fileID: 11497858}
   - 114: {fileID: 11418082}
+  - 114: {fileID: 11436946}
   m_Layer: 0
   m_Name: NetworkSkeletonWarrior
   m_TagString: Untagged
@@ -1324,7 +1325,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 116040}
-  m_LocalRotation: {x: .258395463, y: -.707380652, z: -.370614588, w: .543589354}
+  m_LocalRotation: {x: .258395433, y: -.707380593, z: -.370614558, w: .543589294}
   m_LocalPosition: {x: -.0837196782, y: .0613652058, z: .0440563671}
   m_LocalScale: {x: .999999821, y: .999999881, z: .999999881}
   m_Children:
@@ -1705,8 +1706,8 @@ MonoBehaviour:
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
   m_deathSounds:
-  - {fileID: 8300000, guid: 29729708921e4ad48809f0e08ff4f5c2, type: 3}
-  - {fileID: 8300000, guid: 3fa8935e57564aa4d8d396091cfcc22d, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &11418082
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1735,6 +1736,17 @@ MonoBehaviour:
   m_maxItems: 5
   m_amountOfCoins: 0
   m_items: []
+--- !u!114 &11436946
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f06e7732d8acd054385bbfa30a38c6e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11442256
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1792,22 +1804,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 236
-    i1: 85
-    i2: 122
-    i3: 149
-    i4: 142
-    i5: 249
-    i6: 41
-    i7: 36
-    i8: 74
-    i9: 30
-    i10: 211
-    i11: 189
-    i12: 62
-    i13: 246
-    i14: 24
-    i15: 162
+    i0: 25
+    i1: 65
+    i2: 202
+    i3: 210
+    i4: 156
+    i5: 114
+    i6: 9
+    i7: 116
+    i8: 234
+    i9: 191
+    i10: 150
+    i11: 178
+    i12: 76
+    i13: 101
+    i14: 201
+    i15: 169
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &11497858
