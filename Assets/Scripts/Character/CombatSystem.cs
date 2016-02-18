@@ -10,6 +10,7 @@ public class CombatSystem : NetworkBehaviour
 	public int m_currentHp;
 	public int m_maxHp = 3;
 	public int m_damage = 1;
+    public bool isBoss = false;
 	public Text m_textPrefab;
     public AttackStyle m_currentAttackStyle = AttackStyle.MELEE;
     public AudioClip m_meleeAudio;
@@ -18,7 +19,7 @@ public class CombatSystem : NetworkBehaviour
     public AudioClip m_rangedAudio;
     public List<AudioClip> m_deathSounds;
 
-    private GameObject m_textCanvas;
+	private GameObject m_textCanvas;
 	private Text m_label;
 	private Camera m_camera;
 	private Inventory m_inventory;
@@ -87,9 +88,9 @@ public class CombatSystem : NetworkBehaviour
                 m_audioSource.PlayOneShot(m_rangedAudio);
                 break;
         }
-    }
+	}
 
-    public void Attack(int targetID) // Deal damage to object, identified by ID.
+	public void Attack(int targetID) // Deal damage to object, identified by ID.
 	{
 		var target = CharManager.GetObject(targetID);
 		var targetSystem = target.GetComponent<CombatSystem>();
@@ -99,7 +100,7 @@ public class CombatSystem : NetworkBehaviour
 		targetSystem.ChangeHP(-GetDamage());
 	}
 
-    
+
 
 	public void ChangeHP(int amount)
 	{
@@ -114,8 +115,12 @@ public class CombatSystem : NetworkBehaviour
 
 	public void Die()
 	{
-        m_audioSource.PlayOneShot(m_deathSounds[0]);
-        m_controller.Unregister();
+        if (isBoss)
+        {
+            Debug.Log("boss killed!!"); // TODO: victory sequence
+        } 
+        
+		m_controller.Unregister();
 		m_label.enabled = false;
 		gameObject.SetActive(false);
 		Debug.Log("player killed");
