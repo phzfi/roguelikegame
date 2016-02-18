@@ -183,7 +183,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294967039
   m_Lightmapping: 4
   m_BounceIntensity: 1
   m_ShadowRadius: 0
@@ -200,9 +200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3d27e016ec3274c84bb1a836b61245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_placeholderItem: {fileID: 0}
+  m_isDraggedButton: 0
   m_returnTo: {fileID: 0}
-  m_placeholderParent: {fileID: 0}
   m_changeIndex: 0
   m_itemType: 5
 --- !u!114 &11444866
@@ -266,6 +265,7 @@ MonoBehaviour:
   m_strength: 0
   m_agility: 0
   m_intelligence: 0
+  m_vitality: 0
   m_typeOfItem: 0
 --- !u!114 &11489304
 MonoBehaviour:
@@ -499,6 +499,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_typeOfItem
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967039
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

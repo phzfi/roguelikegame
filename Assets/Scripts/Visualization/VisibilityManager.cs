@@ -8,6 +8,9 @@ public class VisibilityManager : MonoBehaviour
 	public static TileRenderer sm_moveRangeRenderer;
 	public static TileRenderer sm_openLosRenderer;
 	public static TileRenderer sm_closedLosRenderer;
+	public static TileRenderer sm_wallRenderer;
+	public static TileRenderer sm_itemRenderer;
+	public static TileRenderer sm_playerRenderer;
 
 	private static LevelMapManager sm_mapManager;
 
@@ -31,6 +34,12 @@ public class VisibilityManager : MonoBehaviour
 				sm_openLosRenderer = renderers[i];
 			else if (renderers[i].m_type == TileRenderer.TileRendererType.FogOfWarClosed)
 				sm_closedLosRenderer = renderers[i];
+			else if (renderers[i].m_type == TileRenderer.TileRendererType.MinimapItems)
+				sm_itemRenderer = renderers[i];
+			else if (renderers[i].m_type == TileRenderer.TileRendererType.MinimapWalls)
+				sm_wallRenderer = renderers[i];
+			else if (renderers[i].m_type == TileRenderer.TileRendererType.MinimapPlayers)
+				sm_playerRenderer = renderers[i];
 		}
 
 		w = sm_mapManager.m_width;
@@ -48,7 +57,7 @@ public class VisibilityManager : MonoBehaviour
 			sm_moveRangeRenderer.Show();
 
 		UpdateMoveRange();
-		UpdateLos();
+		UpdateMinimap();
 	}
 
 	public static void UpdateMoveRange()
@@ -111,7 +120,7 @@ public class VisibilityManager : MonoBehaviour
 		return false;
 	}
 
-	public static void UpdateLos()
+	public static void UpdateMinimap()
 	{
 		int sightRange = 10;
 
@@ -143,16 +152,40 @@ public class VisibilityManager : MonoBehaviour
 
 		List<Vector3> visibleTiles = new List<Vector3>();
 		List<Vector3> blockedTiles = new List<Vector3>();
+		List<Vector3> wallTiles = new List<Vector3>();
+		List<Vector3> itemTiles = new List<Vector3>();
+		List<Vector3> playerTiles = new List<Vector3>();
 		for (int x = 0; x < w; ++x)
 		{
 			for (int y = 0; y < h; ++y) // Loop over all tiles, adding visible tiles to a single list for rendering
 			{
 				Vector2i currentTile = new Vector2i(x, y);
-				VisibilityState tileState = GetTile(currentTile);
-				
+				Vector3 worldPos = MapGrid.GridToWorldPoint(currentTile);
+                VisibilityState tileState = GetTile(currentTile);
+
 				if (tileState == VisibilityState.visible)
-					visibleTiles.Add(MapGrid.GridToWorldPoint(currentTile));
+					visibleTiles.Add(worldPos);
+				else if (tileState == VisibilityState.blocked)
+					wallTiles.Add(worldPos);
 			}
+		}
+
+		for(int i = 0; i < ItemManager.ItemsOnMap.Count; ++i)
+		{
+			var item = ItemManager.ItemsOnMap[i];
+			if (LineOfSight.CheckLOS(navAgent, sm_playerPos, item.m_pos, 30).blocked)
+				continue;
+
+			itemTiles.Add(MapGrid.GridToWorldPoint(item.m_pos));
+		}
+
+		for (int i = 0; i < CharManager.Objects.Count; ++i)
+		{
+			var character = CharManager.Objects[i];
+			if (LineOfSight.CheckLOS(navAgent, sm_playerPos, character.m_mover.m_gridPos, 30).blocked)
+				continue;
+
+			playerTiles.Add(MapGrid.GridToWorldPoint(character.m_mover.m_gridPos));
 		}
 
 		var openkeys = new List<Vector2i>(sm_openTiles.Keys);
@@ -164,6 +197,9 @@ public class VisibilityManager : MonoBehaviour
 
 		sm_closedLosRenderer.CreateMesh(blockedTiles.ToArray()); // Create meshes from tile lists
 		sm_openLosRenderer.CreateMesh(visibleTiles.ToArray());
+		sm_itemRenderer.CreateMesh(itemTiles.ToArray());
+		sm_playerRenderer.CreateMesh(playerTiles.ToArray());
+		sm_wallRenderer.CreateMesh(wallTiles.ToArray());
 	}
 
 	public static List<Vector3> BreadthFirstSearch() // Find any accessible nodes that can be moved into
