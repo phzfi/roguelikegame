@@ -3574,16 +3574,16 @@ MonoBehaviour:
   m_drawDebug: 0
   m_useRandomSeed: 1
   m_seed: 2/17/2016 11:51:49 PM
-  m_randomFillPercent: 0
-  m_smoothingIterations: 0
-  m_frequency: 1
-  m_roomThresholdSize: 0
-  m_passageWidth: 1
-  m_spaceCount: 0
+  m_randomFillPercent: 44
+  m_smoothingIterations: 2
+  m_frequency: .200000003
+  m_roomThresholdSize: 10
+  m_passageWidth: 2
+  m_spaceCount: 4
   m_maxSpaceSize: 10
-  m_minSpaceSize: 1
-  m_meanSpaceSize: 4
-  m_standardDeviation: 4
+  m_minSpaceSize: 3
+  m_meanSpaceSize: 6
+  m_standardDeviation: 2
 --- !u!1001 &1566902820
 Prefab:
   m_ObjectHideFlags: 0

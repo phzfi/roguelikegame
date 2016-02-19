@@ -3,13 +3,39 @@ using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
-public enum networkMsgType : short
+public enum networkingMsgType : short
 {
     connectPlayer = 100,
-    //Inout messages
-    inputMessage = 101,
-    //Output messages
-    visibilityOutputMessage = 102
+    inputMessagesBoundary = 101,
+    inputMovementMessage = 102,
+    outputMessagesBoundary = 103, 
+    visibilityOutputMessage = 104,
+    count = 105
+}
+class NetworkingUtilities
+{
+    public static int GetOutputNetworkMsgTypeIndex(networkingMsgType type)
+    {
+        Debug.Assert(type > networkingMsgType.outputMessagesBoundary);
+        return (int)type - (int)networkingMsgType.outputMessagesBoundary - 1;
+    }
+
+    public static int GetOutputNetworkMsgTypeCount()
+    {
+        return (int)networkingMsgType.count - (int)networkingMsgType.inputMessagesBoundary;
+    }
+
+    public static int GetInputNetworkMsgTypeIndex(networkingMsgType type)
+    {
+        Debug.Assert(type > networkingMsgType.inputMessagesBoundary
+            && type < networkingMsgType.outputMessagesBoundary);
+        return (int)type - (int)networkingMsgType.inputMessagesBoundary - 1;
+    }
+
+    public static int GetInputNetworkMsgTypeCount()
+    {
+        return (int)networkingMsgType.outputMessagesBoundary - (int)networkingMsgType.inputMessagesBoundary;
+    }
 }
 
 public class HostPlayerData

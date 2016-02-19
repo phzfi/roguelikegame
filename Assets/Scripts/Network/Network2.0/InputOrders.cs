@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using System.Collections.Generic;
+using System;
 
-abstract public class InputOrder
+public interface IInputOrder
 {
-    abstract public void ExecuteOrder();
+    void ExecuteOrder(GameLogic logic, int playerIndex);
 }
+
 
 public class InputConnectMessage : MessageBase
 {
@@ -13,28 +16,46 @@ public class InputConnectMessage : MessageBase
     public int m_connectionIndex;
 }
 
-public class InputOrderMessage : MessageBase
+public class InputMessage : MessageBase
 {
-    public InputOrderMessage(InputOrder order, bool clearStack = false)
+    protected void SetInterfaceToOrders<T>(List<IInputOrder> list, ref T[] array)
     {
-        m_order = order;
-        m_clearStack = clearStack;
+        array = new T[list.Count];
+        for (int i = 0; i < list.Count; ++i)
+            array[i] = (T)list[i];
     }
 
-    public InputOrder m_order;
-    public bool m_clearStack;
+    public void SetOrdersToInterface<T>(ref List<IInputOrder> list, T[] array)
+    {
+        for (int i = 0; i < array.Length; ++i)
+            list.Add((IInputOrder)array[i]);
+    }
 }
 
-public class MovementInputOrder : InputOrder
+
+public class MovementInputMessage : InputMessage
 {
-    MovementInputOrder(Vector2i targetPosition)
+    public void SetOrders(List<IInputOrder> inputs)
+    {
+        SetInterfaceToOrders<MovementInputOrder>(inputs, ref m_orders);
+    }
+
+    public MovementInputOrder[] m_orders;
+}
+
+
+public struct MovementInputOrder : IInputOrder
+{
+    public void ExecuteOrder(GameLogic logic, int playerIndex)
+    {
+        logic.PlayerMovement(this, playerIndex);
+    }
+
+    public void SetData(Vector2i targetPosition)
     {
         m_targetGridPos = targetPosition;
     }
-    private Vector2i m_targetGridPos;
 
-    public override void ExecuteOrder()
-    {
-        //DummyGameLogic.Instance.ExecuteMovement();
-    }
+    [SerializeField]
+    private Vector2i m_targetGridPos;
 }

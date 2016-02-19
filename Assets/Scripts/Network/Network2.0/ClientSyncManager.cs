@@ -33,22 +33,22 @@ public class ClientSyncManager : NetworkBehaviour
         m_playerData = new ClientPlayerData();
         m_playerData.m_connection = connection;
         m_playerData.m_clientID = -1;
-        m_playerData.m_connection.RegisterHandler((short)networkMsgType.connectPlayer, HandleIntializion);
-        m_playerData.m_connection.RegisterHandler((short)networkMsgType.inputMessage, ErrorMessageHandler);
-        m_playerData.m_connection.RegisterHandler((short)networkMsgType.visibilityOutputMessage, HandleVisibilityOutputMessage);
+        m_playerData.m_connection.RegisterHandler((short)networkingMsgType.connectPlayer, HandleIntializion);
+        m_playerData.m_connection.RegisterHandler((short)networkingMsgType.inputMovementMessage, ErrorMessageHandler);
+        m_playerData.m_connection.RegisterHandler((short)networkingMsgType.visibilityOutputMessage, HandleVisibilityOutputMessage);
 
         var msg = new InputConnectMessage();
         msg.m_playerIndex = -1;
         msg.m_connectionIndex = connection.connectionId;
-        m_playerData.m_connection.Send((short)networkMsgType.connectPlayer, msg);
+        m_playerData.m_connection.Send((short)networkingMsgType.connectPlayer, msg);
         Debug.Log("Send initialized at client to server");
     }
 
     public void StopOnClient()
     {
-        m_playerData.m_connection.UnregisterHandler((short)networkMsgType.connectPlayer);
-        m_playerData.m_connection.UnregisterHandler((short)networkMsgType.inputMessage);
-        m_playerData.m_connection.UnregisterHandler((short)networkMsgType.visibilityOutputMessage);
+        m_playerData.m_connection.UnregisterHandler((short)networkingMsgType.connectPlayer);
+        m_playerData.m_connection.UnregisterHandler((short)networkingMsgType.inputMovementMessage);
+        m_playerData.m_connection.UnregisterHandler((short)networkingMsgType.visibilityOutputMessage);
         m_playerData = null;
         m_initialized = false;
     }

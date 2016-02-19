@@ -12,9 +12,13 @@ public class HostSyncManager : NetworkBehaviour
     private Dictionary<int, HostPlayerData> m_stacks = new Dictionary<int, HostPlayerData>();
     private int playerIdCounter = 0;
 
+    List<List<IOutputOrder>> m_tmpOutputOrders = new List<List<IOutputOrder>>();
+
     void Start ()
     {
-	}
+        for (int i = 0; i < NetworkingUtilities.GetOutputNetworkMsgTypeCount(); ++i)
+            m_tmpOutputOrders.Add(new List<IOutputOrder>());
+    }
 	
 	void Update ()
     {
@@ -28,23 +32,44 @@ public class HostSyncManager : NetworkBehaviour
 
     void SendOutputStacks()
     {
-        foreach (var item in m_stacks.Values)
+        foreach(var key in m_stacks.Keys)
         {
-            if (item.m_outputStack.Count == 0)
-                return;
+            HostPlayerData data = m_stacks[key];
+            List<IOutputOrder> outputStack = data.m_outputStack;
 
-            VisibilityOutputMessage msg = new VisibilityOutputMessage();
-            msg.SetOrders(item.m_outputStack);
-            NetworkServer.SendToClient(item.m_connectionId, (short)networkMsgType.visibilityOutputMessage, msg);
-            item.ClearOutput();
+            for (int i = 0; i < outputStack.Count; ++i)
+            {
+                IOutputOrder order = outputStack[i];
+                order.SetTurnQueuePosition(i);
+                networkingMsgType msgType = outputStack[i].GetMessageType();
+                int index = NetworkingUtilities.GetOutputNetworkMsgTypeIndex(msgType);
+                m_tmpOutputOrders[index].Add(order);
+            }
+            SendOutputMessages(data.m_connectionId);
+            ClearTmpLists();
         }
+    }
+
+    void SendOutputMessages(int connectionId)
+    {
+        {
+            VisibilityOutputMessage msg = new VisibilityOutputMessage();
+            msg.SetOrders(m_tmpOutputOrders[0]);
+            NetworkServer.SendToClient(connectionId, (short)networkingMsgType.visibilityOutputMessage, msg);
+        }
+    }
+
+    void ClearTmpLists()
+    {
+        for (int i = 0; i < m_tmpOutputOrders.Count; ++i)
+            m_tmpOutputOrders[i].Clear();
     }
 
     public void InitOnServer() // initialize server side sync logic
     {
-        NetworkServer.RegisterHandler((short)networkMsgType.connectPlayer, ConnectNewPlayer);
-        NetworkServer.RegisterHandler((short)networkMsgType.inputMessage, HandleInputMessage);
-        NetworkServer.RegisterHandler((short)networkMsgType.visibilityOutputMessage, ErrorMessageHandler);
+        NetworkServer.RegisterHandler((short)networkingMsgType.connectPlayer, ConnectNewPlayer);
+        NetworkServer.RegisterHandler((short)networkingMsgType.inputMovementMessage, HandleInputMessage);
+        NetworkServer.RegisterHandler((short)networkingMsgType.visibilityOutputMessage, ErrorMessageHandler);
         enabled = true;
         Debug.Log("Initialized at server");
 
@@ -57,9 +82,9 @@ public class HostSyncManager : NetworkBehaviour
 
     public void StopOnServer()
     {
-        NetworkServer.UnregisterHandler((short)networkMsgType.connectPlayer);
-        NetworkServer.UnregisterHandler((short)networkMsgType.inputMessage);
-        NetworkServer.UnregisterHandler((short)networkMsgType.visibilityOutputMessage);
+        NetworkServer.UnregisterHandler((short)networkingMsgType.connectPlayer);
+        NetworkServer.UnregisterHandler((short)networkingMsgType.inputMovementMessage);
+        NetworkServer.UnregisterHandler((short)networkingMsgType.visibilityOutputMessage);
     }
 
     void ConnectNewPlayer(NetworkMessage msg)
@@ -72,10 +97,10 @@ public class HostSyncManager : NetworkBehaviour
             HostPlayerData stackData = new HostPlayerData(connectionId);
             m_stacks.Add(playerIdCounter, stackData);
             VisibilityOutputOrder visibilityOrder = new VisibilityOutputOrder();
-            var outputMsg = GameLogic.Instance.AddPlayer(++playerIdCounter, ref visibilityOrder);
+            var outputMsg = GameLogic.Instance.PlayerAdd(++playerIdCounter, ref visibilityOrder);
             stackData.m_outputStack.Add(visibilityOrder);
 
-            NetworkServer.SendToClient(connectionId, (short)networkMsgType.connectPlayer, outputMsg);
+            NetworkServer.SendToClient(connectionId, (short)networkingMsgType.connectPlayer, outputMsg);
             Debug.Log("Send initialized at client to server");
         }
         else

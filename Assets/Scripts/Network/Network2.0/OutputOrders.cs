@@ -7,6 +7,8 @@ using System;
 public interface IOutputOrder
 {
     void ExecuteOrder(ClientSyncManager manager);
+    void SetTurnQueuePosition(int index);
+    networkingMsgType GetMessageType();
 }
 
 
@@ -49,6 +51,16 @@ public struct VisibilityOutputOrder : IOutputOrder
         manager.ExecuteVisibilityOrder(this);
     }
 
+    public void SetTurnQueuePosition(int index)
+    {
+        m_turnQueuePosition = index;
+    }
+
+    public networkingMsgType GetMessageType()
+    {
+        return networkingMsgType.visibilityOutputMessage;
+    }
+
     public void SetData(int numberOfTiles, 
         List<Vector2i> gridPositions,
         List<int> tileTypes,
@@ -64,6 +76,8 @@ public struct VisibilityOutputOrder : IOutputOrder
         m_visualizationIndices = visualizationIndices.ToArray();
     }
 
+    [SerializeField]
+    public int m_turnQueuePosition;
     [SerializeField]
     public int m_numberOfTiles;
     [SerializeField]

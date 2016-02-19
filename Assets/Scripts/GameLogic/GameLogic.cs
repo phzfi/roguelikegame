@@ -11,6 +11,7 @@ public class GameLogic : Singleton<GameLogic>
     public int m_coinCount;
     public int m_itemCount;
     public List<GameObject> m_items;
+    [Header("Draw debug gizmos for the map")]
     public bool m_drawDebug = false;
 
     [Header("Map randomization parameters")]
@@ -45,7 +46,7 @@ public class GameLogic : Singleton<GameLogic>
         GeneratePlayerStartPositions(numberOfPlayers);
     }
 
-    public OutputConnectMessage AddPlayer(int playerIndex, ref VisibilityOutputOrder order)
+    public OutputConnectMessage PlayerAdd(int playerIndex, ref VisibilityOutputOrder order)
     {
         OutputConnectMessage msg = new OutputConnectMessage();
         msg.m_mapSize.x = m_width;
@@ -60,6 +61,11 @@ public class GameLogic : Singleton<GameLogic>
             ref indices);
         order.SetData(positions.Count, positions, tiles, indices);
         return msg;
+    }
+
+    public void PlayerMovement(MovementInputOrder order, int playerIndex)
+    {
+
     }
 
     private void GenerateItems()
