@@ -22,7 +22,7 @@ class NetworkingUtilities
 
     public static int GetOutputNetworkMsgTypeCount()
     {
-        return (int)networkingMsgType.count - (int)networkingMsgType.inputMessagesBoundary;
+        return (int)networkingMsgType.count - (int)networkingMsgType.outputMessagesBoundary - 1;
     }
 
     public static int GetInputNetworkMsgTypeIndex(networkingMsgType type)
@@ -34,7 +34,7 @@ class NetworkingUtilities
 
     public static int GetInputNetworkMsgTypeCount()
     {
-        return (int)networkingMsgType.outputMessagesBoundary - (int)networkingMsgType.inputMessagesBoundary;
+        return (int)networkingMsgType.outputMessagesBoundary - (int)networkingMsgType.inputMessagesBoundary - 1;
     }
 }
 

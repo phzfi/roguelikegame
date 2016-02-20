@@ -22,19 +22,20 @@ public class LevelMapManager : MonoBehaviour
         m_map = new LevelMap(false);
         m_map.GenerateEmpty(width, height);
         m_mapVisualization.Init(m_map);
+        m_mapVisualization.CreateFloor(m_map);
     }
 
     public void AddToMap(Vector2i pos, MapTileType type, int visualizationIndex)
     {
         m_map.AddToMap(pos, type, visualizationIndex);
         m_map.GetNavGrid().SetCellAccessable(pos, m_map.IsAccessible(pos.x, pos.y));
-        //m_mapVisualization.MeshSingle(m_map, pos.x, pos.y);
+        m_mapVisualization.MeshSingleBasedOnIndex(m_map, pos.x, pos.y);
     }
-    
-    public void Visualize()
+
+    public void UpdateVisualization()
     {
-        m_mapVisualization.MarchingSquaresMesh(m_map);
-    } 
+        m_mapVisualization.UpdateMesh();
+    }
 
     public void Reset()
     {

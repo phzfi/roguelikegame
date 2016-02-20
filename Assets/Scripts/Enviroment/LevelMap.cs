@@ -81,7 +81,13 @@ public class LevelMap
 		return m_map[x, y].m_tileType;
 	}
 
-	public bool IsAccessible(int x, int y) {
+    public int GetVisualizationIndex(int x, int y)
+    {
+        Debug.Assert(m_map != null, "Trying to access map data before its created!");
+        return m_map[x, y].m_visualizationIndex;
+    }
+
+    public bool IsAccessible(int x, int y) {
 		Debug.Assert(m_map != null, "Trying to access map data before its created!");
 		return m_map [x, y].m_isAccessible;
 	}
@@ -128,7 +134,17 @@ public class LevelMap
 		UpdateAccessibility ();
 
 		m_navGrid = new NavGrid(this, true);
-	}
+        GenerateVisualizationIndices();
+    }
+
+    void GenerateVisualizationIndices()
+    {
+        for (int x = 0; x < m_size.x; ++x)
+        {
+            for (int y = 0; y < m_size.y; ++y)
+                m_map[x, y].m_visualizationIndex = LevelMapUtilities.GetMeshVisualizationIndex(this, x, y);
+        }
+    }
 
     public void GenerateEmpty(int width, int height)
     {
@@ -715,3 +731,4 @@ public class LevelMap
 
 
 }
+

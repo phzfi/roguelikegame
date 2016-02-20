@@ -96,6 +96,44 @@ public class LevelMapVisualization : MonoBehaviour
                 MeshSingle(map, x, y);
             }
         }
+    }
+
+	public void MeshCircle(LevelMap map, Vector2i pos, int radius) 
+	{
+		for (int x = pos.x - radius; x <= pos.x + radius; x++) 
+		{
+			for (int y = pos.y - radius; y <= pos.y + radius; y++) 
+			{
+				if (y < map.Height && x < map.Width && x >= 0 && y >= 0) 
+				{
+					int xdist = x - pos.x;
+					int ydist = y - pos.y;
+					if (xdist * xdist + ydist * ydist <= radius * radius) 
+					{
+						MeshSingle (map, x, y);
+					}
+				}
+			}
+		}
+	}
+
+    public void MeshSingle(LevelMap map, int x, int y)
+    {
+        int state = LevelMapUtilities.GetMeshVisualizationIndex(map, x, y);
+
+        TriangulateSingle(x, y, state, map.Width, map.Height);
+    }
+
+    public void MeshSingleBasedOnIndex(LevelMap map, int x, int y)
+    {
+        int state = map.GetVisualizationIndex(x,y);
+        TriangulateSingle(x, y, state, map.Width, map.Height);
+    }
+
+    public void CreateFloor(LevelMap map)
+    {
+        int width = map.Width;
+        int height = map.Height;
 
         float tileSize = MapGrid.tileSize;
         Vector3 heightVector = new Vector3(0, 0, -sm_meshHeight);
@@ -140,41 +178,6 @@ public class LevelMapVisualization : MonoBehaviour
         UpdateGrid(map.Size);
     }
 
-	public void MeshCircle(LevelMap map, Vector2i pos, int radius) 
-	{
-		for (int x = pos.x - radius; x <= pos.x + radius; x++) 
-		{
-			for (int y = pos.y - radius; y <= pos.y + radius; y++) 
-			{
-				if (y < map.Height && x < map.Width && x >= 0 && y >= 0) 
-				{
-					int xdist = x - pos.x;
-					int ydist = y - pos.y;
-					if (xdist * xdist + ydist * ydist <= radius * radius) 
-					{
-						MeshSingle (map, x, y);
-					}
-				}
-			}
-		}
-	}
-
-    public void MeshSingle(LevelMap map, int x, int y)
-    {
-        if (x < 0 || y < 0 || x >= map.Width || y >= map.Height)
-        {
-            Debug.LogError("The requested square in MeshSquare() is out of range: (" + x + ", "  + y + ")");
-            return;
-        }
-
-        int state = 0;
-        if (map.GetTileType(x, y) == MapTileType.Wall) state += 1;
-        if (x + 1 == map.Width || map.GetTileType(x + 1, y) == MapTileType.Wall) state += 2;
-        if ((y + 1 == map.Height || x + 1 == map.Width) || map.GetTileType(x + 1, y + 1) == MapTileType.Wall) state += 4;
-        if (y + 1 == map.Height || map.GetTileType(x, y + 1) == MapTileType.Wall) state += 8;
-
-        TriangulateSingle(x, y, state, map.Width, map.Height);
-    }
 
     private void TriangulateSingle(int x, int y, int state, int width, int height)
     {
@@ -328,7 +331,7 @@ public class LevelMapVisualization : MonoBehaviour
 		floorTriangles.Add(floorVertices.Count - 1);
 	}
 
-    private void UpdateGrid(Vector2i mapSize)
+    public void UpdateGrid(Vector2i mapSize)
 	{
 		if (gridMaterial)
 		{

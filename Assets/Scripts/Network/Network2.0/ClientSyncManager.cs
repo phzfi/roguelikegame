@@ -69,8 +69,11 @@ public class ClientSyncManager : NetworkBehaviour
     public void ExecuteVisibilityOrder(VisibilityOutputOrder order)
     {
         for (int i = 0; i < order.m_numberOfTiles; ++i)
-           m_levelManager.AddToMap(order.m_gridPostions[i], (MapTileType)order.m_mapTiles[i], order.m_visualizationIndices[i]);
-        m_levelManager.Visualize();
+        {
+            Vector2i p = order.m_gridPostions[i];
+            m_levelManager.AddToMap(p, (MapTileType)order.m_mapTiles[i], order.m_visualizationIndices[i]);
+        }
+        m_levelManager.UpdateVisualization();
     }
 
     public void ErrorMessageHandler(NetworkMessage msg)

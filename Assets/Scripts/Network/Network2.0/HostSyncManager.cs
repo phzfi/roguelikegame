@@ -45,6 +45,7 @@ public class HostSyncManager : NetworkBehaviour
                 int index = NetworkingUtilities.GetOutputNetworkMsgTypeIndex(msgType);
                 m_tmpOutputOrders[index].Add(order);
             }
+            outputStack.Clear();
             SendOutputMessages(data.m_connectionId);
             ClearTmpLists();
         }
