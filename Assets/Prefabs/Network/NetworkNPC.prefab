@@ -57,7 +57,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -223,7 +225,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 122222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee580ca42eaadbb4bba0be68dfcbe7f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 216b07b127beb3446b33dbd00204bd70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_attackRange: 2
@@ -249,7 +251,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
-  m_currentAttackStyle: 0
+  m_deathSounds: []
 --- !u!114 &11478352
 MonoBehaviour:
   m_ObjectHideFlags: 1
