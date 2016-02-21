@@ -251,6 +251,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
+  m_deathSounds: []
 --- !u!114 &11478352
 MonoBehaviour:
   m_ObjectHideFlags: 1
