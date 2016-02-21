@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2812e8b5905a5419f5e36e41c700c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_attackRange: 15
+  m_chaseRange: 8
 --- !u!114 &11413432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -179,6 +179,7 @@ MonoBehaviour:
   m_playerStrength: 0
   m_playerAgility: 0
   m_playerIntelligence: 0
+  m_playerVitality: 0
 --- !u!114 &11428952
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -193,8 +194,14 @@ MonoBehaviour:
   m_currentHp: 12
   m_maxHp: 12
   m_damage: 1
+  isBoss: 0
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
+  m_meleeAudio: {fileID: 0}
+  m_barehandSounds: []
+  m_mageAudio: {fileID: 0}
+  m_rangedAudio: {fileID: 0}
+  m_deathSounds: []
 --- !u!114 &11432868
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -255,6 +262,7 @@ MonoBehaviour:
   m_syncer: {fileID: 0}
   m_inventory: {fileID: 0}
   m_equipment: {fileID: 0}
+  m_combatSystem: {fileID: 0}
   m_enemyAI: {fileID: 0}
   m_isPlayer: 0
 --- !u!114 &11459084
@@ -306,6 +314,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_maxHp
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_chaseRange
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ReceiveShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
