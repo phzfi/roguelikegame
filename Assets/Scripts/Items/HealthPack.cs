@@ -31,7 +31,7 @@ public class HealthPack : MonoBehaviour
                 Debug.Log("Health potion used. Potions left " + potions);
                 if (potions < 1)
                 {
-                    GetComponentInParent<Slot>().m_containsItem = false;
+                    transform.parent.GetComponent<Slot>().m_containsItem = false;
                     Destroy(gameObject);
                     var draggedButtons = GetComponent<ActionDraggedButton>().m_draggedButtons;
                     for (int j = 0; j < draggedButtons.Count; ++j)
