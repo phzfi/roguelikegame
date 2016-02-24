@@ -30,7 +30,7 @@ public class InputHandler : Singleton<InputHandler>
 
 	void Update()
 	{
-		if (MenuManager.sm_menuOpen)
+		if (ExitGameScreen.sm_exitMenuOpen)
 			return;
 
 		Vector2i mouseGridPos = GetMouseGridPosition();

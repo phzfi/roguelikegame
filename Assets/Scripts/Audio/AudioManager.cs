@@ -33,14 +33,29 @@ public class AudioManager : Singleton<AudioManager>
 		m_audioMixer.SetFloat("EffectsVolume", VolumeToDecibels(GlobalSettings.effectsAudioVolume));
 		m_audioMixer.SetFloat("UIVolume", VolumeToDecibels(GlobalSettings.uiAudioVolume));
 
-		if (!m_ambientPlaying && !MenuManager.sm_menuOpen)
+		if (Application.loadedLevelName == "MainMenu")
 		{
-			m_ambientPlaying = true;
-			StartCoroutine("FadeOut", 1.0f);
-			StartCoroutine("Wait");
-			m_musicAudioSource.clip = m_ambientSounds;
-			StartCoroutine("FadeIn", 1.0f);
-			m_musicAudioSource.Play();
+			if (m_ambientPlaying)
+			{
+				m_ambientPlaying = false;
+				StartCoroutine("FadeOut", 1.0f);
+				StartCoroutine("Wait");
+				m_musicAudioSource.clip = m_menuMusic;
+				StartCoroutine("FadeIn", 1.0f);
+				m_musicAudioSource.Play();
+			}
+		}
+		else 
+		{
+			if (!m_ambientPlaying)
+			{
+				m_ambientPlaying = true;
+				StartCoroutine("FadeOut", 1.0f);
+				StartCoroutine("Wait");
+				m_musicAudioSource.clip = m_ambientSounds;
+				StartCoroutine("FadeIn", 1.0f);
+				m_musicAudioSource.Play();
+			}
 		}
 	}
 

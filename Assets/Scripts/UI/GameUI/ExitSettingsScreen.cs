@@ -12,5 +12,10 @@ public class ExitSettingsScreen : MonoBehaviour
 		m_exitMenu.SetActive(true);
 		m_exitSettings.SetActive(false);
 	}
+
+	public void OnVolumeChanged(float value)
+	{
+		Debug.Log("TODO: Implement in-game volume slider");
+	}
 	
 }

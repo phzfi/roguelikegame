@@ -23,6 +23,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		base.OnServerDisconnect(conn);
 		m_syncManager.DisconnectClient(conn);
+		m_mainMenu.Show();
 	}
 
 	// Lobby Manager
@@ -58,6 +59,14 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			m_syncManager.StopOnServer();
 			m_mainMenu.Show();
 		}
+	}
+
+	public override void OnStopServer()
+	{
+		Debug.Log("OnStopServer");
+		base.OnStopServer();
+		m_syncManager.StopOnServer();
+		m_mainMenu.Show();
 	}
 
 	// Server / Host
@@ -139,6 +148,14 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		}
 
 		base.OnClientSceneChanged(conn);
+	}
+
+	public override void OnStopClient()
+	{
+		Debug.Log("OnStopClient");
+		base.OnStopClient();
+		m_syncManager.StopOnClient();
+		m_mainMenu.Show();
 	}
 
 	public override void OnClientDisconnect(NetworkConnection conn)

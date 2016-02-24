@@ -11,6 +11,7 @@ public class LobbyManager : Singleton<LobbyManager>
 
 	private CustomNetworkLobbyManager m_manager;
 	private System.Action m_onErrorCallback;
+	private System.Action m_exitAction;
 
 	// PHZ dedicated server, hardcoded for now...
 	public const string dedicatedServerNetworkAddress = "84.248.74.249";
@@ -115,6 +116,8 @@ public class LobbyManager : Singleton<LobbyManager>
 		{
 			m_onErrorCallback();
 		}
+
+		m_exitAction = StopHostLobby;
 	}
 
 	public void StartHostBroadcasting()
@@ -184,6 +187,8 @@ public class LobbyManager : Singleton<LobbyManager>
 		{
 			m_onErrorCallback();
 		}
+
+		m_exitAction = ExitLobbyAsClient;
 	}
 
 	public void ExitLobbyAsClient()
@@ -206,7 +211,19 @@ public class LobbyManager : Singleton<LobbyManager>
 
 	public void SetReady(bool ready)
 	{
+		// TODO?
+	}
 
+	public void ExitGame()
+	{
+		if (m_exitAction != null)
+		{
+			m_exitAction();
+		}
+		else
+		{
+			Application.Quit();
+		}
 	}
 
 }
