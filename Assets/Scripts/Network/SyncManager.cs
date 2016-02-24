@@ -67,8 +67,9 @@ public class SyncManager : NetworkBehaviour
         sm_serverData = new ServerData();
 		enabled = true;
 		sm_isServer = true;
-		sm_running = true;
+		sm_running = true;		
 		gameObject.SetActive(true);
+		NetworkServer.Spawn(gameObject);
 	}
 
     
