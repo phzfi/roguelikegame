@@ -116,14 +116,17 @@ public class SyncManager : NetworkBehaviour
 
 	public void StopOnClient() // stop client side sync logic
 	{
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.moveOrder);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.connected);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.pickupOrder);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.attackOrder);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.death);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.turnSync);
-        sm_clientData.m_connection.UnregisterHandler((short)msgType.equipOrder);
+		if (sm_clientData != null)
+		{
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.moveOrder);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.connected);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.pickupOrder);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.attackOrder);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.death);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.turnSync);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.equipOrder);
+		}
         sm_clientData = null;
 		enabled = false;
 	}
