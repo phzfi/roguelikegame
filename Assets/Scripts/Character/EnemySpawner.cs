@@ -8,7 +8,7 @@ public class EnemySpawner : NetworkBehaviour
 
 	public void Start()
 	{
-		GameObject obj = (GameObject)Instantiate(m_prefab, transform.position, transform.rotation);
+		GameObject obj = (GameObject)Instantiate(m_prefab, transform.position, m_prefab.transform.rotation);
 		NetworkServer.Spawn(obj);
 		Destroy(gameObject);
 	}

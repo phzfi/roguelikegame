@@ -15,6 +15,8 @@ public class CharController : NetworkBehaviour
 	[HideInInspector]
 	public Equipment m_equipment = null;
 	[HideInInspector]
+	public CombatSystem m_combatSystem = null;
+	[HideInInspector]
 	public EnemyAI m_enemyAI = null; // is null if player character
 
 	public bool m_isPlayer; // Whether this character is a player or an enemy NPC
@@ -28,6 +30,7 @@ public class CharController : NetworkBehaviour
 		m_mover = GetComponent<SimpleCharacterMovement>();
 		m_inventory = GetComponent<Inventory>();
 		m_equipment = GetComponent<Equipment>();
+		m_combatSystem = GetComponent<CombatSystem>();
 
 		if(!m_isPlayer)
 			m_enemyAI = GetComponent<EnemyAI>();

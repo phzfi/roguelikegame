@@ -16,6 +16,8 @@ public class Item : NetworkBehaviour
     public int m_agility = 0;
     [SyncVar]
     public int m_intelligence = 0;
+    [SyncVar]
+    public int m_vitality = 0;
 
     [SyncVar]
 	private bool m_onMap = true;
@@ -59,4 +61,26 @@ public class Item : NetworkBehaviour
 	{
 		ItemManager.Unregister(ID);
 	}
+
+    public override string ToString()
+    {
+        string information = "";
+		if (m_typeOfItem == ItemType.OTHER)
+		{
+			var hp = GetComponent<HealthPack>();
+			if (hp != null)
+				information = "Heals " + hp.m_heals + " hitpoints.";
+			else
+				information = m_name;
+		}
+		else
+		{
+			information = "Strength: " + m_strength
+						+ "\nAgility: " + m_agility
+						+ "\nIntelligence: " + m_intelligence
+						+ "\nVitality: " + m_vitality;
+		}
+
+        return information;
+    }
 }

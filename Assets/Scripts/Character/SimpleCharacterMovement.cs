@@ -26,6 +26,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 
 	private CombatSystem m_combatSystem;
 	private CharController m_controller;
+    private CharacterAnimation m_animator;
 
 	bool m_onGoingMovement = false;
 	float m_distanceOnStep = 0.0f;
@@ -49,7 +50,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		Debug.Assert(m_navAgent.CanAccess(m_gridPos), "Character " + gameObject.name + " is in unaccessable location");
 		
 		transform.position = MapGrid.GridToWorldPoint(m_gridPos, transform.position.z);
-
+        m_animator = GetComponent<CharacterAnimation>();
 
 		m_controller = GetComponent<CharController>();
 	}
@@ -113,7 +114,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		m_onGoingMovement = true;
 
 		StopAllCoroutines(); // kill previous interpolations if they're still going
-
+        m_animator.ToggleWalkAnimation(true); //TODO: make it work
 		if (currentPath.Count >= 2)
 		{
 			List<Vector3> worldSpacePath = MapGrid.NavPathToWorldSpacePath(currentPath, transform.position.z);
@@ -126,7 +127,8 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			Vector3 endWorldPos = MapGrid.GridToWorldPoint(targetGridPos, transform.position.z);
 			StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(startWorldPos, endWorldPos, true));
 		}
-	}
+        m_animator.ToggleWalkAnimation(false);
+    }
 
 	IEnumerator InterpolateCurveMovementCoroutine(CatmullRomSpline spline, int pathPointCount)
 	{
@@ -188,8 +190,8 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			case OrderType.none:
 				return false;
 			case OrderType.move:
-				m_navPath = m_navAgent.SeekPath(m_gridPos, m_moveOrderTarget);
-				break;
+                m_navPath = m_navAgent.SeekPath(m_gridPos, m_moveOrderTarget);
+                break;
 			case OrderType.attack:
 				var target = CharManager.GetObject(m_attackOrderTarget);
 				if (target == null) // if target not found, it must be dead and we can cancel attack order

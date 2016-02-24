@@ -45,6 +45,17 @@ MonoBehaviour:
   m_coinsText: {fileID: 0}
   m_playerNameText: {fileID: 0}
   m_healthBar: {fileID: 0}
+  m_tooltip: {fileID: 175626, guid: 36879e06ff64652479fd9736886d233b, type: 2}
+  m_actionBarSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
