@@ -68,6 +68,7 @@ public class SyncManager : NetworkBehaviour
 		enabled = true;
 		sm_isServer = true;
 		sm_running = true;
+		gameObject.SetActive(true);
 	}
 
     
@@ -89,6 +90,7 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.RegisterHandler((short)msgType.chatMessage, OnClientReceiveChatMessage);
         enabled = true;
 		sm_running = true;
+		gameObject.SetActive(true);
 
 		var msg = new ConnectionMessage();
 		msg.m_clientID = -1;

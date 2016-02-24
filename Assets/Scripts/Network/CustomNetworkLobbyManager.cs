@@ -11,8 +11,8 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	[SerializeField]
 	private MainMenuScreen m_mainMenu;
 
-	private Action m_onErrorCallback;
-	private Action m_onConnectedCallback;
+	private System.Action m_onErrorCallback;
+	private System.Action m_onConnectedCallback;
 	
 	public void Start()
 	{
@@ -26,12 +26,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	}
 
 	// Lobby Manager
-	public void SetOnErrorCallback(Action onErrorCallback)
+	public void SetOnErrorCallback(System.Action onErrorCallback)
 	{
 		m_onErrorCallback = onErrorCallback;
 	}
 
-	public void SetOnConnectedCallback(Action onConnectedCallback)
+	public void SetOnConnectedCallback(System.Action onConnectedCallback)
 	{
 		m_onConnectedCallback = onConnectedCallback;
 	}

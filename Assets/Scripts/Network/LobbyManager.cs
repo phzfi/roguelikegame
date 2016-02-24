@@ -10,7 +10,7 @@ public class LobbyManager : Singleton<LobbyManager>
 	public CustomNetworkDiscovery m_discovery;
 
 	private CustomNetworkLobbyManager m_manager;
-	private Action m_onErrorCallback;
+	private System.Action m_onErrorCallback;
 
 	// PHZ dedicated server, hardcoded for now...
 	public const string dedicatedServerNetworkAddress = "84.248.74.249";
@@ -72,18 +72,18 @@ public class LobbyManager : Singleton<LobbyManager>
 		}
 	}
 
-	public void SetOnErrorCallback(Action onErrorCallback)
+	public void SetOnErrorCallback(System.Action onErrorCallback)
 	{
 		m_onErrorCallback = onErrorCallback;
 		m_manager.SetOnErrorCallback(onErrorCallback);
 	}
 
-	public void SetOnConnectedCallback(Action onConnectedCallback)
+	public void SetOnConnectedCallback(System.Action onConnectedCallback)
 	{
 		m_manager.SetOnConnectedCallback(onConnectedCallback);
 	}
 
-	public void SetOnReceiveBroadcastCallback(Action<string, string> onReceiveBroadcast)
+	public void SetOnReceiveBroadcastCallback(System.Action<string, string> onReceiveBroadcast)
 	{
 		m_discovery.SetOnReceiveBroadcastCallback(onReceiveBroadcast);
 	}
