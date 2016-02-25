@@ -26,7 +26,7 @@ public class CombatSystem : NetworkBehaviour
     private Equipment m_equipment;
 	private CharController m_controller;
     private AudioSource m_audioSource;
-
+    private CharacterAnimation m_animator;
 
     public enum AttackStyle { MELEE, MAGE, RANGED };
 
@@ -41,6 +41,7 @@ public class CombatSystem : NetworkBehaviour
 		m_controller = GetComponent<CharController>();
         m_equipment = GetComponent<Equipment>();
         m_audioSource = GetComponent<AudioSource>();
+        m_animator = GetComponent<CharacterAnimation>();
 	}
 
 	public void Update()
@@ -96,7 +97,8 @@ public class CombatSystem : NetworkBehaviour
 		var targetSystem = target.GetComponent<CombatSystem>();
 		if (targetSystem == null)
 			return;
-        PlayAttackSound();        
+        PlayAttackSound();
+        m_animator.TriggerAttackAnimation();     
 		targetSystem.ChangeHP(-GetDamage());
 	}
 

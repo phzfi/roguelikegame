@@ -18,5 +18,9 @@ public class CharacterAnimation : MonoBehaviour
         else Debug.Log("Walking turned off.");
     }
 
+    public void TriggerAttackAnimation()
+    {
+        m_animator.SetTrigger("Attack");
+    }
 
 }
