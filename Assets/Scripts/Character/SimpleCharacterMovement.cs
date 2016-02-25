@@ -112,10 +112,10 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		m_distanceOnStep = .0f;
 		m_step = 0;
 		m_onGoingMovement = true;
+        m_animator.ToggleWalkAnimation(true);
 
 		StopAllCoroutines(); // kill previous interpolations if they're still going
-        m_animator.ToggleWalkAnimation(true); //TODO: make it work
-		if (currentPath.Count >= 2)
+    	if (currentPath.Count >= 2)
 		{
 			List<Vector3> worldSpacePath = MapGrid.NavPathToWorldSpacePath(currentPath, transform.position.z);
 			CatmullRomSpline spline = new CatmullRomSpline(worldSpacePath);
@@ -127,7 +127,6 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			Vector3 endWorldPos = MapGrid.GridToWorldPoint(targetGridPos, transform.position.z);
 			StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(startWorldPos, endWorldPos, true));
 		}
-        m_animator.ToggleWalkAnimation(false);
     }
 
 	IEnumerator InterpolateCurveMovementCoroutine(CatmullRomSpline spline, int pathPointCount)
@@ -172,6 +171,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			if (m_distanceOnStep >= dist)
 			{
 				transform.position = endWorldPos;
+                m_animator.ToggleWalkAnimation(false);
 				m_onGoingMovement = false;
 				yield break;
 			}

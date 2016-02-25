@@ -14,6 +14,8 @@ public class CharacterAnimation : MonoBehaviour
     public void ToggleWalkAnimation(bool on)
     {
         m_animator.SetBool("IsWalking", on);
+        if (on) Debug.Log("Walking turned on.");
+        else Debug.Log("Walking turned off.");
     }
 
 
