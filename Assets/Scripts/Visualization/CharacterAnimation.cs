@@ -23,4 +23,9 @@ public class CharacterAnimation : MonoBehaviour
         m_animator.SetTrigger("Attack");
     }
 
+    public void TriggerDeathAnimation()
+    {
+        m_animator.SetTrigger("Death");
+    }
+
 }

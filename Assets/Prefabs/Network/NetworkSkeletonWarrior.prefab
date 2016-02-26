@@ -1325,7 +1325,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 116040}
-  m_LocalRotation: {x: .258395463, y: -.707380652, z: -.370614588, w: .543589354}
+  m_LocalRotation: {x: .258395433, y: -.707380593, z: -.370614558, w: .543589294}
   m_LocalPosition: {x: -.0837196782, y: .0613652058, z: .0440563671}
   m_LocalScale: {x: .999999821, y: .999999881, z: .999999881}
   m_Children:
@@ -1700,15 +1700,14 @@ MonoBehaviour:
   isBoss: 0
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
-  m_meleeAudio: {fileID: 8300000, guid: 07ed8ba57da982047a3281cd98812483, type: 3}
+  m_meleeAudio: {fileID: 8300000, guid: 91d90ca0b1cd79d47bf3fd828075e35e, type: 3}
   m_barehandSounds:
-  - {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
-  - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
+  - {fileID: 8300000, guid: 91d90ca0b1cd79d47bf3fd828075e35e, type: 3}
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
   m_deathSounds:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 176965e0e22da4a77a46cecfbb41ae3b, type: 3}
+  - {fileID: 8300000, guid: b27efd798b7f04a15bb72e2404d282cb, type: 3}
 --- !u!114 &11418082
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2178,6 +2177,14 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: m_deathSounds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_LocalRotation.x
       value: -.707106829
       objectReference: {fileID: 0}
@@ -2201,6 +2208,18 @@ Prefab:
       propertyPath: m_Avatar
       value: 
       objectReference: {fileID: 9000000, guid: e48a2a9a6d73dab4e92507e1bbb2568b, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_meleeAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: 91d90ca0b1cd79d47bf3fd828075e35e, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 190718}
