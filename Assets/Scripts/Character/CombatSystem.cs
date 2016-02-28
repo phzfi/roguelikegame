@@ -18,6 +18,7 @@ public class CombatSystem : NetworkBehaviour
     public AudioClip m_mageAudio;
     public AudioClip m_rangedAudio;
     public List<AudioClip> m_deathSounds;
+    public float m_attackSoundOffset = 0f;
 
 	private GameObject m_textCanvas;
 	private Text m_label;
@@ -26,7 +27,7 @@ public class CombatSystem : NetworkBehaviour
     private Equipment m_equipment;
 	private CharController m_controller;
     private AudioSource m_audioSource;
-
+    private CharacterAnimation m_animator;
 
     public enum AttackStyle { MELEE, MAGE, RANGED };
 
@@ -41,6 +42,7 @@ public class CombatSystem : NetworkBehaviour
 		m_controller = GetComponent<CharController>();
         m_equipment = GetComponent<Equipment>();
         m_audioSource = GetComponent<AudioSource>();
+        m_animator = GetComponent<CharacterAnimation>();
 	}
 
 	public void Update()
@@ -63,31 +65,20 @@ public class CombatSystem : NetworkBehaviour
 
     private void PlayAttackSound()
     {
-        switch (m_currentAttackStyle)
+        var equipment = m_equipment.m_equipment;
+        bool swordEquipped = false;
+        for (int i = 0; i < equipment.Count; ++i)
         {
-            case AttackStyle.MELEE:
-                var equipment = m_equipment.m_equipment;
-                bool swordEquipped = false;
-                for (int i = 0; i < equipment.Count; ++i)
-                {
-                    if(equipment[i].GetComponent<Item>().m_name.Contains("Sword"))
-                    {
-                        swordEquipped = true;
-                    }
-                    continue;
-                }
-                if (!swordEquipped)
-                    m_audioSource.PlayOneShot(m_barehandSounds[Random.Range(0, m_barehandSounds.Count - 1)]);
-                else
-                    m_audioSource.PlayOneShot(m_meleeAudio);
-                break;
-            case AttackStyle.MAGE:
-                m_audioSource.PlayOneShot(m_mageAudio);
-                break;
-            case AttackStyle.RANGED:
-                m_audioSource.PlayOneShot(m_rangedAudio);
-                break;
+            if(equipment[i].GetComponent<Item>().m_name.Contains("Sword"))
+            {
+                swordEquipped = true;
+            }
+            continue;
         }
+        if (!swordEquipped)
+            m_audioSource.PlayOneShot(m_barehandSounds[Random.Range(0, m_barehandSounds.Count - 1)]);
+        else
+            m_audioSource.PlayOneShot(m_meleeAudio);
 	}
 
 	public void Attack(int targetID) // Deal damage to object, identified by ID.
@@ -96,7 +87,8 @@ public class CombatSystem : NetworkBehaviour
 		var targetSystem = target.GetComponent<CombatSystem>();
 		if (targetSystem == null)
 			return;
-        PlayAttackSound();        
+        Invoke("PlayAttackSound", m_attackSoundOffset);
+        m_animator.TriggerAttackAnimation();     
 		targetSystem.ChangeHP(-GetDamage());
 	}
 
@@ -122,7 +114,14 @@ public class CombatSystem : NetworkBehaviour
         
 		m_controller.Unregister();
 		m_label.enabled = false;
-		gameObject.SetActive(false);
+        m_animator.TriggerDeathAnimation();
+        m_audioSource.PlayOneShot(m_deathSounds[Random.Range(0, m_deathSounds.Count)]);
+        Invoke("Disable", 5f);
 		Debug.Log("player killed");
 	}
+
+    void Disable()
+    {
+        gameObject.SetActive(false);
+    }
 }

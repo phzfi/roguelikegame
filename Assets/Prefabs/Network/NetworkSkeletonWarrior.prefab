@@ -1548,7 +1548,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1572,7 +1574,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1671,7 +1675,7 @@ Animator:
   m_GameObject: {fileID: 190718}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: e48a2a9a6d73dab4e92507e1bbb2568b, type: 3}
-  m_Controller: {fileID: 9100000, guid: de2bd8801eefffc4b80359d0ba6c57f6, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3b377faacf61c1c45a865524de93e82a, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1696,15 +1700,14 @@ MonoBehaviour:
   isBoss: 0
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
-  m_meleeAudio: {fileID: 8300000, guid: 07ed8ba57da982047a3281cd98812483, type: 3}
+  m_meleeAudio: {fileID: 8300000, guid: 91d90ca0b1cd79d47bf3fd828075e35e, type: 3}
   m_barehandSounds:
-  - {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
-  - {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
+  - {fileID: 8300000, guid: 91d90ca0b1cd79d47bf3fd828075e35e, type: 3}
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
   m_deathSounds:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 176965e0e22da4a77a46cecfbb41ae3b, type: 3}
+  - {fileID: 8300000, guid: b27efd798b7f04a15bb72e2404d282cb, type: 3}
 --- !u!114 &11418082
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1856,7 +1859,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1936,7 +1941,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2016,7 +2023,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2096,7 +2105,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2166,6 +2177,14 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: m_deathSounds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_LocalRotation.x
       value: -.707106829
       objectReference: {fileID: 0}
@@ -2189,6 +2208,18 @@ Prefab:
       propertyPath: m_Avatar
       value: 
       objectReference: {fileID: 9000000, guid: e48a2a9a6d73dab4e92507e1bbb2568b, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: f82f1b0895c8f594f80d8f608c87a6e6, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_barehandSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_meleeAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: 91d90ca0b1cd79d47bf3fd828075e35e, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 190718}
