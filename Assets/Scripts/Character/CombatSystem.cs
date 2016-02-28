@@ -34,7 +34,7 @@ public class CombatSystem : NetworkBehaviour
 	{
 		m_currentHp = m_maxHp;
 		m_textCanvas = GameObject.FindGameObjectWithTag("TextCanvas");
-		m_camera = FindObjectOfType<Camera>();
+        m_camera = Camera.main;
 		m_label = Instantiate(m_textPrefab);
 		m_label.transform.SetParent(m_textCanvas.transform, true);
 		m_inventory = GetComponent<Inventory>(); // store inventory reference for use in damage modifiers
