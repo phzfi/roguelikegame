@@ -51,6 +51,9 @@ public class ExitGameScreen : MonoBehaviour
 		else
 		{
 			Application.Quit();
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+#endif
 		}
 
 		m_exitGame.SetActive(false);

@@ -10,12 +10,28 @@ public class MainMenuScreen : MenuScreen
 	public CreditsMenuScreen m_creditsMenu;
 	public MenuScreen m_background;
 	public MenuScreen m_blackBackground;
+	public MenuScreen m_dedicatedServerScreen;
+
+	protected override void Start()
+	{
+		base.Start();
+
+		if (LobbyManager.Instance.m_dedicatedServer)
+		{
+			m_dedicatedServerScreen.Show();
+		}
+	}
 
 	public override void Show()
 	{
 		base.Show();
 		m_background.Show();
-    }
+
+		if (LobbyManager.Instance.m_dedicatedServer)
+		{
+			m_dedicatedServerScreen.Show();
+		}
+	}
 
 	public void HostButtonPressed()
 	{
@@ -63,6 +79,11 @@ public class MainMenuScreen : MenuScreen
 		m_settingsMenu.Hide();
 		m_creditsMenu.Hide();
 		m_background.Hide();
+
+		if (LobbyManager.Instance.m_dedicatedServer)
+		{
+			m_dedicatedServerScreen.Hide();
+		}
 
 		sm_overrideFadeInDuration = -1.0f;
 		sm_overrideFadeOutDuration = -1.0f;

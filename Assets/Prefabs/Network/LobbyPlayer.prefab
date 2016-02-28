@@ -510,7 +510,7 @@ MonoBehaviour:
     i14: 140
     i15: 6
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &11491472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -797,6 +797,10 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: ShowLobbyGUI
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalPlayerAuthority
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -25,9 +25,19 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			{
 				Debug.Log("All clients disconnected - returning to main menu");
 				m_syncManager.StopOnServer();
+				StopServer();
 				m_mainMenu.Show();
+				
+				Debug.Log("Restarting dedicated server lobby");
+				StartCoroutine(StartServerRoutine());
 			}
 		}
+	}
+
+	private IEnumerator StartServerRoutine()
+	{
+		yield return new WaitForSeconds(1.0f);
+		StartServer();
 	}
 
 	// Lobby Manager

@@ -18,13 +18,18 @@ public class MenuScreen : MonoBehaviour
 	protected static float sm_overrideFadeInDuration = -1.0f;
 	protected static float sm_overrideFadeOutDuration = -1.0f;
 
-	virtual protected void Start()
+	virtual protected void Awake()
 	{
 		// Use canvas group alpha to show/hide menu
 		// instead of gameobject active/deactive.
 		// This way animations work correctly after Hide and Show
 		m_canvasGroup = GetComponent<CanvasGroup>();
 		m_buttons = GetComponentsInChildren<Button>();
+	}
+
+	virtual protected void Start()
+	{
+
 	}
 
 	virtual public void Show()

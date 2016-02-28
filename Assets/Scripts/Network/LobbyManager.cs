@@ -3,12 +3,13 @@ using UnityEngine.Networking;
 using System.Collections;
 using System;
 
+[RequireComponent(typeof(CustomNetworkDiscovery))]
 [RequireComponent(typeof(CustomNetworkLobbyManager))]
 public class LobbyManager : Singleton<LobbyManager>
 {
 	public bool m_dedicatedServer = false;
-	public CustomNetworkDiscovery m_discovery;
 
+	private CustomNetworkDiscovery m_discovery;
 	private CustomNetworkLobbyManager m_manager;
 	private System.Action m_onErrorCallback;
 	private System.Action m_exitAction;
@@ -59,9 +60,15 @@ public class LobbyManager : Singleton<LobbyManager>
 		return data;
 	}
 
+	void Awake()
+	{
+		m_discovery = GetComponent<CustomNetworkDiscovery>();
+		m_manager = GetComponent<CustomNetworkLobbyManager>();
+	}
+
 	void Start()
 	{
-		m_manager = GetComponent<CustomNetworkLobbyManager>();
+		
 
 		if (m_dedicatedServer)
 		{
@@ -69,6 +76,9 @@ public class LobbyManager : Singleton<LobbyManager>
 			{
 				Debug.LogError("Unable to start dedicated server!");
 				Application.Quit();
+#if UNITY_EDITOR
+				UnityEditor.EditorApplication.isPlaying = false;
+#endif
 			}
 		}
 	}
@@ -91,9 +101,12 @@ public class LobbyManager : Singleton<LobbyManager>
 
 	public bool StartDedicatedServerLobby()
 	{
+		Debug.Log("Starting dedicated server lobby");
+
 		m_manager.networkAddress = dedicatedServerLocalAddress;
 		m_manager.networkPort = dedicatedServerNetworkPort;
 		m_manager.maxPlayers = dedicatedServerMaxPlayers;
+		
 		return m_manager.StartServer();
 	}
 
@@ -223,6 +236,9 @@ public class LobbyManager : Singleton<LobbyManager>
 		else
 		{
 			Application.Quit();
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+#endif
 		}
 	}
 
