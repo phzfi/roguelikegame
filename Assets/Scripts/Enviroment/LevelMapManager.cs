@@ -20,7 +20,8 @@ public class LevelMapManager : NetworkBehaviour
 	{
 		m_map = GetComponent<LevelMap>();
 		m_map.Generate(m_width, m_height);
-        m_mapVisualization.MarchingSquaresMesh(m_map);
+        string seed = m_map.m_seed;
+        m_mapVisualization.MarchingSquaresMesh(m_map, seed);
         GeneratePlayerStartPositions();
 		//GenerateItems();
 		StartCoroutine(DelayItemGenerate());

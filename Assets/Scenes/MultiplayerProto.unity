@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: .211999997, g: .226999998, b: .259000003, a: 1}
   m_AmbientEquatorColor: {r: .114, g: .125, b: .133000001, a: 1}
   m_AmbientGroundColor: {r: .0469999984, g: .0430000015, b: .0350000001, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: .400000006
   m_AmbientMode: 0
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: .5
@@ -2694,6 +2694,14 @@ Prefab:
       propertyPath: floorMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 091c9cec33bfaa345b8e50b49382f8de, type: 2}
+    - target: {fileID: 11446702, guid: f311aad33ead3fe409638c2e09de6ec8, type: 2}
+      propertyPath: torch
+      value: 
+      objectReference: {fileID: 103002, guid: 07021f80437b47f4f9eb2b3f6138ec5c, type: 2}
+    - target: {fileID: 11446702, guid: f311aad33ead3fe409638c2e09de6ec8, type: 2}
+      propertyPath: torchProbability
+      value: .0500000007
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f311aad33ead3fe409638c2e09de6ec8, type: 2}
   m_IsPrefabParent: 0
@@ -4204,7 +4212,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 10859360, guid: 843a040ec12b5884fbe864d48a1eb240, type: 2}
       propertyPath: m_Intensity
-      value: .560000002
+      value: .300000012
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 843a040ec12b5884fbe864d48a1eb240, type: 2}

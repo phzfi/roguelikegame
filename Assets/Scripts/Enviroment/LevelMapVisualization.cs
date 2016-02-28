@@ -12,10 +12,13 @@ public class LevelMapVisualization : MonoBehaviour
     public Material floorMaterial;
 	public Transform gridTransform;
     public GameObject torch;
+    public float torchProbability;
 
     private GameObject top;
     private GameObject floor;
     private GameObject walls;
+
+    private System.Random rand;
 
     private List<Vector3> vertices;
 	private List<int> triangles;
@@ -29,8 +32,10 @@ public class LevelMapVisualization : MonoBehaviour
     private List<int> wallTriangles;
     private List<Vector2> wallUVs;
 
-    public void Init(LevelMap map)
+    public void Init(LevelMap map, string seed)
     {
+        rand = new System.Random(seed.GetHashCode());
+
         top = new GameObject();
         top.name = "Top";
         top.transform.parent = this.gameObject.transform;
@@ -83,9 +88,9 @@ public class LevelMapVisualization : MonoBehaviour
         wallMeshFilter.mesh.RecalculateNormals();
     }
 
-    public void MarchingSquaresMesh(LevelMap map)
+    public void MarchingSquaresMesh(LevelMap map, string seed)
     {
-        Init(map);
+        Init(map, seed);
 
         int width = map.Width;
         int height = map.Height;
@@ -175,7 +180,7 @@ public class LevelMapVisualization : MonoBehaviour
         if (y + 1 == map.Height || map.GetTileType(x, y + 1) == MapTileType.Wall) state += 8;
 
         TriangulateSingle(x, y, state, map.Width, map.Height);
-        if (state == 3 || state == 6 || state == 9 || state == 12)
+        if (torch != null && (state == 3 || state == 6 || state == 9 || state == 12))
         {
             SpawnTorch(x, y, state);
         }
@@ -183,7 +188,13 @@ public class LevelMapVisualization : MonoBehaviour
 
     private void SpawnTorch(int x, int y, int state)
     {
-        // TODO: Implement
+        // First version lol
+        float r = (float)rand.NextDouble();
+        if (r < torchProbability)
+        {
+            Vector3 pos = MapGrid.GridToWorldPoint(x, y, -1.0f);
+            Instantiate(torch, pos, torch.transform.rotation);
+        }
     }
 
     private void TriangulateSingle(int x, int y, int state, int width, int height)
