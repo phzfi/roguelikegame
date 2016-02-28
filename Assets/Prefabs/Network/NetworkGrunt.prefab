@@ -1576,6 +1576,8 @@ MonoBehaviour:
   m_attackOrderTarget: 0
   m_gridSpeed: 4
   m_syncer: {fileID: 0}
+  m_moveAction: {fileID: 0}
+  m_visualizeMoveAction: {fileID: 0}
 --- !u!114 &11452318
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1631,6 +1633,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 176965e0e22da4a77a46cecfbb41ae3b, type: 3}
   - {fileID: 8300000, guid: b27efd798b7f04a15bb72e2404d282cb, type: 3}
   m_attackSoundOffset: .25
+  m_attackVisualizeAction: {fileID: 0}
 --- !u!114 &11494126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1831,6 +1834,10 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: m_actions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_deathSounds.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -1879,8 +1886,20 @@ Prefab:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 0}
+      propertyPath: m_moveAction
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_visualizeMoveAction
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_attackSoundOffset
       value: .25
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_actionCount
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

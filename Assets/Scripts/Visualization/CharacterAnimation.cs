@@ -5,11 +5,13 @@ public class CharacterAnimation : MonoBehaviour
 {
     //TODO: Fix animations
     private Animator m_animator;
+	private AttackAnimation m_attackAnimation;
 
     void Start()
     {
         m_animator = GetComponent<Animator>();
-    }
+		m_attackAnimation = m_animator.GetBehaviour<AttackAnimation>();
+	}
 	
     public void ToggleWalkAnimation(bool on)
     {
@@ -27,5 +29,10 @@ public class CharacterAnimation : MonoBehaviour
     {
         m_animator.SetTrigger("Death");
     }
+
+	public bool IsAttackPlaying()
+	{
+		return m_attackAnimation.m_attacking;
+	}
 
 }

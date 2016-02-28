@@ -8,7 +8,7 @@ public class ActionManager : MonoBehaviour
 	public Action m_currentAction = null;
 	public bool m_currentlyTargeting = false; // Whether we're currently targeting some action. TODO: change cursor to appropriate
 
-	public static Dictionary<int, Action> sm_actionDictionary;
+	public static Dictionary<ulong, Action> sm_actionDictionary;
 
 	private InputHandler m_inputHandler;
 
@@ -16,7 +16,7 @@ public class ActionManager : MonoBehaviour
 	void Start()
 	{
 		m_inputHandler = FindObjectOfType<InputHandler>();
-		sm_actionDictionary = new Dictionary<int, Action>();
+		sm_actionDictionary = new Dictionary<ulong, Action>();
 	}
 
 	// Update is called once per frame
@@ -25,7 +25,7 @@ public class ActionManager : MonoBehaviour
 
 	}
 
-	public static Action GetAction(int ID)
+	public static Action GetAction(ulong ID)
 	{
 		if (sm_actionDictionary.ContainsKey(ID))
 			return sm_actionDictionary[ID];

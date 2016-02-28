@@ -19,6 +19,7 @@ public class CombatSystem : NetworkBehaviour
     public AudioClip m_rangedAudio;
     public List<AudioClip> m_deathSounds;
     public float m_attackSoundOffset = 0f;
+	public Action m_attackVisualizeAction;
 
 	private GameObject m_textCanvas;
 	private Text m_label;
@@ -43,6 +44,10 @@ public class CombatSystem : NetworkBehaviour
         m_equipment = GetComponent<Equipment>();
         m_audioSource = GetComponent<AudioSource>();
         m_animator = GetComponent<CharacterAnimation>();
+
+		var actionpool = GetComponent<ActionPool>();
+		m_attackVisualizeAction = gameObject.AddComponent<Action>();
+		m_attackVisualizeAction.m_useDelegate = VisualizeAttack;
 	}
 
 	public void Update()
@@ -87,12 +92,39 @@ public class CombatSystem : NetworkBehaviour
 		var targetSystem = target.GetComponent<CombatSystem>();
 		if (targetSystem == null)
 			return;
-        Invoke("PlayAttackSound", m_attackSoundOffset);
-        m_animator.TriggerAttackAnimation();     
 		targetSystem.ChangeHP(-GetDamage());
+
+		ActionData data = new ActionData();
+		data.m_actionID = m_attackVisualizeAction.ID;
+		SyncManager.AddVisualizeAction(data);
 	}
 
+	public void VisualizeAttack(ActionTargetData data)
+	{
+		Invoke("PlayAttackSound", m_attackSoundOffset);
+		m_animator.TriggerAttackAnimation();
+		StartCoroutine(AttackVisualizeCoRoutine());
+	}
 
+	public IEnumerator AttackVisualizeCoRoutine()
+	{
+		while(true)
+		{
+			if (m_animator.IsAttackPlaying()) // First wait for animation to start
+				break;
+			yield return null;
+		}
+
+		while(true)
+		{
+			if(!m_animator.IsAttackPlaying()) // Then wait until it is finished
+			{
+				ClientTurnLogicManager.RunNextAction();
+				yield break;
+			}
+			yield return null;
+		}
+	}
 
 	public void ChangeHP(int amount)
 	{

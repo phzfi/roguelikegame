@@ -57,7 +57,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -167,6 +169,8 @@ MonoBehaviour:
   m_attackOrderTarget: 0
   m_gridSpeed: 4
   m_syncer: {fileID: 0}
+  m_moveAction: {fileID: 0}
+  m_visualizeMoveAction: {fileID: 0}
 --- !u!114 &11417772
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -251,6 +255,8 @@ MonoBehaviour:
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
   m_deathSounds: []
+  m_attackSoundOffset: 0
+  m_attackVisualizeAction: {fileID: 0}
 --- !u!114 &11478352
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -306,6 +312,10 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: m_actions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_barehandSounds.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -349,6 +359,14 @@ Prefab:
       propertyPath: m_barehandSounds.Array.data[1]
       value: 
       objectReference: {fileID: 8300000, guid: 666abe4636c90404081e67ddc936f4f4, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_moveAction
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_visualizeMoveAction
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 122222}

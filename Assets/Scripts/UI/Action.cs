@@ -15,7 +15,7 @@ public struct ActionTargetData
 public struct ActionData
 {
 	public ActionTargetData m_target;
-	public int m_actionID;
+	public ulong m_actionID;
 	public enum ActionType { move = 0, attack, }
 }
 
@@ -30,30 +30,33 @@ public class Action : NetworkBehaviour {
 	public float m_targetingMaxRange = 0;
 	
 	public ActionDelegate m_useDelegate;
-
-	[SyncVar]
-	public int ID = -1;
+	
+	public ulong ID = 0;
 
 	private ActionManager m_actionManager;
-	private static int sm_lastID = -1;
 	private bool m_registered = false;
 
 	public void Start()
 	{
-		m_actionManager = FindObjectOfType<ActionManager>();
+		Initialize();
 	}
 
-	public void Update()
+	public void Initialize()
 	{
-		if(ID < 0 && SyncManager.IsServer)
-			ID = sm_lastID++;
-
-		if (!m_registered && ID >= 0)
+		m_actionManager = FindObjectOfType<ActionManager>();
+		if (!m_registered)
 		{
-			ActionManager.sm_actionDictionary.Add(ID, this);
+			var actionpool = gameObject.GetComponent<ActionPool>();
+			if (actionpool == null)
+			{
+				actionpool = gameObject.AddComponent<ActionPool>();
+				actionpool.Initialize();
+			}
+			ID = actionpool.GetNextFreeID();
+            ActionManager.sm_actionDictionary.Add(ID, this);
 			m_registered = true;
 		}
-    }
+	}
 
 	public void OnMouseClick()
 	{

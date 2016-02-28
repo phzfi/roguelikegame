@@ -32,7 +32,10 @@ public class BossAI : EnemyAI {
 
 		if(foundTarget) // If target found, chase and attack it
 		{
-			m_mover.AttackCommand(target.ID);
+			ActionTargetData targetdata = new ActionTargetData();
+			targetdata.m_playerTarget = true;
+			targetdata.m_targetID = target.ID;
+			m_mover.MoveCommand(targetdata);
 		}
 	}
 }
