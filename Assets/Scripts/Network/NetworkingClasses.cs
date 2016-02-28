@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using System;
 
 public enum msgType : short
 {
@@ -181,9 +182,9 @@ public class PlayerData
 {
 	public int m_connectionID;
 	public NetworkConnection m_connection;
-	public bool m_receivedMoveInput;
-	public bool m_receivedAttackInput;
+	public bool m_receivedActionInput;
 	public bool m_receivedEquipInput;
+	public bool m_visualizationInProgress;
 }
 
 public class ServerData
@@ -196,7 +197,26 @@ public class ServerData
 		for(int i = 0; i < m_playerData.Count; ++i)
 		{
 			var data = m_playerData[i];
-			if (!data.m_receivedAttackInput || !data.m_receivedMoveInput || !data.m_receivedEquipInput)
+			if (!data.m_receivedActionInput || !data.m_receivedEquipInput)
+				return false;
+		}
+		return true;
+	}
+
+	public void StartVisualization()
+	{
+		for (int i = 0; i < m_playerData.Count; ++i)
+		{
+			m_playerData[i].m_visualizationInProgress = true;
+		}
+	}
+
+	public bool VisualizationDone()
+	{
+		for (int i = 0; i < m_playerData.Count; ++i)
+		{
+			var data = m_playerData[i];
+			if (data.m_visualizationInProgress)
 				return false;
 		}
 		return true;

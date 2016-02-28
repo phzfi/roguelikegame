@@ -7,7 +7,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 {
 	public enum OrderType { none, move, attack }
 	[HideInInspector]
-	public OrderType m_orderType;
+	public OrderType m_orderType = OrderType.none;
 	[HideInInspector]
 	public Vector2i m_moveOrderTarget;
 	[HideInInspector]
@@ -19,6 +19,8 @@ public class SimpleCharacterMovement : NetworkBehaviour
 	[HideInInspector]
 	public PlayerSync m_syncer;
 	private AudioSource m_audioSource;
+	public Action m_moveAction;
+	public Action m_visualizeMoveAction;
 	
 	public NavPathAgent m_navAgent;
 	public NavPath m_navPath = new NavPath();
@@ -53,11 +55,14 @@ public class SimpleCharacterMovement : NetworkBehaviour
         m_animator = GetComponent<CharacterAnimation>();
 
 		m_controller = GetComponent<CharController>();
+		
+		m_moveAction.m_useDelegate = MoveCommand;
+		m_visualizeMoveAction.m_useDelegate = VisualizeMove;
 	}
 
-	public void InputMoveOrder(Vector2i targetGridPos) // Update the move order. Run pathfinding to move target. 
+	public void InputMoveOrder(Vector2i target) // Update the move order. Run pathfinding to move target. 
 	{
-		m_moveOrderPath = m_navAgent.SeekPath(m_gridPos, targetGridPos);
+		m_moveOrderPath = m_navAgent.SeekPath(m_gridPos, target);
 		m_orderType = OrderType.move;
 	}
 
@@ -80,26 +85,33 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		return true;
 	}
 
-	public void MoveCommand(Vector2i targetGridPos) // Tell this object to start moving towards new target
+	public void MoveCommand(ActionTargetData target) // Tell this object to start moving towards new target
 	{
-		m_orderType = OrderType.move;
-		m_moveOrderTarget = targetGridPos;
+		if (!target.m_playerTarget)
+		{
+			m_orderType = OrderType.move;
+			m_moveOrderTarget = target.m_gridTarget;
+		}
+		else
+		{
+			m_orderType = OrderType.attack;
+			m_attackOrderTarget = target.m_targetID;
+		}
 	}
 
-	public void AttackCommand(int targetID)
-	{
-		m_orderType = OrderType.attack;
-		m_attackOrderTarget = targetID;
-	}
-
-	public void VisualizeMove(Vector2i targetGridPos) // Start movement visualization towards given point
+	public void VisualizeMove(ActionTargetData target) // Start movement visualization towards given point
 	{
 		// TODO should we use world coordinates here? Or store start grid pos to move command?
+		Debug.Log("visualizing move id: " + m_controller.ID);
 		Vector2i startGridPos = MapGrid.WorldToGridPoint(transform.position);
+		Vector2i targetGridPos = target.m_gridTarget;
 
 		NavPath tempPath = m_navAgent.SeekPath(startGridPos, targetGridPos);
 		if (tempPath.Count == 0)
+		{
+			ClientTurnLogicManager.RunNextAction();
 			return;
+		}
 
 		NavPath currentPath = new NavPath();
 		for (int i = 0; i < m_gridSpeed; ++i)
@@ -114,7 +126,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		m_onGoingMovement = true;
 
 		StopAllCoroutines(); // kill previous interpolations if they're still going
-        m_animator.ToggleWalkAnimation(true); //TODO: make it work
+		m_animator.ToggleWalkAnimation(true); //TODO: make it work
 		if (currentPath.Count >= 2)
 		{
 			List<Vector3> worldSpacePath = MapGrid.NavPathToWorldSpacePath(currentPath, transform.position.z);
@@ -127,7 +139,6 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			Vector3 endWorldPos = MapGrid.GridToWorldPoint(targetGridPos, transform.position.z);
 			StartCoroutine(InterpolateTwoPointsLerpMovementCoroutine(startWorldPos, endWorldPos, true));
 		}
-        m_animator.ToggleWalkAnimation(false);
     }
 
 	IEnumerator InterpolateCurveMovementCoroutine(CatmullRomSpline spline, int pathPointCount)
@@ -173,6 +184,8 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			{
 				transform.position = endWorldPos;
 				m_onGoingMovement = false;
+				m_animator.ToggleWalkAnimation(false);
+				ClientTurnLogicManager.RunNextAction();
 				yield break;
 			}
 			else

@@ -384,6 +384,8 @@ GameObject:
   - 114: {fileID: 11476100}
   - 114: {fileID: 11421756}
   - 114: {fileID: 11418020}
+  - 114: {fileID: 11488096}
+  - 114: {fileID: 11416994}
   m_Layer: 0
   m_Name: NetworkSkeletonKing
   m_TagString: Untagged
@@ -994,7 +996,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 194426}
-  m_LocalRotation: {x: .634646356, y: .363188505, z: .332055539, w: .595866919}
+  m_LocalRotation: {x: .634646297, y: .363188475, z: .332055509, w: .595866859}
   m_LocalPosition: {x: -.421166986, y: -8.88178367e-17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1630,7 +1632,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1730,6 +1734,23 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11416994
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 155062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetingType: 0
+  m_targetEnemies: 0
+  m_targetFriendlies: 0
+  m_targetSelf: 0
+  m_targetingMaxRange: 0
+  ID: -1
 --- !u!114 &11418020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1854,6 +1875,8 @@ MonoBehaviour:
   m_attackOrderTarget: 0
   m_gridSpeed: 4
   m_syncer: {fileID: 0}
+  m_moveAction: {fileID: 11488096}
+  m_visualizeMoveAction: {fileID: 11416994}
 --- !u!114 &11476100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1873,6 +1896,23 @@ MonoBehaviour:
   m_combatSystem: {fileID: 0}
   m_enemyAI: {fileID: 0}
   m_isPlayer: 0
+--- !u!114 &11488096
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 155062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetingType: 0
+  m_targetEnemies: 0
+  m_targetFriendlies: 0
+  m_targetSelf: 0
+  m_targetingMaxRange: 0
+  ID: -1
 --- !u!114 &11488498
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1907,7 +1947,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1991,7 +2033,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2075,7 +2119,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2159,7 +2205,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2231,7 +2279,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_moveAction
+      value: 
+      objectReference: {fileID: 11488096}
+    - target: {fileID: 0}
+      propertyPath: m_visualizeMoveAction
+      value: 
+      objectReference: {fileID: 11416994}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 155062}

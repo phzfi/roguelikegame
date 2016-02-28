@@ -20,6 +20,8 @@ GameObject:
   - 114: {fileID: 11413432}
   - 114: {fileID: 11453896}
   - 114: {fileID: 11400128}
+  - 114: {fileID: 11401200}
+  - 114: {fileID: 11484234}
   m_Layer: 0
   m_Name: NetworkBoss
   m_TagString: Player
@@ -57,7 +59,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -164,6 +168,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_chaseRange: 8
+--- !u!114 &11401200
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 102116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetingType: 0
+  m_targetEnemies: 0
+  m_targetFriendlies: 0
+  m_targetSelf: 0
+  m_targetingMaxRange: 0
+  ID: -1
 --- !u!114 &11413432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -296,6 +317,25 @@ MonoBehaviour:
   m_attackOrderTarget: 0
   m_gridSpeed: 2
   m_syncer: {fileID: 0}
+  m_moveAction: {fileID: 11401200}
+  m_visualizeMoveAction: {fileID: 11484234}
+--- !u!114 &11484234
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 102116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetingType: 0
+  m_targetEnemies: 0
+  m_targetFriendlies: 0
+  m_targetSelf: 0
+  m_targetingMaxRange: 0
+  ID: -1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -323,6 +363,14 @@ Prefab:
       propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_moveAction
+      value: 
+      objectReference: {fileID: 11401200}
+    - target: {fileID: 0}
+      propertyPath: m_visualizeMoveAction
+      value: 
+      objectReference: {fileID: 11484234}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 102116}

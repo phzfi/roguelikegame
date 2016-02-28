@@ -696,6 +696,8 @@ GameObject:
   - 114: {fileID: 11421616}
   - 114: {fileID: 11452608}
   - 114: {fileID: 11414070}
+  - 114: {fileID: 11423358}
+  - 114: {fileID: 11447826}
   m_Layer: 0
   m_Name: NetworkGrunt
   m_TagString: Untagged
@@ -1380,7 +1382,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162936}
-  m_LocalRotation: {x: .733087718, y: -.287658453, z: -.611732781, w: -.0749545395}
+  m_LocalRotation: {x: .733087659, y: -.287658423, z: -.611732721, w: -.0749545321}
   m_LocalPosition: {x: -.0189039875, y: .0134009998, z: -.0589309335}
   m_LocalScale: {x: .999999821, y: .999999762, z: .999999821}
   m_Children: []
@@ -1561,6 +1563,23 @@ MonoBehaviour:
   m_combatSystem: {fileID: 0}
   m_enemyAI: {fileID: 0}
   m_isPlayer: 0
+--- !u!114 &11423358
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 188406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetingType: 0
+  m_targetEnemies: 0
+  m_targetFriendlies: 0
+  m_targetSelf: 0
+  m_targetingMaxRange: 0
+  ID: -1
 --- !u!114 &11433284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1576,6 +1595,25 @@ MonoBehaviour:
   m_attackOrderTarget: 0
   m_gridSpeed: 4
   m_syncer: {fileID: 0}
+  m_moveAction: {fileID: 11423358}
+  m_visualizeMoveAction: {fileID: 11447826}
+--- !u!114 &11447826
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 188406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetingType: 0
+  m_targetEnemies: 0
+  m_targetFriendlies: 0
+  m_targetSelf: 0
+  m_targetingMaxRange: 0
+  ID: -1
 --- !u!114 &11452318
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1676,7 +1714,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1756,7 +1796,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1873,6 +1915,14 @@ Prefab:
       propertyPath: Loop
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_moveAction
+      value: 
+      objectReference: {fileID: 11423358}
+    - target: {fileID: 0}
+      propertyPath: m_visualizeMoveAction
+      value: 
+      objectReference: {fileID: 11447826}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 188406}

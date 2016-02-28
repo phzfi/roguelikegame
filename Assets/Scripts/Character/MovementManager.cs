@@ -13,6 +13,7 @@ public class MovementManager : MonoBehaviour
 			if (mover.m_syncer.IsLocalPlayer())
 			{
 				mover.InputMoveOrder(targetGridPos);
+				return;
 			}
 		}
 	}
@@ -25,37 +26,44 @@ public class MovementManager : MonoBehaviour
 			var mover = controller.m_mover;
 			if (mover.m_syncer.IsLocalPlayer())
 			{
-				SyncManager.AddAttackOrder(targetID, controller.ID);
+				//SyncManager.AddAttackOrder(targetID, controller.ID);
+				ActionTargetData target = new ActionTargetData();
+				target.m_playerTarget = true;
+				target.m_targetID = targetID;
+				ActionData actionData = new ActionData();
+				actionData.m_actionID = mover.m_moveAction.ID;
+				actionData.m_target = target;
+				SyncManager.AddAction(actionData);
 				mover.m_orderType = SimpleCharacterMovement.OrderType.attack;
 				return;
 			}
 		}
 	}
 
-	public static void OrderMove(MoveOrder order) // pass move order to the mover it is associated with by ID
-	{
-		var mover = CharManager.GetObject(order.m_moverID).m_mover;
-		if (mover == null)
-			return;
-		mover.MoveCommand(order.m_targetGridPos);
-	}
+	//public static void OrderMove(MoveOrder order) // pass move order to the mover it is associated with by ID
+	//{
+	//	var mover = CharManager.GetObject(order.m_moverID).m_mover;
+	//	if (mover == null)
+	//		return;
+	//	mover.MoveCommand(order.m_targetGridPos);
+	//}
 
-	public static void OrderMoveVisualize(MoveOrder order) // pass move visualization order to the mover it is associated with by ID
-	{
-		var controller = CharManager.GetObject(order.m_moverID);
-		var mover = controller.m_mover;
-		if (mover == null)
-			return;
-		mover.VisualizeMove(order.m_targetGridPos);
-	}
+	//public static void OrderMoveVisualize(MoveOrder order) // pass move visualization order to the mover it is associated with by ID
+	//{
+	//	var controller = CharManager.GetObject(order.m_moverID);
+	//	var mover = controller.m_mover;
+	//	if (mover == null)
+	//		return;
+	//	mover.VisualizeMove(order.m_targetGridPos);
+	//}
 
-	public static void OrderAttack(AttackOrder order)
-	{
-		var mover = CharManager.GetObject(order.m_moverID).m_mover;
-		if (mover == null)
-			return;
-		mover.AttackCommand(order.m_targetID);
-	}
+	//public static void OrderAttack(AttackOrder order)
+	//{
+	//	var mover = CharManager.GetObject(order.m_moverID).m_mover;
+	//	if (mover == null)
+	//		return;
+	//	mover.AttackCommand(order.m_targetID);
+	//}
 	public static void KillObject(int m_targetID)
 	{
 		var mover = CharManager.GetObject(m_targetID).m_mover;
@@ -81,7 +89,13 @@ public class MovementManager : MonoBehaviour
 			if (moved)
 			{
 				mover.m_syncer.SyncPosition(mover.m_gridPos);
-				SyncManager.AddMoveVisualizationOrder(mover.m_gridPos, controller.ID);
+				ActionTargetData target = new ActionTargetData();
+				target.m_gridTarget = mover.m_gridPos;
+				ActionData actionData = new ActionData();
+				actionData.m_actionID = mover.m_visualizeMoveAction.ID;
+				actionData.m_target = target;
+				SyncManager.AddVisualizeAction(actionData);
+				//SyncManager.AddMoveVisualizationOrder(mover.m_gridPos, controller.ID);
 			}
 		}
 	}
@@ -97,7 +111,16 @@ public class MovementManager : MonoBehaviour
 				Vector2i nextTarget = Vector2i.Zero;
 				bool moved = mover.GetNextMoveSegment(ref nextTarget);
 				if (moved)
-					SyncManager.AddMoveOrder(nextTarget, controller.ID);
+				{
+					ActionTargetData target = new ActionTargetData();
+					target.m_gridTarget = nextTarget;
+					target.m_playerTarget = false;
+					ActionData actionData = new ActionData();
+					actionData.m_actionID = mover.m_moveAction.ID;
+					actionData.m_target = target;
+					SyncManager.AddAction(actionData, false);
+				}
+				//	SyncManager.AddMoveOrder(nextTarget, controller.ID);
 			}
 		}
 	}
