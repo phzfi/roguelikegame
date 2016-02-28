@@ -1243,8 +1243,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_currentHp: 0
-  m_maxHp: 30
+  m_maxHp: 5
   m_damage: 1
+  isBoss: 0
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
   m_currentAttackStyle: 0
   m_meleeAudio: {fileID: 8300000, guid: 07ed8ba57da982047a3281cd98812483, type: 3}
@@ -1254,8 +1255,9 @@ MonoBehaviour:
   m_mageAudio: {fileID: 0}
   m_rangedAudio: {fileID: 0}
   m_deathSounds:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 176965e0e22da4a77a46cecfbb41ae3b, type: 3}
+  - {fileID: 8300000, guid: b27efd798b7f04a15bb72e2404d282cb, type: 3}
+  m_attackSoundOffset: .200000003
 --- !u!114 &11415356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1633,7 +1635,7 @@ Prefab:
       objectReference: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
     - target: {fileID: 0}
       propertyPath: m_maxHp
-      value: 30
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Animator
@@ -1651,6 +1653,10 @@ Prefab:
       propertyPath: m_Avatar
       value: 
       objectReference: {fileID: 9000000, guid: caf69a8ed8b474948ae91bdeba2b5fa4, type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_attackSoundOffset
+      value: .200000003
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180150}
