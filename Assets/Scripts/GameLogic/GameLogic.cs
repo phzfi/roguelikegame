@@ -58,7 +58,7 @@ public class GameLogic : Singleton<GameLogic>
         m_map.GetAllVisibleTiles(m_playerStartingPositions[playerIndex],
             ref positions,
             ref tiles,
-            ref indices);
+            ref indices, 4);
         order.SetData(positions.Count, positions, tiles, indices);
         return msg;
     }
@@ -162,6 +162,13 @@ public class GameLogic : Singleton<GameLogic>
                         Gizmos.color = Color.red;
                         break;
                 }
+
+                for(int i = 0; i <  m_playerStartingPositions.Count; ++i)
+                {
+                    if (m_playerStartingPositions[i] == new Vector2i(x, y))
+                        Gizmos.color = Color.yellow;
+                }
+                
                 Gizmos.DrawSphere(new Vector3(x*1.5f + .75f, y * 1.5f + .75f, .0f), .35f);
             }
         }

@@ -162,19 +162,60 @@ public class LevelMap
     }
 
     public void GetAllVisibleTiles(Vector2i p, ref List<Vector2i> positions, 
+        ref List<int> tiles, ref List<int> visualizationIndices, int LOSRange)
+    {
+        int xMax = Math.Min(m_size.x - 1, p.x + LOSRange);
+        int xMin = Math.Max(0, p.x - LOSRange);
+        int yMax = Math.Min(m_size.y - 1, p.y + LOSRange);
+        int yMin = Math.Max(0, p.y - LOSRange);
+
+        for (int x = xMin; x <= xMax; ++x)
+        {
+            for (int y = yMin; y < yMax; ++y)
+            {
+                LosResult result = LineOfSight.CheckLOS(m_navGrid, 
+                    p, new Vector2i(x, y), (float)LOSRange, true, true);
+                Vector2i position;
+                if (result.blockedTiles.Count > 0)
+                {
+                    position.x = result.blockedTiles[0].x;
+                    position.y = result.blockedTiles[0].y;
+                }
+                else
+                {
+                    position.x = x;
+                    position.y = y;
+                }
+
+                AddNeighborhoodTiles(position, ref positions, ref tiles, ref visualizationIndices);
+            }
+        }
+    }
+
+    private void AddNeighborhoodTiles(Vector2i p, ref List<Vector2i> positions,
         ref List<int> tiles, ref List<int> visualizationIndices)
     {
-        for(int x = 0; x < m_size.x; ++x)
+        Spiral sprial = new Spiral();
+        Vector2i offset = new Vector2i(0, 0);
+        Vector2i position = new Vector2i(p.x, p.y);
+        for (int j = 0; j < 9; ++j)
         {
-            for (int y = 0; y < m_size.y; ++y)
+            position += offset;
+            bool b = false;
+            for (int i = 0; i < positions.Count; ++i)
             {
-                Vector2i position;
-                position.x = x;
-                position.y = y;
-                positions.Add(position);
-                tiles.Add((int)m_map[x, y].m_tileType);
-                visualizationIndices.Add(m_map[x,y].m_visualizationIndex);
+                if (positions[i] == p)
+                {
+                    b = true;
+                    continue;
+                }
             }
+            if (b)
+                continue;
+            positions.Add(position);
+            tiles.Add((int)m_map[position.x, position.y].m_tileType);
+            visualizationIndices.Add(m_map[position.x, position.y].m_visualizationIndex);
+            offset = sprial.GetNextOffset();
         }
     }
 
