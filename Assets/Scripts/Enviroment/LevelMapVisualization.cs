@@ -11,6 +11,7 @@ public class LevelMapVisualization : MonoBehaviour
     public Material topMaterial;
     public Material floorMaterial;
 	public Transform gridTransform;
+    public GameObject torch;
 
     private GameObject top;
     private GameObject floor;
@@ -174,6 +175,15 @@ public class LevelMapVisualization : MonoBehaviour
         if (y + 1 == map.Height || map.GetTileType(x, y + 1) == MapTileType.Wall) state += 8;
 
         TriangulateSingle(x, y, state, map.Width, map.Height);
+        if (state == 3 || state == 6 || state == 9 || state == 12)
+        {
+            SpawnTorch(x, y, state);
+        }
+    }
+
+    private void SpawnTorch(int x, int y, int state)
+    {
+        // TODO: Implement
     }
 
     private void TriangulateSingle(int x, int y, int state, int width, int height)
