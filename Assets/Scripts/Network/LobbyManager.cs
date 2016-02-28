@@ -15,7 +15,7 @@ public class LobbyManager : Singleton<LobbyManager>
 	private System.Action m_exitAction;
 
 	// PHZ dedicated server, hardcoded for now...
-	public const string dedicatedServerNetworkAddress = "84.248.74.249";
+	public const string dedicatedServerNetworkAddress = "orthanc.phz.fi";
 	public const string dedicatedServerLocalAddress = "0.0.0.0";
 	public const int dedicatedServerNetworkPort = 20000;
 	public const int dedicatedServerMaxPlayers = 8; // TODO max players support
