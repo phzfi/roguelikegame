@@ -1,57 +1,104 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 using System.Collections;
 using System.Collections.Generic;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
-	//public List<AudioClip> m_musicList;
+	protected AudioManager() { }
+
+	public AudioMixer m_audioMixer;
+	public AudioSource m_musicAudioSource;
+	public AudioSource m_menuAudioSource;
+
+	public AudioClip m_buttonHover;
+	public AudioClip m_buttonClick;
 	public AudioClip m_menuMusic;
 	public AudioClip m_ambientSounds;
-	public AudioSource m_source;
 
-	//private float m_menuVolume = 1.0f;
-	//private float m_ambientVolume = 0.0f;
 	private bool m_ambientPlaying = false;
-	//private int m_currentSong = -1;
 
 	void Start()
 	{
-		m_source.clip = m_menuMusic;
-	}
-
-	IEnumerator Wait()
-	{
-		yield return new WaitForSeconds(5.0f);
+		m_musicAudioSource.clip = m_menuMusic;
+		m_musicAudioSource.volume = 0.0f;
+		m_musicAudioSource.Play();
+		StartCoroutine(FadeIn(2.0f));
 	}
 
 	void Update()
 	{
-		if (!m_ambientPlaying && !MenuManager.sm_menuOpen)
+		AudioListener.volume = GlobalSettings.mainAudioVolume;
+		m_audioMixer.SetFloat("MusicVolume", VolumeToDecibels(GlobalSettings.musicAudioVolume));
+		m_audioMixer.SetFloat("EffectsVolume", VolumeToDecibels(GlobalSettings.effectsAudioVolume));
+		m_audioMixer.SetFloat("UIVolume", VolumeToDecibels(GlobalSettings.uiAudioVolume));
+
+		if (Application.loadedLevelName == "MainMenu")
 		{
-			m_ambientPlaying = true;
-			StartCoroutine("FadeOut");
-			StartCoroutine("Wait");
-			m_source.clip = m_ambientSounds;
-			StartCoroutine("FadeIn");
-			m_source.Play();
+			if (m_ambientPlaying)
+			{
+				m_ambientPlaying = false;
+				StartCoroutine("FadeOut", 1.0f);
+				StartCoroutine("Wait");
+				m_musicAudioSource.clip = m_menuMusic;
+				StartCoroutine("FadeIn", 1.0f);
+				m_musicAudioSource.Play();
+			}
+		}
+		else 
+		{
+			if (!m_ambientPlaying)
+			{
+				m_ambientPlaying = true;
+				StartCoroutine("FadeOut", 1.0f);
+				StartCoroutine("Wait");
+				m_musicAudioSource.clip = m_ambientSounds;
+				StartCoroutine("FadeIn", 1.0f);
+				m_musicAudioSource.Play();
+			}
 		}
 	}
 
-	IEnumerator FadeOut()
+	public void PlayButtonHoverSound()
 	{
-		for (float f = 1f; f > 0f; f -= 0.1f * Time.deltaTime)
-		{
-			m_source.volume = f;
-			yield return null;
-		}
+		m_menuAudioSource.PlayOneShot(m_buttonHover);
 	}
 
-	IEnumerator FadeIn()
+	public void PlayButtonClickSound()
 	{
-		for (float f = 0f; f < 1.0f; f += 0.1f * Time.deltaTime)
+		m_menuAudioSource.PlayOneShot(m_buttonClick);
+	}
+
+	private float VolumeToDecibels(float volume)
+	{
+		float dB = 20f * Mathf.Log10(volume * volume);
+		if (float.IsInfinity(dB))
+			dB = -80f;
+		return dB;
+	}
+
+	private IEnumerator Wait()
+	{
+		yield return new WaitForSeconds(5.0f);
+	}
+
+	private IEnumerator FadeOut(float duration = 1.0f)
+	{
+		for (float t = duration; t >= 0.0f; t -= Time.deltaTime)
 		{
-			m_source.volume = f;
+			m_musicAudioSource.volume = t / duration;
 			yield return null;
 		}
+		m_musicAudioSource.volume = 0.0f;
+	}
+
+	private IEnumerator FadeIn(float duration = 1.0f)
+	{
+		for (float t = 0.0f; t < duration; t += Time.deltaTime)
+		{
+			m_musicAudioSource.volume = t / duration;
+			yield return null;
+		}
+		m_musicAudioSource.volume = 1.0f;
 	}
 }

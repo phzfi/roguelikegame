@@ -27,8 +27,8 @@ public class SyncManager : NetworkBehaviour
 	private static List<ActionData> sm_incomingActions = new List<ActionData>();
 	private static List<ActionData> sm_outgoingVisualizeActions = new List<ActionData>();
 	private static List<ActionData> sm_incomingVisualizeActions = new List<ActionData>();
-
-	private ChatManager m_chatManager;
+	
+    private ChatManager m_chatManager;
 	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
@@ -41,10 +41,23 @@ public class SyncManager : NetworkBehaviour
 		get { return sm_isServer; }
 	}
 
-
 	void Start()
 	{
         m_chatManager = FindObjectOfType<ChatManager>();
+	}
+
+	public override void OnStartServer()
+	{
+		Debug.Log("OnStartServer");
+		base.OnStartServer();
+		InitOnServer();
+	}
+
+	public override void OnStartClient()
+	{
+		Debug.Log("OnStartClient");
+		base.OnStartClient();
+		InitOnClient(NetworkManager.singleton.client.connection);
 	}
 
 	void Update()
@@ -68,10 +81,12 @@ public class SyncManager : NetworkBehaviour
         NetworkServer.RegisterHandler((short)msgType.equipOrder, OnServerReceiveEquipOrders);
         NetworkServer.RegisterHandler((short)msgType.chatMessage, OnServerReceiveChatMessage);
 		NetworkServer.RegisterHandler((short)msgType.visualize, OnServerReceiveVisualizeDone);
-		sm_serverData = new ServerData();
+        sm_serverData = new ServerData();
 		enabled = true;
 		sm_isServer = true;
 		sm_running = true;
+		gameObject.SetActive(true);
+		NetworkServer.Spawn(gameObject);
 	}
 
     
@@ -93,6 +108,7 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.RegisterHandler((short)msgType.chatMessage, OnClientReceiveChatMessage);
         enabled = true;
 		sm_running = true;
+		gameObject.SetActive(true);
 
 		var msg = new ConnectionMessage();
 		msg.m_clientID = -1;
@@ -117,6 +133,8 @@ public class SyncManager : NetworkBehaviour
 
 	public void StopOnClient() // stop client side sync logic
 	{
+		if (sm_clientData != null)
+		{
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.moveOrder);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.connected);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
@@ -125,12 +143,16 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.death);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.turnSync);
         sm_clientData.m_connection.UnregisterHandler((short)msgType.equipOrder);
+		}
         sm_clientData = null;
 		enabled = false;
 	}
 
 	public void DisconnectClient(NetworkConnection connection) // remove disconnected client from players list so that we won't wait for them during turn changes
 	{
+		if (sm_serverData == null)
+			return;
+
 		for (int i = 0; i < sm_serverData.m_playerData.Count; ++i)
 		{
 			var playerData = sm_serverData.m_playerData[i];
@@ -140,6 +162,11 @@ public class SyncManager : NetworkBehaviour
 				return;
 			}
 		}
+	}
+
+	public int GetClientCount()
+	{
+		return sm_serverData.m_playerData.Count;
 	}
 
 	//void handleMoveOrdersOnServer()
@@ -301,7 +328,7 @@ public class SyncManager : NetworkBehaviour
 		Debug.Log("end visualization");
 		SendPickupOrdersToClients();
 		SendDeathOrdersToClients();
-		SendEquipOrdersToClients();
+        SendEquipOrdersToClients();
 
 		sm_currentTurn++;
 		SyncTurnNumber();
@@ -522,7 +549,7 @@ public class SyncManager : NetworkBehaviour
 			Debug.Log("Can't find player data for client ID: " + actionMessage.m_clientID);
 	}
 
-	void OnServerReceiveConnection(NetworkMessage msg) // creates new server data entry for connected client so that they can be tracked when changing turns
+    void OnServerReceiveConnection(NetworkMessage msg) // creates new server data entry for connected client so that they can be tracked when changing turns
 	{
 		var connectMsg = msg.ReadMessage<ConnectionMessage>(); // when receiving connection message from client, generate server data for the client
 
