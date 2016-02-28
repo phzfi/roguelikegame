@@ -36,11 +36,24 @@ public class SyncManager : NetworkBehaviour
 	{
 		get { return sm_isServer; }
 	}
-
-
+	
 	void Start()
 	{
         m_chatManager = FindObjectOfType<ChatManager>();
+	}
+
+	public override void OnStartServer()
+	{
+		Debug.Log("OnStartServer");
+		base.OnStartServer();
+		InitOnServer();
+	}
+
+	public override void OnStartClient()
+	{
+		Debug.Log("OnStartClient");
+		base.OnStartClient();
+		InitOnClient(NetworkManager.singleton.client.connection);
 	}
 
 	void Update()
@@ -145,6 +158,11 @@ public class SyncManager : NetworkBehaviour
 				return;
 			}
 		}
+	}
+
+	public int GetClientCount()
+	{
+		return sm_serverData.m_playerData.Count;
 	}
 
 	void handleMoveOrdersOnServer()

@@ -5,7 +5,6 @@ using System;
 
 public class CustomNetworkLobbyManager : NetworkLobbyManager
 {
-	[SerializeField]
 	private SyncManager m_syncManager;
 
 	[SerializeField]
@@ -13,17 +12,22 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	private System.Action m_onErrorCallback;
 	private System.Action m_onConnectedCallback;
-	
-	public void Start()
-	{
-		m_syncManager.enabled = false;
-	}
 
 	public override void OnServerDisconnect(NetworkConnection conn)
 	{
 		base.OnServerDisconnect(conn);
-		m_syncManager.DisconnectClient(conn);
-		m_mainMenu.Show();
+		Debug.Log("Client disconnected");
+		if (m_syncManager)
+		{
+			m_syncManager.DisconnectClient(conn);
+
+			if (m_syncManager.GetClientCount() == 0)
+			{
+				Debug.Log("All clients disconnected - returning to main menu");
+				m_syncManager.StopOnServer();
+				m_mainMenu.Show();
+			}
+		}
 	}
 
 	// Lobby Manager
@@ -50,14 +54,10 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		if (Application.loadedLevelName == playScene)
 		{
 			Debug.Log("Start game on server!");
-			m_syncManager.InitOnServer();
+			m_syncManager = FindObjectOfType<SyncManager>();
+			if (m_syncManager == null)
+				Debug.LogError("Unable to find SyncManager");
 			m_mainMenu.HideAll();
-		}
-		else if (Application.loadedLevelName == lobbyScene)
-		{
-			Debug.Log("Start lobby on server!");
-			m_syncManager.StopOnServer();
-			m_mainMenu.Show();
 		}
 	}
 
@@ -65,7 +65,8 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		Debug.Log("OnStopServer");
 		base.OnStopServer();
-		m_syncManager.StopOnServer();
+		if (m_syncManager)
+			m_syncManager.StopOnServer();
 		m_mainMenu.Show();
 	}
 
@@ -137,14 +138,11 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		if (Application.loadedLevelName == playScene)
 		{
 			Debug.Log("Start game on client!");
-			m_syncManager.InitOnClient(conn);
+			// TODO figure out a more robust way to get the sync manager
+			m_syncManager = GameObject.Find("Managers").transform.GetComponentsInChildren<SyncManager>(true)[0];
+			if (m_syncManager == null)
+				Debug.LogError("Unable to find SyncManager");
 			m_mainMenu.HideAll();
-		}
-		else if (Application.loadedLevelName == lobbyScene)
-		{
-			Debug.Log("Start lobby on client!");
-			m_syncManager.StopOnClient();
-			m_mainMenu.Show();
 		}
 
 		base.OnClientSceneChanged(conn);
@@ -154,14 +152,8 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		Debug.Log("OnStopClient");
 		base.OnStopClient();
-		m_syncManager.StopOnClient();
-		m_mainMenu.Show();
-	}
-
-	public override void OnClientDisconnect(NetworkConnection conn)
-	{
-		base.OnClientDisconnect(conn);
-		m_syncManager.StopOnClient();
+		if (m_syncManager)
+			m_syncManager.StopOnClient();
 		m_mainMenu.Show();
 	}
 
@@ -176,4 +168,10 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		}
 	}
 
+	public override void OnClientDisconnect(NetworkConnection conn)
+	{
+		Debug.Log("OnClientDisconnect");
+		base.OnClientDisconnect(conn);
+	}
+	
 }

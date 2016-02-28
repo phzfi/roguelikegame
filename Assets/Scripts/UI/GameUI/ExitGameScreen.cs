@@ -40,6 +40,8 @@ public class ExitGameScreen : MonoBehaviour
 
 	public void ExitGame()
 	{
+		sm_exitMenuOpen = false;
+
 		LobbyManager lobbyManager = FindObjectOfType<LobbyManager>();
 
 		if (lobbyManager != null)
