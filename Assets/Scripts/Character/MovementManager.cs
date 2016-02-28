@@ -84,7 +84,8 @@ public class MovementManager : MonoBehaviour
 			if (!controller.m_isPlayer) // If this character is an NPC, run its turn decision logic
 				controller.m_enemyAI.TakeTurn();
 
-			bool moved = mover.TakeStep();
+			List<ActionData> combatVisualization = new List<ActionData>();
+			bool moved = mover.TakeStep(ref combatVisualization);
 
 			if (moved)
 			{
@@ -97,6 +98,9 @@ public class MovementManager : MonoBehaviour
 				SyncManager.AddVisualizeAction(actionData);
 				//SyncManager.AddMoveVisualizationOrder(mover.m_gridPos, controller.ID);
 			}
+
+			for(int j = 0; j < combatVisualization.Count; ++j)
+				SyncManager.AddVisualizeAction(combatVisualization[j]);
 		}
 	}
 

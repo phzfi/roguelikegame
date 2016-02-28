@@ -200,7 +200,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		}
 	}
 
-	public bool TakeStep() // Move this object towards the current target, move m_gridSpeed steps
+	public bool TakeStep(ref List<ActionData> combatVisualization) // Move this object towards the current target, move m_gridSpeed steps
 	{
 		switch (m_orderType)
 		{
@@ -244,7 +244,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 					var combatSystem = controller.GetComponent<CombatSystem>();
 					if (combatSystem != null)
 					{
-						m_combatSystem.Attack(controller.ID);
+						m_combatSystem.Attack(controller.ID, ref combatVisualization);
 					}
 					movementBlocked = true;
 					break;
