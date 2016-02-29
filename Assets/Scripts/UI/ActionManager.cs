@@ -46,6 +46,7 @@ public class ActionManager : MonoBehaviour
 					ActionTargetData targetData = new ActionTargetData();
 					targetData.m_playerTarget = false;
 					targetData.m_gridTarget = mouseGridPos;
+					targetData.m_userID = CharManager.GetLocalPlayer().ID;
 					ActionData action = new ActionData();
 					action.m_actionID = m_currentAction.ID;
 					action.m_target = targetData;

@@ -77,7 +77,7 @@ MonoBehaviour:
   - {fileID: 129782, guid: cab6cda1137c36f478393a42a6d0c2ee, type: 2}
   - {fileID: 122640, guid: eff1670eb4fa346eb8ab344d3c3c277b, type: 2}
   - {fileID: 121334, guid: ab08ed2b27dd847e3b45bb92ce21d26f, type: 2}
-  - {fileID: 178154, guid: 30a88b281afdaf14aba3db5fff12be13, type: 2}
+  - {fileID: 102422, guid: 786de7147f9dec84cb8fa7f4b862d174, type: 2}
   - {fileID: 102116, guid: 44137d3c2d2cf9641acc6550025956e0, type: 2}
   - {fileID: 155062, guid: d3324265805be7b4d9279c18addfc9f7, type: 2}
   - {fileID: 190718, guid: 1941cad29c720974eabf96b24c65c9a9, type: 2}
@@ -104,6 +104,7 @@ MonoBehaviour:
     m_IsAcksLong: 0
     m_Channels: []
   m_Channels: 
+  m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 235
   m_PacketLossPercentage: 0
