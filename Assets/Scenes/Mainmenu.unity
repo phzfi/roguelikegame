@@ -821,15 +821,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22453080, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22453080, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22453080, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22473430, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_AnchorMin.x
@@ -845,15 +845,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22432420, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22432420, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22432420, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22462772, guid: 2e3f17a9d1d79d94784dbb602531ebbf, type: 2}
       propertyPath: m_AnchorMin.y
@@ -1126,7 +1126,7 @@ MonoBehaviour:
   - {fileID: 129782, guid: cab6cda1137c36f478393a42a6d0c2ee, type: 2}
   - {fileID: 121334, guid: ab08ed2b27dd847e3b45bb92ce21d26f, type: 2}
   - {fileID: 122640, guid: eff1670eb4fa346eb8ab344d3c3c277b, type: 2}
-  - {fileID: 178154, guid: 30a88b281afdaf14aba3db5fff12be13, type: 2}
+  - {fileID: 0}
   - {fileID: 102116, guid: 44137d3c2d2cf9641acc6550025956e0, type: 2}
   - {fileID: 155062, guid: d3324265805be7b4d9279c18addfc9f7, type: 2}
   - {fileID: 190718, guid: 1941cad29c720974eabf96b24c65c9a9, type: 2}
@@ -1154,6 +1154,7 @@ MonoBehaviour:
     m_IsAcksLong: 0
     m_Channels: []
   m_Channels: 0500000000000000
+  m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
   m_PacketLossPercentage: 0

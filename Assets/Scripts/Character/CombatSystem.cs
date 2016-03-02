@@ -86,7 +86,7 @@ public class CombatSystem : NetworkBehaviour
             m_audioSource.PlayOneShot(m_meleeAudio);
 	}
 
-	public void Attack(int targetID) // Deal damage to object, identified by ID.
+	public void Attack(int targetID, ref List<ActionData> visualization) // Deal damage to object, identified by ID.
 	{
 		var target = CharManager.GetObject(targetID);
 		var targetSystem = target.GetComponent<CombatSystem>();
@@ -96,7 +96,7 @@ public class CombatSystem : NetworkBehaviour
 
 		ActionData data = new ActionData();
 		data.m_actionID = m_attackVisualizeAction.ID;
-		SyncManager.AddVisualizeAction(data);
+		visualization.Add(data);
 	}
 
 	public void VisualizeAttack(ActionTargetData data)
