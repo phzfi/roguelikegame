@@ -35,6 +35,7 @@ public class SyncManager : NetworkBehaviour
 	
 	public static int sm_currentTurn = 0;
 	public static bool sm_running = false;
+	private static int sm_clientCount = 0;
 
 	public static bool IsServer
 	{
@@ -64,6 +65,8 @@ public class SyncManager : NetworkBehaviour
 	{
 		if (sm_isServer && Time.realtimeSinceStartup - m_lastSync > m_syncRate && !sm_serverData.m_turnInProgress) // start turn change if enough time has passed since last turn, and we're on the server
 		{
+			if (GetClientCount() > sm_clientCount) // If all clients haven't yet sent their connection messages, wait.
+				return;
 			m_lastSync = Time.realtimeSinceStartup;
 			StartServerTurn();
 		}
@@ -86,7 +89,7 @@ public class SyncManager : NetworkBehaviour
 		sm_isServer = true;
 		sm_running = true;
 		gameObject.SetActive(true);
-		NetworkServer.Spawn(gameObject);
+		//NetworkServer.Spawn(gameObject);
 	}
 
     
@@ -129,6 +132,7 @@ public class SyncManager : NetworkBehaviour
         sm_serverData = null;
 		enabled = false;
 		sm_isServer = false;
+		sm_clientCount = 0;
 	}
 
 	public void StopOnClient() // stop client side sync logic
@@ -159,9 +163,20 @@ public class SyncManager : NetworkBehaviour
 			if (playerData.m_connectionID == connection.connectionId) // tell server to stop tracking disconnected client
 			{
 				sm_serverData.m_playerData.RemoveAt(i);
+				sm_clientCount--;
 				return;
 			}
 		}
+	}
+
+	public static void IncrementClientCount()
+	{
+		sm_clientCount++;
+	}
+
+	public static void DecrementClientCount()
+	{
+		sm_clientCount--;
 	}
 
 	public int GetClientCount()
