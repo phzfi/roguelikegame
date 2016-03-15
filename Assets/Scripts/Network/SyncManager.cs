@@ -65,7 +65,7 @@ public class SyncManager : NetworkBehaviour
 	{
 		if (sm_isServer && Time.realtimeSinceStartup - m_lastSync > m_syncRate && !sm_serverData.m_turnInProgress) // start turn change if enough time has passed since last turn, and we're on the server
 		{
-			if (GetClientCount() > sm_clientCount) // If all clients haven't yet sent their connection messages, wait.
+			if (GetClientCount() < sm_clientCount) // If all clients haven't yet sent their connection messages, wait.
 				return;
 			m_lastSync = Time.realtimeSinceStartup;
 			StartServerTurn();
@@ -415,6 +415,8 @@ public class SyncManager : NetworkBehaviour
 		msg.m_orders = sm_pickupOrders.ToArray();
 		sm_pickupOrders.Clear();
 		NetworkServer.SendToAll((short)msgType.pickupOrder, msg);
+		if (GetClientCount() < sm_clientCount)
+			Debug.LogError("sent message too early sdjf");
 	}
 
 	void SyncTurnNumber(NetworkConnection conn = null)
