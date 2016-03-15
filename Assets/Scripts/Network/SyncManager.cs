@@ -29,6 +29,7 @@ public class SyncManager : NetworkBehaviour
 	private static List<ActionData> sm_incomingVisualizeActions = new List<ActionData>();
 	
     private ChatManager m_chatManager;
+	private ClientTurnLogicManager m_turnLogicManager;
 	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
@@ -45,6 +46,7 @@ public class SyncManager : NetworkBehaviour
 	void Start()
 	{
         m_chatManager = FindObjectOfType<ChatManager>();
+		m_turnLogicManager = FindObjectOfType<ClientTurnLogicManager>();
 	}
 
 	public override void OnStartServer()
@@ -276,7 +278,7 @@ public class SyncManager : NetworkBehaviour
 	void handleActionOrdersOnClient()
 	{
 		//List<ActionData> orderedList = sm_incomingActions.OrderBy(o => o.m_target.m_userID).ToList();
-		ClientTurnLogicManager.StartClientTurnLogic(sm_incomingVisualizeActions);
+		m_turnLogicManager.StartClientTurnLogic(sm_incomingVisualizeActions);
 		sm_incomingActions.Clear();
 	}
 
@@ -495,14 +497,12 @@ public class SyncManager : NetworkBehaviour
 	private void OnServerReceiveVisualizeDone(NetworkMessage netMsg)
 	{
 		var msg = netMsg.ReadMessage<ConnectionMessage>();
-		Debug.Log("received visualization done: " + msg.m_clientID);
 		for(int i = 0; i < sm_serverData.m_playerData.Count; ++i)
 		{
 			var data = sm_serverData.m_playerData[i];
 			if (data.m_connectionID == msg.m_clientID)
 			{
 				data.m_visualizationInProgress = false;
-				Debug.Log("validated!" + msg.m_clientID);
 			}
 		}
 	}

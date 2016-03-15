@@ -21,6 +21,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 	private AudioSource m_audioSource;
 	public Action m_moveAction;
 	public Action m_visualizeMoveAction;
+	public Action m_turnToFaceAction;
 	
 	public NavPathAgent m_navAgent;
 	public NavPath m_navPath = new NavPath();
@@ -58,10 +59,13 @@ public class SimpleCharacterMovement : NetworkBehaviour
 
 		m_moveAction = gameObject.AddComponent<Action>();
 		m_moveAction.Initialize();
+		m_moveAction.m_useDelegate = MoveCommand;
 		m_visualizeMoveAction = gameObject.AddComponent<Action>();
 		m_visualizeMoveAction.Initialize();
-		m_moveAction.m_useDelegate = MoveCommand;
 		m_visualizeMoveAction.m_useDelegate = VisualizeMove;
+		m_turnToFaceAction = gameObject.AddComponent<Action>();
+		m_turnToFaceAction.Initialize();
+		m_turnToFaceAction.m_useDelegate = FaceGrid;
 	}
 
 	public void InputMoveOrder(Vector2i target) // Update the move order. Run pathfinding to move target. 
@@ -103,17 +107,41 @@ public class SimpleCharacterMovement : NetworkBehaviour
 		}
 	}
 
+	public void FaceGrid(ActionTargetData target)
+	{
+		Debug.Log("visualizing change facing, id: " + m_controller.ID);
+		StartCoroutine(TurnToFaceGrid(target.m_gridTarget));
+	}
+
+	public IEnumerator TurnToFaceGrid(Vector2i target)
+	{
+		Vector2i offset = (target - m_gridPos);
+		Vector3 dir = new Vector3(offset.x, offset.y, 0).normalized;
+		while (true)
+		{
+			Quaternion look = Quaternion.LookRotation(Vector3.forward, dir);
+			transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * 4);
+			Vector3 forward = transform.TransformDirection(new Vector3(0, 1, 0)).normalized;
+			if (Vector3.Dot(dir, forward) > .99f)
+			{
+				ClientTurnLogicManager.MarkActionFinished();
+				yield break;
+			}
+			yield return null;
+		}
+	}
+
 	public void VisualizeMove(ActionTargetData target) // Start movement visualization towards given point
 	{
 		// TODO should we use world coordinates here? Or store start grid pos to move command?
-		Debug.Log("visualizing move id: " + m_controller.ID);
+		Debug.Log("visualizing move, id: " + m_controller.ID);
 		Vector2i startGridPos = MapGrid.WorldToGridPoint(transform.position);
 		Vector2i targetGridPos = target.m_gridTarget;
 
 		NavPath tempPath = m_navAgent.SeekPath(startGridPos, targetGridPos);
 		if (tempPath.Count == 0)
 		{
-			ClientTurnLogicManager.RunNextAction();
+			ClientTurnLogicManager.MarkActionFinished();
 			return;
 		}
 
@@ -189,7 +217,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 				transform.position = endWorldPos;
 				m_onGoingMovement = false;
 				m_animator.ToggleWalkAnimation(false);
-				ClientTurnLogicManager.RunNextAction();
+				ClientTurnLogicManager.MarkActionFinished();
 				yield break;
 			}
 			else
@@ -244,6 +272,12 @@ public class SimpleCharacterMovement : NetworkBehaviour
 					var combatSystem = controller.GetComponent<CombatSystem>();
 					if (combatSystem != null)
 					{
+						ActionData actionData = new ActionData();
+						ActionTargetData target = new ActionTargetData();
+						target.m_gridTarget = controller.m_mover.m_gridPos;
+						actionData.m_actionID = m_turnToFaceAction.ID;
+						actionData.m_target = target;
+						SyncManager.AddVisualizeAction(actionData);
 						m_combatSystem.Attack(controller.ID, ref combatVisualization);
 					}
 					movementBlocked = true;
