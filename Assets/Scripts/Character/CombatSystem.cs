@@ -101,6 +101,7 @@ public class CombatSystem : NetworkBehaviour
 
 	public void VisualizeAttack(ActionTargetData data)
 	{
+		Debug.Log("visualizing attack, id: " + m_controller.ID);
 		Invoke("PlayAttackSound", m_attackSoundOffset);
 		m_animator.TriggerAttackAnimation();
 		StartCoroutine(AttackVisualizeCoRoutine());
@@ -119,7 +120,7 @@ public class CombatSystem : NetworkBehaviour
 		{
 			if(!m_animator.IsAttackPlaying()) // Then wait until it is finished
 			{
-				ClientTurnLogicManager.RunNextAction();
+				ClientTurnLogicManager.MarkActionFinished();
 				yield break;
 			}
 			yield return null;

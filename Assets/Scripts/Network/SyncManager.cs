@@ -29,12 +29,14 @@ public class SyncManager : NetworkBehaviour
 	private static List<ActionData> sm_incomingVisualizeActions = new List<ActionData>();
 	
     private ChatManager m_chatManager;
+	private ClientTurnLogicManager m_turnLogicManager;
 	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
 	
 	public static int sm_currentTurn = 0;
 	public static bool sm_running = false;
+	private static int sm_clientCount = 0;
 
 	public static bool IsServer
 	{
@@ -44,6 +46,7 @@ public class SyncManager : NetworkBehaviour
 	void Start()
 	{
         m_chatManager = FindObjectOfType<ChatManager>();
+		m_turnLogicManager = FindObjectOfType<ClientTurnLogicManager>();
 	}
 
 	public override void OnStartServer()
@@ -64,6 +67,8 @@ public class SyncManager : NetworkBehaviour
 	{
 		if (sm_isServer && Time.realtimeSinceStartup - m_lastSync > m_syncRate && !sm_serverData.m_turnInProgress) // start turn change if enough time has passed since last turn, and we're on the server
 		{
+			if (GetClientCount() < sm_clientCount) // If all clients haven't yet sent their connection messages, wait.
+				return;
 			m_lastSync = Time.realtimeSinceStartup;
 			StartServerTurn();
 		}
@@ -86,7 +91,7 @@ public class SyncManager : NetworkBehaviour
 		sm_isServer = true;
 		sm_running = true;
 		gameObject.SetActive(true);
-		NetworkServer.Spawn(gameObject);
+		//NetworkServer.Spawn(gameObject);
 	}
 
     
@@ -129,6 +134,7 @@ public class SyncManager : NetworkBehaviour
         sm_serverData = null;
 		enabled = false;
 		sm_isServer = false;
+		sm_clientCount = 0;
 	}
 
 	public void StopOnClient() // stop client side sync logic
@@ -159,9 +165,20 @@ public class SyncManager : NetworkBehaviour
 			if (playerData.m_connectionID == connection.connectionId) // tell server to stop tracking disconnected client
 			{
 				sm_serverData.m_playerData.RemoveAt(i);
+				sm_clientCount--;
 				return;
 			}
 		}
+	}
+
+	public static void IncrementClientCount()
+	{
+		sm_clientCount++;
+	}
+
+	public static void DecrementClientCount()
+	{
+		sm_clientCount--;
 	}
 
 	public int GetClientCount()
@@ -261,7 +278,7 @@ public class SyncManager : NetworkBehaviour
 	void handleActionOrdersOnClient()
 	{
 		//List<ActionData> orderedList = sm_incomingActions.OrderBy(o => o.m_target.m_userID).ToList();
-		ClientTurnLogicManager.StartClientTurnLogic(sm_incomingVisualizeActions);
+		m_turnLogicManager.StartClientTurnLogic(sm_incomingVisualizeActions);
 		sm_incomingActions.Clear();
 	}
 
@@ -400,6 +417,8 @@ public class SyncManager : NetworkBehaviour
 		msg.m_orders = sm_pickupOrders.ToArray();
 		sm_pickupOrders.Clear();
 		NetworkServer.SendToAll((short)msgType.pickupOrder, msg);
+		if (GetClientCount() < sm_clientCount)
+			Debug.LogError("sent message too early sdjf");
 	}
 
 	void SyncTurnNumber(NetworkConnection conn = null)
@@ -478,14 +497,12 @@ public class SyncManager : NetworkBehaviour
 	private void OnServerReceiveVisualizeDone(NetworkMessage netMsg)
 	{
 		var msg = netMsg.ReadMessage<ConnectionMessage>();
-		Debug.Log("received visualization done: " + msg.m_clientID);
 		for(int i = 0; i < sm_serverData.m_playerData.Count; ++i)
 		{
 			var data = sm_serverData.m_playerData[i];
 			if (data.m_connectionID == msg.m_clientID)
 			{
 				data.m_visualizationInProgress = false;
-				Debug.Log("validated!" + msg.m_clientID);
 			}
 		}
 	}

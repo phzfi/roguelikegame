@@ -60,6 +60,13 @@ public class RangedAttack : MonoBehaviour {
 
 			if (m_projectilePrefab != null)
 			{
+				ActionTargetData facingTarget = new ActionTargetData();
+				facingTarget.m_gridTarget = target.m_mover.m_gridPos;
+				ActionData facingData = new ActionData();
+				facingData.m_actionID = source.m_mover.m_turnToFaceAction.ID;
+				facingData.m_target = facingTarget;
+				SyncManager.AddVisualizeAction(facingData);
+
 				ActionData actionData = new ActionData();
 				actionData.m_actionID = m_projectileAction.ID;
 				actionData.m_target = targetData;

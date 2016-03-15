@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour {
 			float distanceTravelled = velocity * t;
 			if (distanceTravelled > distanceToTarget) // Stop visualization if we have travelled enough
 			{
-				ClientTurnLogicManager.RunNextAction();
+				ClientTurnLogicManager.MarkActionFinished();
 				Destroy(gameObject);
 				yield break;
 			}
