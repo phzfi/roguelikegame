@@ -18,16 +18,18 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 	public Item.ItemType m_itemType;
 
 	private GameObject m_slots;
+    private GameObject m_inventoryCanvas;
 
 	//Maybe find a better idea for getting the game object "Slots", or even make a better solution for slots
 	void Start()
 	{
-		if (GetComponent<Item>() != null)
+        m_inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas");
+        if (GetComponent<Item>() != null)
 		{
 			m_itemType = GetComponent<Item>().m_typeOfItem;
 		}
 
-		var panels = GameObject.FindGameObjectWithTag("InventoryCanvas").transform.GetChild(0);
+		var panels = m_inventoryCanvas.transform.GetChild(0);
 		for (int i = 0; i < panels.childCount; ++i)
 		{
 			var equipment = panels.transform.GetChild(i);
@@ -55,7 +57,7 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 	{
 
 		m_returnTo = transform.parent;
-		transform.SetParent(transform.parent.parent);
+		transform.SetParent(m_inventoryCanvas.transform);
 		if (m_isDraggedButton)
 		{
 			LayoutElement element = GetComponent<LayoutElement>();
