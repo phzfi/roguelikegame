@@ -32,6 +32,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
     private CharacterAnimation m_animator;
 
 	bool m_onGoingMovement = false;
+	public bool IsMoving { get { return m_onGoingMovement; } }
 	float m_distanceOnStep = 0.0f;
 	float m_visualizationSpeed = 4.0f;
 	float m_visualizationRotationSpeed = 6.0f;
