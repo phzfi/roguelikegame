@@ -58,7 +58,7 @@ public class Slot : MonoBehaviour, IDropHandler
                 {
                     m_containsItem = true;
                 }
-                else
+                else if(m_containsItem)
                 {
                     var oldEquippedItem = transform.GetChild(transform.childCount - 1);
                     oldEquippedItem.SetParent(item.m_returnTo.transform);
