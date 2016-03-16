@@ -219,6 +219,7 @@ public class LobbyManager : Singleton<LobbyManager>
 	public void AddLobbyPlayer(CustomNetworkLobbyPlayer lobbyPlayer)
 	{
 		LobbyMenuScreen lobbyMenu = FindObjectOfType<LobbyMenuScreen>();
+		SyncManager.IncrementClientCount();
 		lobbyMenu.AddLobbyPlayer(lobbyPlayer);
 	}
 

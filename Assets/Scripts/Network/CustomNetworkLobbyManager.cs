@@ -17,6 +17,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		base.OnServerDisconnect(conn);
 		Debug.Log("Client disconnected");
+		SyncManager.DecrementClientCount();
 		if (m_syncManager)
 		{
 			m_syncManager.DisconnectClient(conn);
