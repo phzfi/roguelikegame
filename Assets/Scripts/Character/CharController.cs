@@ -18,6 +18,8 @@ public class CharController : NetworkBehaviour
 	public CombatSystem m_combatSystem = null;
 	[HideInInspector]
 	public EnemyAI m_enemyAI = null; // is null if player character
+    [HideInInspector]
+    public string m_name;
 
 	public bool m_isPlayer; // Whether this character is a player or an enemy NPC
 

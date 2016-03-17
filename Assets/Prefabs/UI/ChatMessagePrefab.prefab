@@ -11,6 +11,7 @@ GameObject:
   - 222: {fileID: 22213732}
   - 114: {fileID: 11411636}
   - 114: {fileID: 11450764}
+  - 114: {fileID: 11406756}
   m_Layer: 5
   m_Name: ChatMessagePrefab
   m_TagString: Untagged
@@ -18,6 +19,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &11406756
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 125188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!114 &11411636
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -49,7 +63,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '48: test'
+  m_Text: '2: asdofkasdpaskdfpasdokfaspodkfaspdkasodfapsdokfs viesti'
 --- !u!114 &11450764
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -65,7 +79,7 @@ MonoBehaviour:
   m_MinWidth: -1
   m_MinHeight: -1
   m_PreferredWidth: 255
-  m_PreferredHeight: 20
+  m_PreferredHeight: -1
   m_FlexibleWidth: 0
   m_FlexibleHeight: 0
 --- !u!222 &22213732
@@ -100,7 +114,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_PreferredHeight
-      value: 20
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_FontData.m_BestFit
@@ -109,6 +123,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_FontData.m_MaxSize
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_VerticalFit
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
