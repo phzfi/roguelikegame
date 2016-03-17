@@ -50,61 +50,66 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
 	public void OnDrag(PointerEventData eventData)
 	{
-		transform.position = eventData.position;
+        if(eventData.button == PointerEventData.InputButton.Left)
+		    transform.position = eventData.position;
 	}
 
-	public void OnBeginDrag(PointerEventData eventData)
-	{
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
 
-		m_returnTo = transform.parent;
-		transform.SetParent(m_inventoryCanvas.transform);
-		if (m_isDraggedButton)
-		{
-			LayoutElement element = GetComponent<LayoutElement>();
-			element.ignoreLayout = true;
-		}
+            m_returnTo = transform.parent;
+            transform.SetParent(m_inventoryCanvas.transform);
+            if (m_isDraggedButton)
+            {
+                LayoutElement element = GetComponent<LayoutElement>();
+                element.ignoreLayout = true;
+            }
 
-		for (int i = 0; i < m_slots.transform.childCount; i++)
-		{
-			var child = m_slots.transform.GetChild(i);
-			var outline = child.GetComponent<Outline>();
-			if (outline != null)
-			{
-				if (child.GetComponent<Slot>() != null)
-				{
-					if (child.GetComponent<Slot>().m_itemType == m_itemType)
-					{
-						outline.effectColor = new Color(0, 1, 0, 1);
-						outline.enabled = true;
-					}
-					else
-					{
-						outline.effectColor = new Color(1, 0, 0, 1);
-						outline.enabled = true;
-					}
-				}
-			}
-		}
-		GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
+            for (int i = 0; i < m_slots.transform.childCount; i++)
+            {
+                var child = m_slots.transform.GetChild(i);
+                var outline = child.GetComponent<Outline>();
+                if (outline != null)
+                {
+                    if (child.GetComponent<Slot>() != null)
+                    {
+                        if (child.GetComponent<Slot>().m_itemType == m_itemType)
+                        {
+                            outline.effectColor = new Color(0, 1, 0, 1);
+                            outline.enabled = true;
+                        }
+                        else
+                        {
+                            outline.effectColor = new Color(1, 0, 0, 1);
+                            outline.enabled = true;
+                        }
+                    }
+                }
+            }
+            GetComponent<CanvasGroup>().blocksRaycasts = false;
+        }
+    }
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            transform.SetParent(m_returnTo);
+            if (m_isDraggedButton)
+            {
+                LayoutElement element = GetComponent<LayoutElement>();
+                element.ignoreLayout = false;
+            }
 
-	public void OnEndDrag(PointerEventData eventData)
-	{
-		transform.SetParent(m_returnTo);
-		if (m_isDraggedButton)
-		{
-			LayoutElement element = GetComponent<LayoutElement>();
-			element.ignoreLayout = false;
-		}
+            for (int i = 0; i < m_slots.transform.childCount; i++)
+            {
+                var child = m_slots.transform.GetChild(i);
+                var outline = child.GetComponent<Outline>();
+                outline.enabled = false;
+            }
 
-		for (int i = 0; i < m_slots.transform.childCount; i++)
-		{
-			var child = m_slots.transform.GetChild(i);
-			var outline = child.GetComponent<Outline>();
-			outline.enabled = false;
-		}
-
-		GetComponent<CanvasGroup>().blocksRaycasts = true;
-	}
-
+            GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+    }
 }

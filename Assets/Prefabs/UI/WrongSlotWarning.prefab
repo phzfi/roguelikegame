@@ -31,7 +31,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &117992
 GameObject:
   m_ObjectHideFlags: 1
@@ -91,8 +91,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 110476}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 140, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -275, y: -51, z: 0}
+  m_LocalScale: {x: .857768953, y: .857768953, z: .857768953}
   m_Children:
   - {fileID: 22403422}
   m_Father: {fileID: 0}
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 11448696, guid: ca2f21b817b35d14f9668eb6cf63869d, type: 2}
         m_MethodName: CloseWarningSign
         m_Mode: 1
         m_Arguments:
