@@ -5839,7 +5839,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Searching local hosts
+  m_Text: Searching local servers
 --- !u!114 &11411660
 MonoBehaviour:
   m_ObjectHideFlags: 1
