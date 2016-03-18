@@ -11641,14 +11641,6 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: 4 Players
       m_Image: {fileID: 0}
-    - m_Text: 5 Players
-      m_Image: {fileID: 0}
-    - m_Text: 6 Players
-      m_Image: {fileID: 0}
-    - m_Text: 7 Players
-      m_Image: {fileID: 0}
-    - m_Text: 8 Players
-      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:

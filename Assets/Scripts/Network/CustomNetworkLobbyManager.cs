@@ -13,6 +13,23 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	private System.Action m_onErrorCallback;
 	private System.Action m_onConnectedCallback;
 
+	private IEnumerator ShowMainMenu()
+	{
+		m_mainMenu.Show();
+		yield return null;
+		m_mainMenu.Show();
+	}
+
+	public override void OnServerConnect(NetworkConnection conn)
+	{
+		base.OnServerConnect(conn);
+		if (conn.connectionId >= maxConnections)
+		{
+			conn.Disconnect();
+			conn.Dispose();
+		}
+	}
+	
 	public override void OnServerDisconnect(NetworkConnection conn)
 	{
 		base.OnServerDisconnect(conn);
@@ -26,8 +43,8 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			{
 				Debug.Log("All clients disconnected - returning to main menu");
 				m_syncManager.StopOnServer();
-				m_mainMenu.Show();
-				
+				StartCoroutine(ShowMainMenu());
+
 				Debug.Log("Restarting dedicated server lobby");
 				StartCoroutine(RestartServerRoutine());
 			}
@@ -79,7 +96,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		base.OnStopServer();
 		if (m_syncManager)
 			m_syncManager.StopOnServer();
-		m_mainMenu.Show();
+		StartCoroutine(ShowMainMenu());
 	}
 
 	// Server / Host
@@ -120,6 +137,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	}
 
 	// Client
+	
 	public override void OnLobbyClientEnter()
 	{
 		base.OnLobbyClientEnter();
@@ -151,6 +169,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		{
 			Debug.Log("Start game on client!");
 			// TODO figure out a more robust way to get the sync manager
+			m_onErrorCallback = null;
 			m_syncManager = GameObject.Find("Managers").transform.GetComponentsInChildren<SyncManager>(true)[0];
 			if (m_syncManager == null)
 				Debug.LogError("Unable to find SyncManager");
@@ -166,14 +185,19 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		base.OnStopClient();
 		if (m_syncManager)
 			m_syncManager.StopOnClient();
-		m_mainMenu.Show();
+		StartCoroutine(ShowMainMenu());
+
+		if (m_onErrorCallback != null)
+		{
+			m_onErrorCallback();
+		}
 	}
 
 	public override void OnClientError(NetworkConnection conn, int errorCode)
 	{
-		base.OnClientError(conn, errorCode);
 		Debug.LogError("ClientError: " + errorCode);
-
+		base.OnClientError(conn, errorCode);
+		
 		if (m_onErrorCallback != null)
 		{
 			m_onErrorCallback();
@@ -184,6 +208,11 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		Debug.Log("OnClientDisconnect");
 		base.OnClientDisconnect(conn);
+
+		if (m_onErrorCallback != null)
+		{
+			m_onErrorCallback();
+		}
 	}
 	
 }

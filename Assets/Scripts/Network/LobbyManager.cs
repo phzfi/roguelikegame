@@ -18,7 +18,7 @@ public class LobbyManager : Singleton<LobbyManager>
 	public const string dedicatedServerNetworkAddress = "orthanc.phz.fi";
 	public const string dedicatedServerLocalAddress = "0.0.0.0";
 	public const int dedicatedServerNetworkPort = 443;
-	public const int dedicatedServerMaxPlayers = 8; // TODO max players support
+	public const int dedicatedServerMaxPlayers = 4;
 	
 	// TODO check when connecting
 	//private int gameVersion = 1;
@@ -106,7 +106,8 @@ public class LobbyManager : Singleton<LobbyManager>
 		m_manager.networkAddress = dedicatedServerLocalAddress;
 		m_manager.networkPort = dedicatedServerNetworkPort;
 		m_manager.maxPlayers = dedicatedServerMaxPlayers;
-		
+		m_manager.maxConnections = dedicatedServerMaxPlayers;
+
 		return m_manager.StartServer();
 	}
 
@@ -120,6 +121,7 @@ public class LobbyManager : Singleton<LobbyManager>
 		m_manager.networkAddress = GlobalSettings.hostNetworkAddress;
 		m_manager.networkPort = GlobalSettings.hostNetworkPort;
 		m_manager.maxPlayers = GlobalSettings.hostPlayerCount;
+		m_manager.maxConnections = GlobalSettings.hostPlayerCount;
 
 		Debug.Log("Host game lobby - IP: " + m_manager.networkAddress + " Port: " + m_manager.networkPort);
 
@@ -195,7 +197,7 @@ public class LobbyManager : Singleton<LobbyManager>
 		Debug.Log("Join game lobby - IP: " + m_manager.networkAddress + " Port: " + m_manager.networkPort);
 
 		NetworkClient client = m_manager.StartClient();
-
+		
 		if (client == null && m_onErrorCallback != null)
 		{
 			m_onErrorCallback();
@@ -207,6 +209,8 @@ public class LobbyManager : Singleton<LobbyManager>
 	public void ExitLobbyAsClient()
 	{
 		Debug.Log("Exit lobby");
+
+		SetOnErrorCallback(null);
 
 		if (m_discovery.running)
 		{

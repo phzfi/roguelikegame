@@ -40,12 +40,7 @@ public class CustomNetworkLobbyPlayer : NetworkLobbyPlayer
 	{
 		base.OnClientReady(readyState);
 	}
-
-	public override void OnStartClient()
-	{
-		base.OnStartClient();
-	}
-
+	
 	public override void OnClientEnterLobby()
 	{
 		base.OnClientEnterLobby();
