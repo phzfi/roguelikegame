@@ -87,7 +87,7 @@ public class JoinMenuScreen : MenuScreen
 		phzServer.serverType = ServerType.Dedicated;
 		phzServer.networkAddress = LobbyManager.dedicatedServerNetworkAddress;
 		phzServer.networkPort = LobbyManager.dedicatedServerNetworkPort;
-		phzServer.gameName = "PHZ Server";
+		phzServer.gameName = "Official PHZ Server";
 		m_serverInfos.Add(phzServer);
 
 		for (int i = 0; i < m_remoteServerLabels.Length; ++i)
