@@ -11,6 +11,13 @@ public class SettingsMenuScreen : MenuScreen
 	public Slider m_musicVolumeSlider;
 	public Slider m_effectsVolumeSlider;
 	public Slider m_uiVolumeSlider;
+	public Button m_applyButton;
+
+	private string playerName;
+	private float mainVolume;
+	private float musicVolume;
+	private float effectsVolume;
+	private float uiAudioVolume;
 
 	protected override void Start()
 	{
@@ -27,7 +34,6 @@ public class SettingsMenuScreen : MenuScreen
 	public override void Hide()
 	{
 		base.Hide();
-		GlobalSettings.SaveToDisk();
 	}
 
 	public void BackButtonPressed()
@@ -36,29 +42,39 @@ public class SettingsMenuScreen : MenuScreen
 		m_mainMenu.Show();
 	}
 
+	public void ApplyButtonPressed()
+	{
+		ApplySettings();
+	}
+
 	public void PlayerNameChanged(string name)
 	{
-		GlobalSettings.playerName.Set(name);
+		playerName = name;
+		ActivateApplyButton();
 	}
 
 	public void MainVolumeChanged(float value)
 	{
-		GlobalSettings.mainAudioVolume.Set(value);
+		mainVolume = value;
+		ActivateApplyButton();
 	}
 
 	public void MusicVolumeChanged(float value)
 	{
-		GlobalSettings.musicAudioVolume.Set(value);
+		musicVolume = value;
+		ActivateApplyButton();
 	}
 
 	public void EffectsVolumeChanged(float value)
 	{
-		GlobalSettings.effectsAudioVolume.Set(value);
+		effectsVolume = value;
+		ActivateApplyButton();
 	}
 
 	public void UIVolumeChanged(float value)
 	{
-		GlobalSettings.uiAudioVolume.Set(value);
+		uiAudioVolume = value;
+		ActivateApplyButton();
 	}
 
 	private void LoadSettings()
@@ -68,6 +84,37 @@ public class SettingsMenuScreen : MenuScreen
 		m_musicVolumeSlider.value = GlobalSettings.musicAudioVolume;
 		m_effectsVolumeSlider.value = GlobalSettings.effectsAudioVolume;
 		m_uiVolumeSlider.value = GlobalSettings.uiAudioVolume;
+
+		playerName = GlobalSettings.playerName;
+		mainVolume = GlobalSettings.mainAudioVolume;
+		musicVolume = GlobalSettings.musicAudioVolume;
+		effectsVolume = GlobalSettings.effectsAudioVolume;
+		uiAudioVolume = GlobalSettings.uiAudioVolume;
+
+		DeactivateApplyButton();
+	}
+
+	private void ApplySettings()
+	{
+		GlobalSettings.playerName.Set(playerName);
+		GlobalSettings.mainAudioVolume.Set(mainVolume);
+		GlobalSettings.musicAudioVolume.Set(musicVolume);
+		GlobalSettings.effectsAudioVolume.Set(effectsVolume);
+		GlobalSettings.uiAudioVolume.Set(uiAudioVolume);
+
+		GlobalSettings.SaveToDisk();
+
+		DeactivateApplyButton();
+	}
+
+	private void ActivateApplyButton()
+	{
+		m_applyButton.interactable = true;
+	}
+
+	private void DeactivateApplyButton()
+	{
+		m_applyButton.interactable = false;
 	}
 
 }
