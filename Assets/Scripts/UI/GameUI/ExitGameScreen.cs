@@ -5,9 +5,9 @@ using UnityEngine.Networking;
 
 public class ExitGameScreen : MonoBehaviour
 {
-	public GameObject m_options;
+	public ExitSettingsScreen m_exitSettings;
 	public GameObject m_exitGame;
-	public Slider m_volumeSlider;
+	public GameObject m_background;
 	
 	public static bool sm_exitMenuOpen = false;
 	
@@ -15,12 +15,13 @@ public class ExitGameScreen : MonoBehaviour
 	{
 		if (!sm_exitMenuOpen)
 		{
+			m_background.SetActive(true);
 			m_exitGame.SetActive(true);
-			m_volumeSlider.value = AudioListener.volume;
 			sm_exitMenuOpen = true;
 		}
 		else
 		{
+			m_background.SetActive(false);
 			m_exitGame.SetActive(false);
 			sm_exitMenuOpen = false;
 		}
@@ -34,7 +35,7 @@ public class ExitGameScreen : MonoBehaviour
 
 	public void OpenSettings()
 	{
-		m_options.SetActive(true);
+		m_exitSettings.Show();
 		gameObject.SetActive(false);
 	}
 
@@ -57,6 +58,7 @@ public class ExitGameScreen : MonoBehaviour
 		}
 
 		m_exitGame.SetActive(false);
+		m_background.SetActive(false);
 	}
 
 }
