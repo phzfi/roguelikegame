@@ -6211,7 +6211,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Main volume
+  m_Text: Master volume
 --- !u!114 &11414178
 MonoBehaviour:
   m_ObjectHideFlags: 1
