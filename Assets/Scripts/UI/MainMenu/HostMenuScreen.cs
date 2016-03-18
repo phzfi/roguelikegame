@@ -124,6 +124,11 @@ public class HostMenuScreen : MenuScreen
 
 	private void LoadSettings()
 	{
+		if (GlobalSettings.hostGameName == "" && GlobalSettings.playerName != "")
+		{
+			GlobalSettings.hostGameName.Set(GlobalSettings.playerName + "'s game");
+		}
+
 		m_serverName.text = GlobalSettings.hostGameName;
 		m_IPaddress.text = GlobalSettings.hostNetworkAddress;
 		m_port.text = GlobalSettings.hostNetworkPort.Value.ToString();
