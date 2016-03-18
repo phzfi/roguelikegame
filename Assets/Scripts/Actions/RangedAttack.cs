@@ -50,7 +50,7 @@ public class RangedAttack : MonoBehaviour {
 			}
 		}
 
-		if (target == null || source == null) // If target not found or attacker invalid, do nothing
+		if (target == null || source == null || target == source) // If target not found or attacker invalid, do nothing
 			return;
 
 		if (!LineOfSight.CheckLOS(source.m_mover.m_navAgent, source.m_mover.m_gridPos, target.m_mover.m_gridPos, m_maxRange).blocked) // Check that target is visible

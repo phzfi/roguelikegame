@@ -118,6 +118,9 @@ public class LevelMapManager : NetworkBehaviour
             var item = obj.GetComponent<Item>();
             ItemManager.GetID(out item.ID);
             item.m_pos = MapGrid.WorldToGridPoint(pos);
+            Vector3 position = item.transform.position;
+            position.z = -0.05f;
+            item.transform.position = position;
             NetworkServer.Spawn(obj);
         }
     }

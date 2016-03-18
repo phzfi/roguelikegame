@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
             m_healthBar.value = (float) playerCombatSystem.m_currentHp / playerCombatSystem.m_maxHp;
             
             if (m_localPlayer != null)
-                m_playerNameText.text = "Player: " + m_localPlayer.ID.ToString(); //player's ID is used as player's name for now
+                m_playerNameText.text = m_localPlayer.m_name; //player's ID is used as player's name for now
         }
 
         if (Input.GetKeyDown(KeyCode.I))

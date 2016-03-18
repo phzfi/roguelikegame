@@ -1156,10 +1156,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2c5491ef7a819845a9e9a829891dea5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_options: {fileID: 189136}
+  m_options: {fileID: 0}
   m_exitGame: {fileID: 113830}
   m_volumeSlider: {fileID: 11432956}
-  m_lobbyManager: {fileID: 0}
 --- !u!114 &11493634
 MonoBehaviour:
   m_ObjectHideFlags: 1
