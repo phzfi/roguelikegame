@@ -15,6 +15,7 @@ public class InputHandler : Singleton<InputHandler>
 
 	public PathVisualization pathVisualization;
 	private ActionManager m_actionManager;
+	private LevelMapManager m_mapManager;
 
 	static readonly Plane sm_groundPlane = new Plane(new Vector3(0, 0, -1), new Vector3(0, 0, 0));
 
@@ -26,6 +27,7 @@ public class InputHandler : Singleton<InputHandler>
 		}
         
 		m_actionManager = FindObjectOfType<ActionManager>();
+		m_mapManager = FindObjectOfType<LevelMapManager>();
 	}
 
 	void Update()
@@ -43,7 +45,20 @@ public class InputHandler : Singleton<InputHandler>
 			if (selectedTileMaterial)
 			{
 				selectedTileMaterial.color = Input.GetMouseButton(1) ? selectedColor : hoverColor;
-			}            
+			}
+
+			if (m_mapManager && m_mapManager.GetMap())
+			{
+				Vector2i mapSize = m_mapManager.GetMap().Size;
+				if (mouseGridPos.x < 0 || mouseGridPos.x >= mapSize.x || mouseGridPos.y < 0 || mouseGridPos.y >= mapSize.y)
+				{
+					selectedTile.GetComponent<MeshRenderer>().enabled = false;
+				}
+				else
+				{
+					selectedTile.GetComponent<MeshRenderer>().enabled = true;
+				}
+			}
 		}
 
 		// Visualize potential movement path to target tile
