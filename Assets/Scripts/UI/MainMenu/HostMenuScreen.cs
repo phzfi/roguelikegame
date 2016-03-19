@@ -14,7 +14,7 @@ public class HostMenuScreen : MenuScreen
 	public InputField m_port;
 	public Dropdown m_playercount;
 
-	private int[] m_playerCounts = { 2, 3, 4, 5, 6, 7, 8 };
+	private int[] m_playerCounts = { 2, 3, 4 };
 	private bool m_connecting = false;
 
 	protected override void Start()
@@ -124,6 +124,11 @@ public class HostMenuScreen : MenuScreen
 
 	private void LoadSettings()
 	{
+		if (GlobalSettings.hostGameName == "" && GlobalSettings.playerName != "")
+		{
+			GlobalSettings.hostGameName.Set(GlobalSettings.playerName + "'s game");
+		}
+
 		m_serverName.text = GlobalSettings.hostGameName;
 		m_IPaddress.text = GlobalSettings.hostNetworkAddress;
 		m_port.text = GlobalSettings.hostNetworkPort.Value.ToString();

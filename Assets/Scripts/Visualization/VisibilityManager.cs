@@ -21,6 +21,9 @@ public class VisibilityManager : MonoBehaviour
 	private static int w, h;
 	private static Vector2i sm_playerPos;
 	private static NavPathAgent sm_navAgent;
+	
+	private static HashSet<Vector2i> sm_moveRangeMap = new HashSet<Vector2i>();
+	private bool moveRangeVisible = false;
 
 	public void Start()
 	{
@@ -49,20 +52,43 @@ public class VisibilityManager : MonoBehaviour
 		sm_openTiles = new Dictionary<Vector2i, bool>();
 	}
 
-	public void Update()
+	public void LateUpdate()
 	{
-		if (SyncManager.IsTurnInProgress())
-			sm_moveRangeRenderer.Hide();
-		else
-			sm_moveRangeRenderer.Show();
+		bool showMoveRange = false;
+		bool hideMoveRange = false;
 
-		UpdateMoveRange();
+		var player = CharManager.GetLocalPlayer();
+		if (player && !player.m_mover.IsMoving )
+		{
+			showMoveRange = !moveRangeVisible;
+			moveRangeVisible = true;
+		}
+		else
+		{
+			hideMoveRange = !moveRangeVisible;
+			moveRangeVisible = false;
+		}
+
+		if (showMoveRange)
+		{
+			UpdateMoveRange();
+			sm_moveRangeRenderer.Show();
+		}
+
+		if (hideMoveRange)
+		{
+			sm_moveRangeRenderer.Hide();
+		}
+		
 		UpdateMinimap();
 	}
 
 	public static void UpdateMoveRange()
 	{
-		sm_moveRangeRenderer.CreateMesh(BreadthFirstSearch().ToArray());
+		if (BreadthFirstSearch())
+		{
+			sm_moveRangeRenderer.CreateMovementRangeMesh(sm_moveRangeMap);
+		}
 	}
 
 	private static bool InBounds(Vector2i tile)
@@ -202,21 +228,29 @@ public class VisibilityManager : MonoBehaviour
 		sm_wallRenderer.CreateMesh(wallTiles.ToArray());
 	}
 
-	public static List<Vector3> BreadthFirstSearch() // Find any accessible nodes that can be moved into
+	// Find any accessible nodes that can be moved into
+	// Returns true if move range map has changed
+	public static bool BreadthFirstSearch()
 	{
-		List<Vector3> result = new List<Vector3>();
-
 		var player = CharManager.GetLocalPlayer();
-
 		if (player == null)
-			return result;
+		{
+			if (sm_moveRangeMap.Count > 0)
+			{
+				sm_moveRangeMap.Clear();
+				return true;
+			}
+			return false;
+		}
 
 		var mover = player.m_mover;
 		var navAgent = mover.m_navAgent;
 		int speed = mover.m_gridSpeed;
 		Vector2i start = mover.m_gridPos;
 
-		Dictionary<Vector2i, bool> visitedTiles = new Dictionary<Vector2i, bool>();
+		// TODO update map only once a turn?
+		sm_moveRangeMap.Clear();
+
 		Queue<Vector3i> openTiles = new Queue<Vector3i>();
 		openTiles.Enqueue(new Vector3i(start.x, start.y, 0));
 
@@ -242,15 +276,14 @@ public class VisibilityManager : MonoBehaviour
 				adjacentTile.z += 1; // increment distance travelled by one
 
 				Vector2i adjacentTileGrid = new Vector2i(adjacentTile.x, adjacentTile.y);
-				if (!visitedTiles.ContainsKey(adjacentTileGrid) && adjacentTile.z < speed && navAgent.CanAccess(adjacentTileGrid))
+				if (!sm_moveRangeMap.Contains(adjacentTileGrid) && adjacentTile.z < speed && navAgent.CanAccess(adjacentTileGrid))
 				{
-					result.Add(MapGrid.GridToWorldPoint(adjacentTileGrid));
-					visitedTiles.Add(adjacentTileGrid, true);
+					sm_moveRangeMap.Add(adjacentTileGrid);
 					openTiles.Enqueue(adjacentTile);
 				}
 			}
 		}
 
-		return result;
+		return true;
 	}
 }
