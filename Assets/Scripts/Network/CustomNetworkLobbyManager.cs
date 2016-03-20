@@ -72,8 +72,9 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
 	{
-		// TODO configure game player based on lobby player
-		return true;
+        // TODO configure game player based on lobby player
+        gamePlayer.GetComponent<CharController>().m_name = lobbyPlayer.GetComponent<CustomNetworkLobbyPlayer>().m_playerName;
+        return true;
 	}
 
 	public override void OnServerSceneChanged(string sceneName)

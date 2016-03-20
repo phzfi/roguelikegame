@@ -52,7 +52,7 @@ public class ChatManager : NetworkBehaviour
         var player = CharManager.GetLocalPlayer();
         if (m_messageToBeSent.text.Length == 0)
             return;
-        string message = player.ID.ToString() + ": " + m_messageToBeSent.text;
+        string message = player.m_name.ToString() + ": " + m_messageToBeSent.text;
         SyncManager.AddChatMessage(message, player.ID);
         m_messageToBeSent.text = "";
     }
