@@ -29,7 +29,8 @@ public class ExitGameScreen : MonoBehaviour
 
 	public void ContinueGame()
 	{
-		m_exitGame.SetActive(false);
+        m_background.SetActive(false);
+        m_exitGame.SetActive(false);
 		sm_exitMenuOpen = false;
 	}
 
