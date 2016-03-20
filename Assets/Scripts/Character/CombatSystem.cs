@@ -135,7 +135,11 @@ public class CombatSystem : NetworkBehaviour
 
 		m_currentHp = Mathf.Min(m_maxHp, m_currentHp + actualAmount);
 		if (m_currentHp <= 0)
-			SyncManager.AddDeathOrder(m_controller.ID);
+        {
+            m_currentHp = 0;
+            SyncManager.AddDeathOrder(m_controller.ID);
+        }
+			
 	}
 
 	public void Die()
