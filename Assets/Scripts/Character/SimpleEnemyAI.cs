@@ -34,6 +34,13 @@ public class SimpleEnemyAI : EnemyAI {
 			targetdata.m_playerTarget = true;
 			targetdata.m_targetID = target.ID;
 			m_mover.MoveCommand(targetdata);
-		}
-	}
+        }
+        else if (m_mover.m_orderType == SimpleCharacterMovement.OrderType.attack && !foundTarget)
+        {
+            ActionTargetData targetdata = new ActionTargetData();
+            targetdata.m_playerTarget = false;
+            targetdata.m_gridTarget = m_mover.m_gridPos;
+            m_mover.MoveCommand(targetdata);
+        }
+    }
 }

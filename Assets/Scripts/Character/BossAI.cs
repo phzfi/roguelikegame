@@ -21,7 +21,7 @@ public class BossAI : EnemyAI {
 			var myPos = m_mover.m_gridPos;
 			var enemyPos = mover.m_gridPos;
 			float dist = myPos.Distance(enemyPos);
-
+            
 			if(dist < minDist && controller.m_enemyAI == null) // TODO: line of sight and some smarter parameters
 			{
 				minDist = dist;
@@ -30,12 +30,18 @@ public class BossAI : EnemyAI {
 			}
 		}
 
-		if(foundTarget) // If target found, chase and attack it
+		if (foundTarget) // If target found, chase and attack it
 		{
 			ActionTargetData targetdata = new ActionTargetData();
 			targetdata.m_playerTarget = true;
 			targetdata.m_targetID = target.ID;
 			m_mover.MoveCommand(targetdata);
-		}
+		} else if (m_mover.m_orderType == SimpleCharacterMovement.OrderType.attack && !foundTarget)
+        {
+            ActionTargetData targetdata = new ActionTargetData();
+            targetdata.m_playerTarget = false;
+            targetdata.m_gridTarget = m_mover.m_gridPos;
+            m_mover.MoveCommand(targetdata);
+        }
 	}
 }
