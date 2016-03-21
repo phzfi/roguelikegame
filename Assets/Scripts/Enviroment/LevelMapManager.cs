@@ -13,7 +13,8 @@ public class LevelMapManager : NetworkBehaviour
     public int m_itemCount;
     public List<GameObject> m_items;
     public int m_enemyCount;
-    public List<GameObject> m_enemies;
+    public GameObject m_grunt;
+    public GameObject m_warrior;
     public GameObject m_boss;
     
 
@@ -153,9 +154,13 @@ public class LevelMapManager : NetworkBehaviour
 
     private void SpawnEnemies()
     {
-        for (int i = 0; i <= m_enemyCount; ++i)
+        int i = 0;
+        int warriors = m_enemyCount / 3;
+        int grunts = m_enemyCount - warriors;
+
+        while (i <= m_enemyCount)
         {
-            Vector2i gridPos = new Vector2i(m_rand.Next(1, m_map.Width - 2), m_rand.Next(1, m_map.Height - 2));
+            Vector2i gridPos = new Vector2i(m_rand.Next(1, m_map.Width - 1), m_rand.Next(1, m_map.Height - 1));
             gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
 
             // Skip if inside wall
@@ -165,17 +170,20 @@ public class LevelMapManager : NetworkBehaviour
             m_occupiedPositions.Add(gridPos);
             Vector3 pos = MapGrid.GridToWorldPoint(gridPos, 0.0f);
 
-            int idx = m_rand.Next(0, m_enemies.Count - 1);
-
             // Create item and place on map
             GameObject obj;
-            if (i != m_enemyCount)
+            if (i < warriors)
             {
-                obj = (GameObject)Instantiate(m_enemies[idx], pos, Quaternion.identity);
+                obj = (GameObject)Instantiate(m_warrior, pos, Quaternion.identity);
+            } else if (i >= warriors && i < m_enemyCount)
+            {
+                obj = (GameObject)Instantiate(m_grunt, pos, Quaternion.identity);
             } else
             {
                 obj = (GameObject)Instantiate(m_boss, pos, Quaternion.identity);
             }
+
+            i++;
             NetworkServer.Spawn(obj);
         }
     }

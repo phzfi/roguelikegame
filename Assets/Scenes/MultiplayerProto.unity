@@ -859,14 +859,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1246329629}
     m_Modifications:
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_items.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_enemies.Array.size
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 485898, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -903,90 +895,6 @@ Prefab:
       propertyPath: m_mapVisualization
       value: 
       objectReference: {fileID: 261761855}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: randomFillPercent
-      value: 44
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_randomFillPercent
-      value: 44
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_smoothingIterations
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_passageWidth
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_frequency
-      value: .200000003
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_roomThresholdSize
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_spaceCount
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_maxSpaceSize
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_minSpaceSize
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_meanSpaceSize
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_standardDeviation
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11479710, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_useRandomSeed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_coinCount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_items.Array.data[2]
-      value: 
-      objectReference: {fileID: 122640, guid: eff1670eb4fa346eb8ab344d3c3c277b, type: 2}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_items.Array.data[3]
-      value: 
-      objectReference: {fileID: 121334, guid: ab08ed2b27dd847e3b45bb92ce21d26f, type: 2}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_items.Array.data[4]
-      value: 
-      objectReference: {fileID: 194028, guid: 786de7147f9dec84cb8fa7f4b862d174, type: 2}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_enemies.Array.data[0]
-      value: 
-      objectReference: {fileID: 188406, guid: b69f0025fd33fbe4fae6e561e8b8a996, type: 2}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_boss
-      value: 
-      objectReference: {fileID: 155062, guid: d3324265805be7b4d9279c18addfc9f7, type: 2}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_enemyCount
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 11409172, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
-      propertyPath: m_enemies.Array.data[1]
-      value: 
-      objectReference: {fileID: 190718, guid: 1941cad29c720974eabf96b24c65c9a9, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bb1275cc6a0d41cab41065516f81731, type: 2}
   m_IsPrefabParent: 0

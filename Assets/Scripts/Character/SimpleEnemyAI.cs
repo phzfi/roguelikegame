@@ -20,7 +20,7 @@ public class SimpleEnemyAI : EnemyAI {
 			var enemyPos = mover.m_gridPos;
 			float dist = myPos.Distance(enemyPos);
 
-			if(dist < minDist) // TODO: line of sight and some smarter parameters
+			if(dist < minDist && controller.m_enemyAI == null) // TODO: line of sight and some smarter parameters
 			{
 				minDist = dist;
 				target = controller;

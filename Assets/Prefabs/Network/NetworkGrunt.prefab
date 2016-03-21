@@ -1380,7 +1380,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162936}
-  m_LocalRotation: {x: .733087659, y: -.287658423, z: -.611732721, w: -.0749545321}
+  m_LocalRotation: {x: .733087718, y: -.287658453, z: -.611732781, w: -.0749545395}
   m_LocalPosition: {x: -.0189039875, y: .0134009998, z: -.0589309335}
   m_LocalScale: {x: .999999821, y: .999999762, z: .999999821}
   m_Children: []
@@ -1607,7 +1607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee580ca42eaadbb4bba0be68dfcbe7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_chaseRange: 15
+  m_chaseRange: 8
 --- !u!114 &11467246
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1902,6 +1902,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_actionCount
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_chaseRange
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
