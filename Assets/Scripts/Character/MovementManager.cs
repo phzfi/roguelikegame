@@ -64,14 +64,6 @@ public class MovementManager : MonoBehaviour
 	//		return;
 	//	mover.AttackCommand(order.m_targetID);
 	//}
-	public static void KillObject(int m_targetID)
-	{
-		var mover = CharManager.GetObject(m_targetID).m_mover;
-		if (mover == null)
-			return;
-		var combatSystem = mover.GetComponent<CombatSystem>();
-		combatSystem.Die();
-	}
 
 
 	public static void RunServerTurn() // run server side game logic for all movers, eg. walk along the path determined by path finding

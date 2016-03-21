@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
         {
             UpdateAmountOfCoins();
             var playerCombatSystem = m_localPlayer.GetComponent<CombatSystem>();
-            m_healthBar.value = (float) playerCombatSystem.m_currentHp / playerCombatSystem.m_maxHp;
+            m_healthBar.value = (float) playerCombatSystem.m_visualizeHp / playerCombatSystem.m_maxHp;
             
             if (m_localPlayer != null)
                 m_playerNameText.text = m_localPlayer.m_name.ToString(); //player's ID is used as player's name for now

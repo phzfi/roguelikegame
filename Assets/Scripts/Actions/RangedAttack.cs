@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class RangedAttack : MonoBehaviour {
 
@@ -53,9 +54,10 @@ public class RangedAttack : MonoBehaviour {
 		if (target == null || source == null || target == source) // If target not found or attacker invalid, do nothing
 			return;
 
+		List<ActionData> actions = new List<ActionData>();
+
 		if (!LineOfSight.CheckLOS(source.m_mover.m_navAgent, source.m_mover.m_gridPos, target.m_mover.m_gridPos, m_maxRange).blocked) // Check that target is visible
 		{
-			target.m_combatSystem.ChangeHP(-m_damage);
             m_audioSource.PlayOneShot(m_rangedSound);
 
 			if (m_projectilePrefab != null)
@@ -65,13 +67,21 @@ public class RangedAttack : MonoBehaviour {
 				ActionData facingData = new ActionData();
 				facingData.m_actionID = source.m_mover.m_turnToFaceAction.ID;
 				facingData.m_target = facingTarget;
-				SyncManager.AddVisualizeAction(facingData);
+				actions.Add(facingData);
 
 				ActionData actionData = new ActionData();
 				actionData.m_actionID = m_projectileAction.ID;
 				actionData.m_target = targetData;
-				SyncManager.AddVisualizeAction(actionData);
+				actions.Add(actionData);
             }
+			
+			target.m_combatSystem.TakeDamage(-m_damage, ref actions);
+		}
+
+		for(int i = 0; i < actions.Count; ++i)
+		{
+			var action = actions[i];
+			SyncManager.AddVisualizeAction(action);
 		}
 	}
 

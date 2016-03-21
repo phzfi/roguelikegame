@@ -21,7 +21,6 @@ public class SyncManager : NetworkBehaviour
 	private static List<MoveOrder> sm_visualizeMoveOrders = new List<MoveOrder>();
 	private static List<PickupOrder> sm_pickupOrders = new List<PickupOrder>();
 	private static List<AttackOrder> sm_attackOrders = new List<AttackOrder>();
-	private static List<DeathOrder> sm_deathOrders = new List<DeathOrder>();
     private static List<EquipOrder> sm_equipOrders = new List<EquipOrder>();
 	private static List<ActionData> sm_outgoingActions = new List<ActionData>();
 	private static List<ActionData> sm_incomingActions = new List<ActionData>();
@@ -80,7 +79,6 @@ public class SyncManager : NetworkBehaviour
 		NetworkServer.RegisterHandler((short)msgType.connected, OnServerReceiveConnection);
 		NetworkServer.RegisterHandler((short)msgType.pickupOrder, EmptyMessageHandler);
 		//NetworkServer.RegisterHandler((short)msgType.attackOrder, OnServerReceiveAttackOrders);
-		NetworkServer.RegisterHandler((short)msgType.death, EmptyMessageHandler);
 		NetworkServer.RegisterHandler((short)msgType.turnSync, EmptyMessageHandler);
 		NetworkServer.RegisterHandler((short)msgType.actionOrder, OnServerRecieveActionOrders);
         NetworkServer.RegisterHandler((short)msgType.equipOrder, OnServerReceiveEquipOrders);
@@ -106,7 +104,6 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.RegisterHandler((short)msgType.visualize, EmptyMessageHandler);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.pickupOrder, OnClientReceivePickupOrders);
 		//sm_clientData.m_connection.RegisterHandler((short)msgType.attackOrder, OnClientReceiveAttackOrders);
-		sm_clientData.m_connection.RegisterHandler((short)msgType.death, OnClientReceiveDeath);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.turnSync, OnClientReceiveTurnSync);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.actionOrder, OnClientReceiveActionOrders);
         sm_clientData.m_connection.RegisterHandler((short)msgType.equipOrder, OnClientReceiveEquipOrders);
@@ -128,7 +125,6 @@ public class SyncManager : NetworkBehaviour
 		NetworkServer.UnregisterHandler((short)msgType.visualize);
 		NetworkServer.UnregisterHandler((short)msgType.pickupOrder);
 		NetworkServer.UnregisterHandler((short)msgType.attackOrder);
-		NetworkServer.UnregisterHandler((short)msgType.death);
 		NetworkServer.UnregisterHandler((short)msgType.turnSync);
         NetworkServer.UnregisterHandler((short)msgType.equipOrder);
         sm_serverData = null;
@@ -146,7 +142,6 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.pickupOrder);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.attackOrder);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.death);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.turnSync);
         sm_clientData.m_connection.UnregisterHandler((short)msgType.equipOrder);
 		}
@@ -334,6 +329,7 @@ public class SyncManager : NetworkBehaviour
 		//handleAttackOrdersOnServer();
         handleEquipOrdersOnServer();
         MovementManager.RunServerTurn();
+		SendEquipOrdersToClients();
 		sm_serverData.StartVisualization();
 		SendVisualizeOrdersToClients();
 		Debug.Log("start visualization");
@@ -344,8 +340,6 @@ public class SyncManager : NetworkBehaviour
 	{
 		Debug.Log("end visualization");
 		SendPickupOrdersToClients();
-		SendDeathOrdersToClients();
-        SendEquipOrdersToClients();
 
 		sm_currentTurn++;
 		SyncTurnNumber();
@@ -431,14 +425,6 @@ public class SyncManager : NetworkBehaviour
 			conn.Send((short)msgType.turnSync, msg);
 	}
 
-	void SendDeathOrdersToClients()
-	{
-		var msg = new DeathMessage();
-		msg.m_orders = sm_deathOrders.ToArray();
-		sm_deathOrders.Clear();
-		NetworkServer.SendToAll((short)msgType.death, msg);
-	}
-
     void SendEquipOrdersToClients()
     {
         var msg = new EquipOrderMessage();
@@ -511,13 +497,6 @@ public class SyncManager : NetworkBehaviour
     {
         m_chatManager.AddMessage(netMsg.ReadMessage<ChatMessage>().m_message);
     }
-
-	void OnClientReceiveDeath(NetworkMessage msg)
-	{
-		var deathMsg = msg.ReadMessage<DeathMessage>();
-		for (int i = 0; i < deathMsg.m_orders.Length; ++i)
-			MovementManager.KillObject(deathMsg.m_orders[i].m_targetID);
-	}
 
 	void OnClientReceiveTurnSync(NetworkMessage msg)
 	{
@@ -646,12 +625,6 @@ public class SyncManager : NetworkBehaviour
 	//	var order = new MoveOrder(targetGridPos, moverID);
 	//	sm_moveOrders.Add(order);
 	//}
-
-	public static void AddDeathOrder(int targetID)
-	{
-		var order = new DeathOrder(targetID);
-		sm_deathOrders.Add(order);
-	}
 
     public static void AddEquipOrder(int itemID, int playerID, bool equipType)
     {

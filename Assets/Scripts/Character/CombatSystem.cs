@@ -8,6 +8,7 @@ public class CombatSystem : NetworkBehaviour
 {
 	[SyncVar]
 	public int m_currentHp;
+	public int m_visualizeHp;
 	public int m_maxHp = 3;
 	public int m_damage = 1;
     public bool isBoss = false;
@@ -19,7 +20,7 @@ public class CombatSystem : NetworkBehaviour
     public AudioClip m_rangedAudio;
     public List<AudioClip> m_deathSounds;
     public float m_attackSoundOffset = 0f;
-	public Action m_attackVisualizeAction;
+	public Action m_attackVisualizeAction, m_deathVisualizeAction, m_damageVisualizeAction;
 
 	private GameObject m_textCanvas;
 	private Text m_label;
@@ -35,6 +36,7 @@ public class CombatSystem : NetworkBehaviour
 	public void Start()
 	{
 		m_currentHp = m_maxHp;
+		m_visualizeHp = m_currentHp;
 		m_textCanvas = GameObject.FindGameObjectWithTag("TextCanvas");
         m_camera = Camera.main;
 		m_label = Instantiate(m_textPrefab);
@@ -47,12 +49,20 @@ public class CombatSystem : NetworkBehaviour
 
 		var actionpool = GetComponent<ActionPool>();
 		m_attackVisualizeAction = gameObject.AddComponent<Action>();
+		m_attackVisualizeAction.Initialize();
 		m_attackVisualizeAction.m_useDelegate = VisualizeAttack;
+		m_deathVisualizeAction = gameObject.AddComponent<Action>();
+		m_deathVisualizeAction.Initialize();
+		m_deathVisualizeAction.m_useDelegate = VisualizeDeath;
+		m_damageVisualizeAction = gameObject.AddComponent<Action>();
+		m_damageVisualizeAction.Initialize();
+		m_damageVisualizeAction.m_useDelegate = VisualizeDealtDamage;
+
 	}
 
 	public void Update()
 	{
-		m_label.text = m_currentHp + "/" + m_maxHp;
+		m_label.text = m_visualizeHp + "/" + m_maxHp;
 		m_label.transform.position = m_camera.WorldToScreenPoint(gameObject.transform.position);
 	}
 
@@ -92,33 +102,53 @@ public class CombatSystem : NetworkBehaviour
 		var targetSystem = target.GetComponent<CombatSystem>();
 		if (targetSystem == null)
 			return;
-		targetSystem.ChangeHP(-GetDamage());
+
+		ActionTargetData targetData = new ActionTargetData(); // Add visualization order for hp reduction
+		targetData.m_targetID = targetID;
 
 		ActionData data = new ActionData();
+		data.m_actionID = m_damageVisualizeAction.ID;
+		data.m_target = targetData;
+		visualization.Add(data);
+
+		data = new ActionData(); // And attack animation
 		data.m_actionID = m_attackVisualizeAction.ID;
 		visualization.Add(data);
+
+		targetSystem.TakeDamage(-GetDamage(), ref visualization);
+	}
+
+	public void VisualizeDealtDamage(ActionTargetData data)
+	{
+		var target = CharManager.GetObject(data.m_targetID);
+		var targetSystem = target.GetComponent<CombatSystem>();
+		if (targetSystem == null)
+			return;
+
+		targetSystem.m_visualizeHp = Mathf.Max(0, targetSystem.m_visualizeHp - targetSystem.GetReducedDamage(GetDamage()));
+		ClientTurnLogicManager.MarkActionFinished();
 	}
 
 	public void VisualizeAttack(ActionTargetData data)
 	{
 		Debug.Log("visualizing attack, id: " + m_controller.ID);
 		Invoke("PlayAttackSound", m_attackSoundOffset);
-		m_animator.TriggerAttackAnimation();
-		StartCoroutine(AttackVisualizeCoRoutine());
+		StartCoroutine(PlayAnimationCoRoutine(AnimationType.attack));
 	}
 
-	public IEnumerator AttackVisualizeCoRoutine()
+	public IEnumerator PlayAnimationCoRoutine(AnimationType type)
 	{
-		while(true)
+		m_animator.TriggerAnimation(type);
+		while (true)
 		{
-			if (m_animator.IsAttackPlaying()) // First wait for animation to start
+			if (m_animator.IsAnimationPlaying(type)) // First wait for animation to start
 				break;
 			yield return null;
 		}
 
 		while(true)
 		{
-			if(!m_animator.IsAttackPlaying()) // Then wait until it is finished
+			if(!m_animator.IsAnimationPlaying(type)) // Then wait until it is finished
 			{
 				ClientTurnLogicManager.MarkActionFinished();
 				yield break;
@@ -127,22 +157,28 @@ public class CombatSystem : NetworkBehaviour
 		}
 	}
 
-	public void ChangeHP(int amount)
+	public void Heal(int amount)
 	{
-		int actualAmount = amount;
-		if(amount < 0)
-			actualAmount = -GetReducedDamage(Mathf.Abs(amount)); // Damage resistance only applies if damage is being dealt.
+		m_currentHp = Mathf.Min(m_maxHp, m_currentHp + amount);
+	}
 
-		m_currentHp = Mathf.Min(m_maxHp, m_currentHp + actualAmount);
+	public void TakeDamage(int amount, ref List<ActionData> visualization)
+	{
+		int actualAmount = GetReducedDamage(Mathf.Abs(amount));
+
+		m_currentHp = m_currentHp - actualAmount;
 		if (m_currentHp <= 0)
         {
             m_currentHp = 0;
-            SyncManager.AddDeathOrder(m_controller.ID);
+
+			ActionData action = new ActionData();
+			action.m_actionID = m_deathVisualizeAction.ID;
+			visualization.Add(action);
         }
 			
 	}
 
-	public void Die()
+	public void VisualizeDeath(ActionTargetData data)
 	{
         if (isBoss)
         {
@@ -151,10 +187,10 @@ public class CombatSystem : NetworkBehaviour
         
 		m_controller.Unregister();
 		m_label.enabled = false;
-        m_animator.TriggerDeathAnimation();
-        m_audioSource.PlayOneShot(m_deathSounds[Random.Range(0, m_deathSounds.Count)]);
-        Invoke("Disable", 5f);
-		Debug.Log("player killed");
+		Debug.Log("visualizing death, id: " + m_controller.ID);
+		m_audioSource.PlayOneShot(m_deathSounds[Random.Range(0, m_deathSounds.Count)]);
+		StartCoroutine(PlayAnimationCoRoutine(AnimationType.death));
+		Invoke("Disable", 5f);
 	}
 
     void Disable()
