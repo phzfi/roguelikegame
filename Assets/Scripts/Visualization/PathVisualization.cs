@@ -17,20 +17,23 @@ public class PathVisualization : MonoBehaviour
 	private List<Vector3> m_vertices = new List<Vector3>();
 	private List<Vector3> m_normals = new List<Vector3>();
 	private List<Vector2> m_uvs = new List<Vector2>();
-	
+	private List<Color> m_colors = new List<Color>();
+
 	private static readonly Vector3 sm_up = new Vector3( 0, 0, -1 );
 
 	public struct Vertex
 	{
-		public Vertex(Vector3 position, Vector3 normal, Vector2 uv)
+		public Vertex(Vector3 position, Vector3 normal, Vector2 uv, float alpha)
 		{
 			this.position = position;
 			this.normal = normal;
 			this.uv = uv;
+			this.alpha = alpha;
 		}
 		public Vector3 position;
 		public Vector3 normal;
 		public Vector2 uv;
+		public float alpha;
 	}
 
 	void Start()
@@ -80,7 +83,16 @@ public class PathVisualization : MonoBehaviour
 		m_vertices.Clear();
 		m_normals.Clear();
 		m_uvs.Clear();
-		
+		m_colors.Clear();
+
+		float totalLineLength = 0.0f;
+		for (int i = 1; i < m_tessellatedPositions.Count; ++i)
+		{
+			Vector3 prevPos = m_tessellatedPositions[i - 1];
+			Vector3 pos = m_tessellatedPositions[i];
+			totalLineLength += m_lineUVTiling * Vector3.Distance(prevPos, pos);
+		}
+
 		float lineLength = 0.0f;
 		int lastIndex = m_tessellatedPositions.Count;
         for (int i = 1; i < lastIndex; ++i)
@@ -96,12 +108,16 @@ public class PathVisualization : MonoBehaviour
 			Vector3 nextNormal = Vector3.Cross(nextTangent, sm_up);
 
 			float distance = m_lineUVTiling * Vector3.Distance(prevPos, pos);
+			
+			float nextLineLength = lineLength + distance;
+			float prevAlpha = CalculateLineFade(lineLength, totalLineLength);
+			float alpha = CalculateLineFade(nextLineLength, totalLineLength);
 
 			Vertex[] vertices = {
-				new Vertex( prevPos + normal * m_lineWidth, sm_up, new Vector2(lineLength, 0) ),
-				new Vertex( prevPos - normal * m_lineWidth, sm_up, new Vector2(lineLength, 1) ),
-				new Vertex( pos + nextNormal * m_lineWidth, sm_up, new Vector2(lineLength + distance, 0) ),
-				new Vertex( pos - nextNormal * m_lineWidth, sm_up, new Vector2(lineLength + distance, 1) ),
+				new Vertex( prevPos + normal * m_lineWidth, sm_up, new Vector2(lineLength, 0), prevAlpha ),
+				new Vertex( prevPos - normal * m_lineWidth, sm_up, new Vector2(lineLength, 1), prevAlpha ),
+				new Vertex( pos + nextNormal * m_lineWidth, sm_up, new Vector2(lineLength + distance, 0), alpha ),
+				new Vertex( pos - nextNormal * m_lineWidth, sm_up, new Vector2(lineLength + distance, 1), alpha ),
 			};
 
 			WriteQuad(vertices);
@@ -111,10 +127,19 @@ public class PathVisualization : MonoBehaviour
 		
         m_mesh.vertices = m_vertices.ToArray();
 		m_mesh.normals = m_normals.ToArray();
-		m_mesh.uv = m_uvs.ToArray();		
+		m_mesh.uv = m_uvs.ToArray();
+		m_mesh.colors = m_colors.ToArray();
 		m_mesh.triangles = m_indices.ToArray();
 	}
-	
+
+	private float CalculateLineFade(float length, float totalLength)
+	{
+		const float fadeLength = 0.5f;
+		float startFade = Mathf.Clamp01( length / fadeLength );
+		float endFade = Mathf.Clamp01((totalLength - length) / fadeLength);
+		return startFade * endFade;
+	}
+
 	private void WriteQuad(Vertex[] v)
 	{
 		WriteVertex(v[0]);
@@ -131,6 +156,7 @@ public class PathVisualization : MonoBehaviour
 		m_vertices.Add(v.position);
 		m_normals.Add(v.normal);
 		m_uvs.Add(v.uv);
+		m_colors.Add(new Color(1, 1, 1, v.alpha));
 		m_indices.Add(m_vertices.Count - 1);
 	}
 

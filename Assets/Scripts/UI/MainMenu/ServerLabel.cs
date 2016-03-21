@@ -58,7 +58,21 @@ public class ServerLabel : MonoBehaviour
 	public void UpdateTexts(string serverName, string address, int port, int players, int maxPlayers)
 	{
 		if (m_nameText)
-			m_nameText.text = serverName;
+		{
+			TextGenerator textGen = new TextGenerator();
+			var settings = m_nameText.GetGenerationSettings(Vector2.zero);
+			float width = textGen.GetPreferredWidth(serverName, settings);
+			
+			bool bShortened = false;
+			while (serverName.Length > 5 && textGen.GetPreferredWidth(serverName, settings) > 175)
+			{
+				serverName = serverName.Substring(0, serverName.Length - 1);
+				bShortened = true;
+			}
+
+			m_nameText.text = bShortened ? serverName + "..." : serverName;
+		}
+		
 
 		if (m_addressText)
 			m_addressText.text = string.Format("({0}:{1})", address, port);

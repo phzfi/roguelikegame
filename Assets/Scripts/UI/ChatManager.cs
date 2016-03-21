@@ -16,9 +16,11 @@ public class ChatManager : NetworkBehaviour
     public static bool sm_chatOpen = false;
 
     private static List<Text> sm_messages = new List<Text>();
+    private AudioSource m_audioSource;
 
     public void Start()
     {
+        m_audioSource = GetComponent<AudioSource>();
         m_chatMessagePrefab.text = "";
         for(int i = 0; i<m_maxMessages; ++i)
         {
@@ -37,6 +39,7 @@ public class ChatManager : NetworkBehaviour
         sm_messages.Add(messageText);
         messageText.transform.SetParent(m_messageList.transform);
         messageText.transform.localScale = Vector3.one;
+        m_audioSource.Play();
         if (sm_messages.Count > m_maxMessages)
         {
             sm_messages.RemoveAt(0);
@@ -49,7 +52,7 @@ public class ChatManager : NetworkBehaviour
         var player = CharManager.GetLocalPlayer();
         if (m_messageToBeSent.text.Length == 0)
             return;
-        string message = player.ID.ToString() + ": " + m_messageToBeSent.text;
+        string message = player.m_name.ToString() + ": " + m_messageToBeSent.text;
         SyncManager.AddChatMessage(message, player.ID);
         m_messageToBeSent.text = "";
     }

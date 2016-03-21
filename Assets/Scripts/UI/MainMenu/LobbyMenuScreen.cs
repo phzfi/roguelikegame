@@ -76,7 +76,7 @@ public class LobbyMenuScreen : MenuScreen
 
 	public void AddLobbyPlayer(CustomNetworkLobbyPlayer lobbyPlayer)
 	{
-		lobbyPlayer.transform.SetParent(m_playerListParent);
+		lobbyPlayer.transform.SetParent(m_playerListParent, false);
 
 		Vector3 localPos = Vector3.zero;
 		localPos.y = lobbyPlayer.slot * m_playerLabelOffset;

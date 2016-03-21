@@ -87,7 +87,7 @@ public class JoinMenuScreen : MenuScreen
 		phzServer.serverType = ServerType.Dedicated;
 		phzServer.networkAddress = LobbyManager.dedicatedServerNetworkAddress;
 		phzServer.networkPort = LobbyManager.dedicatedServerNetworkPort;
-		phzServer.gameName = "PHZ Server";
+		phzServer.gameName = "Official PHZ Server";
 		m_serverInfos.Add(phzServer);
 
 		for (int i = 0; i < m_remoteServerLabels.Length; ++i)
@@ -158,7 +158,7 @@ public class JoinMenuScreen : MenuScreen
 		m_connectingMessage.Show("Joining a game...", OnConnectingCanceled);
 
 		m_joinedServerInfo = m_serverInfos[m_selectedServerIndex];
-
+		
 		LobbyManager.Instance.SetOnErrorCallback(OnJoiningFailed);
 		LobbyManager.Instance.SetOnConnectedCallback(OnJoiningSuccesfull);
 		LobbyManager.Instance.JoinLobbyAsClient(m_joinedServerInfo.networkAddress, m_joinedServerInfo.networkPort);
@@ -178,7 +178,7 @@ public class JoinMenuScreen : MenuScreen
 		m_connecting = false;
 		m_connectingMessage.Hide();
 		SetButtonsEnabled(true);
-		LobbyManager.Instance.SetOnErrorCallback(null);
+		//LobbyManager.Instance.SetOnErrorCallback(null);
 		LobbyManager.Instance.SetOnConnectedCallback(null);
 
 		Hide();
@@ -197,6 +197,9 @@ public class JoinMenuScreen : MenuScreen
 		LobbyManager.Instance.SetOnErrorCallback(null);
 		LobbyManager.Instance.SetOnConnectedCallback(null);
 		LobbyManager.Instance.ExitLobbyAsClient();
+
+		Show();
+		m_lobbyMenu.Hide();
 	}
 
 	public void OnConnectingCanceled()
