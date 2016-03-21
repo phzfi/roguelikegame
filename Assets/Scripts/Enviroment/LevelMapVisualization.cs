@@ -194,6 +194,16 @@ public class LevelMapVisualization : MonoBehaviour
         if (r < m_torchProbability)
         {
             Vector3 pos = MapGrid.GridToWorldPoint(x, y, -1.0f);
+            float offset = 0.15f;
+
+            if (state == 3)
+                pos.y += offset;
+            else if (state == 6)
+                pos.x -= offset;
+            else if (state == 9)
+                pos.x += offset;
+            else if (state == 12)
+                pos.y -= offset;
             Instantiate(m_torch, pos, m_torch.transform.rotation);
         }
     }
