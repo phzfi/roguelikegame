@@ -73,6 +73,12 @@ public class SyncManager : NetworkBehaviour
 		}
 	}
 
+	public bool GetTurnProgress(out float progress)
+	{
+		progress = Mathf.Clamp((Time.realtimeSinceStartup - m_lastSync) / m_syncRate, 0, 1);
+		return sm_serverData.m_turnInProgress;
+    }
+
 	public void InitOnServer() // initialize server side sync logic
 	{
 		//NetworkServer.RegisterHandler((short)msgType.moveOrder, OnServerReceiveMoveOrders);
@@ -345,6 +351,7 @@ public class SyncManager : NetworkBehaviour
 		SyncTurnNumber();
 		m_lastSync = Time.realtimeSinceStartup;
 		sm_serverData.m_turnInProgress = false;
+		m_lastSync = Time.realtimeSinceStartup;
 	}
 
 	IEnumerator WaitForClientVisualizationCoRoutine()

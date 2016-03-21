@@ -71,6 +71,9 @@ public class MovementManager : MonoBehaviour
 		for (int i = 0; i < CharManager.Objects.Count; ++i)
 		{
 			var controller = CharManager.Objects[i];
+			var combat = controller.m_combatSystem;
+			if (combat.m_currentHp <= 0)
+				continue;
             var mover = controller.m_mover;
 
 			if (!controller.m_isPlayer) // If this character is an NPC, run its turn decision logic

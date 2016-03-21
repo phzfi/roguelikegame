@@ -146,14 +146,23 @@ public class CombatSystem : NetworkBehaviour
 			yield return null;
 		}
 
-		while(true)
+		if (type == AnimationType.attack)
 		{
-			if(!m_animator.IsAnimationPlaying(type)) // Then wait until it is finished
+			while (true)
 			{
-				ClientTurnLogicManager.MarkActionFinished();
-				yield break;
+				if (!m_animator.IsAnimationPlaying(type)) // Then wait until it is finished
+				{
+					ClientTurnLogicManager.MarkActionFinished();
+					yield break;
+				}
+				yield return null;
 			}
-			yield return null;
+		}
+		else
+		{
+			ClientTurnLogicManager.MarkActionFinished();
+			Invoke("Disable", 5);
+			yield break;
 		}
 	}
 
@@ -190,7 +199,6 @@ public class CombatSystem : NetworkBehaviour
 		Debug.Log("visualizing death, id: " + m_controller.ID);
 		m_audioSource.PlayOneShot(m_deathSounds[Random.Range(0, m_deathSounds.Count)]);
 		StartCoroutine(PlayAnimationCoRoutine(AnimationType.death));
-		Invoke("Disable", 5f);
 	}
 
     void Disable()
