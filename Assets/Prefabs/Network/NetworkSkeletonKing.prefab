@@ -994,7 +994,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 194426}
-  m_LocalRotation: {x: .634646356, y: .363188505, z: .332055539, w: .595866919}
+  m_LocalRotation: {x: .634646297, y: .363188475, z: .332055509, w: .595866859}
   m_LocalPosition: {x: -.421166986, y: -8.88178367e-17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1782,8 +1782,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eabba29f0c98c934ab7d1e58648e567a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_currentHp: 3
-  m_maxHp: 3
+  m_currentHp: 5
+  m_maxHp: 5
   m_damage: 1
   isBoss: 0
   m_textPrefab: {fileID: 11499316, guid: 35befa8bf5642f5499d8ce350d167ebd, type: 2}
@@ -1859,6 +1859,7 @@ MonoBehaviour:
   m_syncer: {fileID: 0}
   m_moveAction: {fileID: 0}
   m_visualizeMoveAction: {fileID: 0}
+  m_turnToFaceAction: {fileID: 0}
 --- !u!114 &11476100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1877,6 +1878,7 @@ MonoBehaviour:
   m_equipment: {fileID: 0}
   m_combatSystem: {fileID: 0}
   m_enemyAI: {fileID: 0}
+  m_name: 
   m_isPlayer: 0
 --- !u!114 &11488498
 MonoBehaviour:
@@ -2260,6 +2262,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_actionCount
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_currentHp
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_maxHp
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
