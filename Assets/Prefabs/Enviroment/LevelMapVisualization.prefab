@@ -78,7 +78,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -102,7 +104,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -133,17 +137,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2eeacace1bd5d34e8ad589fd18bd418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_depth: 0
-  m_meshHeight: 2
   gridMaterial: {fileID: 2100000, guid: 9b7eb622c89c00f4bacef7687ddce24b, type: 2}
+  wallMaterial: {fileID: 0}
+  topMaterial: {fileID: 0}
+  floorMaterial: {fileID: 0}
   gridTransform: {fileID: 411922}
+  m_torch: {fileID: 103002, guid: 07021f80437b47f4f9eb2b3f6138ec5c, type: 2}
+  m_torchProbability: .0500000007
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_torch
+      value: 
+      objectReference: {fileID: 103002, guid: 07021f80437b47f4f9eb2b3f6138ec5c, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_torchProbability
+      value: .0500000007
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 178964}

@@ -12,6 +12,9 @@ public class LevelMapVisualization : MonoBehaviour
     public Material floorMaterial;
 	public Transform gridTransform;
 
+    public GameObject m_torch;
+    public float m_torchProbability;
+
     private GameObject top;
     private GameObject floor;
     private GameObject walls;
@@ -28,8 +31,12 @@ public class LevelMapVisualization : MonoBehaviour
     private List<int> wallTriangles;
     private List<Vector2> wallUVs;
 
+    private System.Random m_rand;
+
     public void Init(LevelMap map)
     {
+        m_rand = new System.Random(map.m_seed.GetHashCode());
+
         top = new GameObject();
         top.name = "Top";
         top.transform.parent = this.gameObject.transform;
@@ -174,6 +181,21 @@ public class LevelMapVisualization : MonoBehaviour
         if (y + 1 == map.Height || map.GetTileType(x, y + 1) == MapTileType.Wall) state += 8;
 
         TriangulateSingle(x, y, state, map.Width, map.Height);
+
+        if (m_torch != null && (state == 3 || state == 6 || state == 9 || state == 12))
+        {
+            SpawnTorch(x, y, state);
+        }
+    }
+
+    private void SpawnTorch(int x, int y, int state)
+    {
+        float r = (float)m_rand.NextDouble();
+        if (r < m_torchProbability)
+        {
+            Vector3 pos = MapGrid.GridToWorldPoint(x, y, -1.0f);
+            Instantiate(m_torch, pos, m_torch.transform.rotation);
+        }
     }
 
     private void TriangulateSingle(int x, int y, int state, int width, int height)
