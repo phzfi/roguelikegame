@@ -61,7 +61,7 @@ public class TurnLogicTimer : MonoBehaviour
 		float turnprogress = .0f;
 		bool turnInProgress = m_syncManager.GetTurnProgress(out turnprogress);
 		if (turnInProgress)
-			turnprogress = 1;
+			turnprogress = 0;
 		else
 			turnInProgress = true;
 		float angle = 2 * 3.1415f * turnprogress;

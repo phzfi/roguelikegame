@@ -72,7 +72,7 @@ public class CombatSystem : NetworkBehaviour
 		return actualDamage; // TODO: damage modifiers
 	}
 
-	private int GetReducedDamage(int incomingDamage) // Modify incoming attack damage by damage reduction from armor
+	public int GetReducedDamage(int incomingDamage) // Modify incoming attack damage by damage reduction from armor
 	{
         var actualDamage = incomingDamage - Mathf.CeilToInt(0.25f * m_equipment.m_playerVitality);
 		return actualDamage; // TODO: damage reduction
@@ -138,17 +138,21 @@ public class CombatSystem : NetworkBehaviour
 
 	public IEnumerator PlayAnimationCoRoutine(AnimationType type)
 	{
+		float startTime = 0;
 		m_animator.TriggerAnimation(type);
 		while (true)
 		{
 			if (m_animator.IsAnimationPlaying(type)) // First wait for animation to start
+			{
+				startTime = Time.realtimeSinceStartup;
 				break;
+			}
 			yield return null;
 		}
 
-		if (type == AnimationType.attack)
+		while (true)
 		{
-			while (true)
+			if (type == AnimationType.attack)
 			{
 				if (!m_animator.IsAnimationPlaying(type)) // Then wait until it is finished
 				{
@@ -157,12 +161,16 @@ public class CombatSystem : NetworkBehaviour
 				}
 				yield return null;
 			}
-		}
-		else
-		{
-			ClientTurnLogicManager.MarkActionFinished();
-			Invoke("Disable", 5);
-			yield break;
+			else
+			{
+				if (Time.realtimeSinceStartup - startTime > 3.0f)
+				{
+					ClientTurnLogicManager.MarkActionFinished();
+					Invoke("Disable", 2);
+					yield break;
+				}
+				yield return null;
+			}
 		}
 	}
 

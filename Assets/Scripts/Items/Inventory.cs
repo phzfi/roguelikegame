@@ -72,7 +72,7 @@ public class Inventory : MonoBehaviour
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
             if (!m_player.isLocalPlayer)
             {
-                item.SetActive(false);
+                item.GetComponent<MeshRenderer>().enabled = false;
                 return true;
             }
 
@@ -83,8 +83,8 @@ public class Inventory : MonoBehaviour
                 else
                 {
                     UpdatePotionCount();
-                    item.SetActive(false);
-                }
+					item.GetComponent<MeshRenderer>().enabled = false;
+				}
             }
             else
                 AddToUIInventory(item);
@@ -93,7 +93,7 @@ public class Inventory : MonoBehaviour
         }
 		if (itemName == "Coins")
 		{
-            item.SetActive(false);
+			item.GetComponent<MeshRenderer>().enabled = false;
 			m_amountOfCoins += 1;
 			Debug.Log(m_amountOfCoins);
 			m_audioSource.PlayOneShot(m_coinPickupAudio);
