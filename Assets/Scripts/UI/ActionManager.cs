@@ -39,6 +39,9 @@ public class ActionManager : MonoBehaviour
 		if (m_currentAction == null)
 			return;
 
+		if (!SyncManager.CheckInputPossible())
+			return;
+
 		switch (m_currentAction.m_targetingType)
 		{
 			case Action.ActionTargetingType.ground: // If targeting type is ground, call action with grid position as target

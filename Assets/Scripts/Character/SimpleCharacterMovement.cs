@@ -252,12 +252,29 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			return false;
 
 		bool moved = false;
+		var rangedAttack = m_controller.m_equipment.GetRangedAttack();
 
 		for (int step = 0; step < m_gridSpeed; step++)
 		{
 			if (m_navPath.Count == 0)
 				return moved;
 
+			if(m_orderType == OrderType.attack && rangedAttack != null) // If ranged weapon is currently equipped and current order is attack
+			{
+				
+				var target = CharManager.GetObject(m_attackOrderTarget);
+				var range = target.m_mover.m_gridPos.Distance(m_gridPos);
+				if (range <= rangedAttack.m_maxRange && !LineOfSight.CheckLOS(m_navAgent, m_gridPos, target.m_mover.m_gridPos, rangedAttack.m_maxRange).blocked) // If los is not blocked to target
+				{
+					ActionTargetData targetData = new ActionTargetData();
+					targetData.m_playerTarget = true;
+					targetData.m_targetID = target.ID;
+					targetData.m_userID = m_controller.ID;
+					targetData.m_gridTarget = target.m_mover.m_gridPos;
+					rangedAttack.Attack(target, m_controller, ref combatVisualization, targetData);
+					break;
+				}
+			}
 			Vector2i nextGridPos = m_navPath[0];
 
 			bool movementBlocked = false;

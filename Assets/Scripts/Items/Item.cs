@@ -18,6 +18,7 @@ public class Item : NetworkBehaviour
     public int m_intelligence = 0;
     [SyncVar]
     public int m_vitality = 0;
+	public bool m_twoHandedWeapon = false;
 
     [SyncVar]
 	private bool m_onMap = true;
@@ -55,6 +56,18 @@ public class Item : NetworkBehaviour
 		if (inventory == null || !inventory.CanAddItem(gameObject))
 			return false;
 		return true;
+	}
+
+	public void Hide()
+	{
+		for (int i = 0; i < transform.childCount; ++i)
+			transform.GetChild(i).gameObject.SetActive(false);
+	}
+
+	public void Show()
+	{
+		for (int i = 0; i < transform.childCount; ++i)
+			transform.GetChild(i).gameObject.SetActive(true);
 	}
 
 	void OnDestroy()

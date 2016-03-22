@@ -20,6 +20,9 @@ public class MovementManager : MonoBehaviour
 
 	public static void InputAttackOrder(int targetID)
 	{
+		if (!SyncManager.CheckInputPossible())
+			return;
+
 		for (int i = 0; i < CharManager.Objects.Count; ++i)
 		{
 			var controller = CharManager.Objects[i];
@@ -64,14 +67,6 @@ public class MovementManager : MonoBehaviour
 	//		return;
 	//	mover.AttackCommand(order.m_targetID);
 	//}
-	public static void KillObject(int m_targetID)
-	{
-		var mover = CharManager.GetObject(m_targetID).m_mover;
-		if (mover == null)
-			return;
-		var combatSystem = mover.GetComponent<CombatSystem>();
-		combatSystem.Die();
-	}
 
 
 	public static void RunServerTurn() // run server side game logic for all movers, eg. walk along the path determined by path finding
@@ -79,6 +74,9 @@ public class MovementManager : MonoBehaviour
 		for (int i = 0; i < CharManager.Objects.Count; ++i)
 		{
 			var controller = CharManager.Objects[i];
+			var combat = controller.m_combatSystem;
+			if (combat.m_currentHp <= 0)
+				continue;
             var mover = controller.m_mover;
 
 			if (!controller.m_isPlayer) // If this character is an NPC, run its turn decision logic

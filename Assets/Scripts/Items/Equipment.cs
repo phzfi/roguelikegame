@@ -22,6 +22,15 @@ public class Equipment : NetworkBehaviour
         m_equipment = new List<GameObject>();
     }
 
-
+	public RangedAttack GetRangedAttack()
+	{
+		for(int i = 0; i < m_equipment.Count; ++i)
+		{
+			var item = m_equipment[i].GetComponent<RangedAttack>();
+			if (item != null)
+				return item;
+		}
+		return null;
+	}
 
 }

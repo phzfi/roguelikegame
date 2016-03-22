@@ -12,7 +12,6 @@ public enum msgType : short
 	visualize,
 	spawnItem,
 	attackOrder,
-	death,
 	turnSync,
     equipOrder,
     chatMessage,

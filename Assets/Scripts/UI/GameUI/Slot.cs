@@ -14,6 +14,7 @@ public class Slot : MonoBehaviour, IDropHandler
 	private Inventory m_inventory;
     private int m_playerID;
     private AudioSource m_audioSource;
+	private GameObject m_inventorySlots;
 
     public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
@@ -28,6 +29,9 @@ public class Slot : MonoBehaviour, IDropHandler
         if (m_equipment == null)
             Debug.LogError("Could not find equipment for slot");
         m_audioSource = gameObject.AddComponent<AudioSource>();
+		m_inventorySlots = GameObject.FindGameObjectWithTag("InventorySlots");
+		if(m_inventorySlots == null)
+			Debug.LogError("Could not find inventory slots for slot");
     }
 
     public void EquipItem(GameObject itemName)
@@ -35,7 +39,6 @@ public class Slot : MonoBehaviour, IDropHandler
         var item = itemName.GetComponent<Item>();
         SyncManager.AddEquipOrder(item.ID, m_playerID, true);
 		m_inventory.m_items.Remove(itemName);
-        m_equipment.m_playerStrength += item.m_strength;
         m_audioSource.PlayOneShot(m_equipSound);
     }
 
@@ -44,15 +47,42 @@ public class Slot : MonoBehaviour, IDropHandler
         var item = itemName.GetComponent<Item>();
         SyncManager.AddEquipOrder(item.ID, m_playerID, false);
 		m_inventory.m_items.Add(itemName);
-		m_equipment.m_playerStrength -= item.m_strength;
     }
+
+	public Slot GetEquipmentSlot(Item.ItemType type)
+	{
+		if (m_isInventory)
+			Debug.LogError("Tried to get equip slots for inventory slot");
+		var slots = transform.parent.GetComponentsInChildren<Slot>();
+		for(int i = 0; i < slots.Length; ++i)
+		{
+			var slot = slots[i];
+			if (slot.m_itemType == type)
+				return slot;
+		}
+		return null;
+	}
 
     public void OnDrop(PointerEventData eventData)
     {
         Draggable item = eventData.pointerDrag.GetComponent<Draggable>();
         if (item != null && !item.m_isDraggedButton)
-        {
-            if (m_itemType == item.m_itemType)
+		{
+			if (!SyncManager.CheckInputPossible())
+				return;
+
+			if (item.m_itemType == Item.ItemType.SHIELD)
+			{
+				var weaponSlot = GetEquipmentSlot(Item.ItemType.WEAPON);
+				if(weaponSlot.m_containsItem)
+				{
+					var weaponSlotItem = weaponSlot.GetComponentsInChildren<Draggable>()[0];
+					if (weaponSlotItem.m_twoHandedWeapon)
+						return;
+				}
+			}
+			item.m_returnTo.GetComponent<Slot>().m_containsItem = false;
+			if (m_itemType == item.m_itemType)
             {
                 if (!m_containsItem)
                 {
@@ -62,10 +92,30 @@ public class Slot : MonoBehaviour, IDropHandler
                 {
                     var oldEquippedItem = transform.GetChild(transform.childCount - 1);
                     oldEquippedItem.SetParent(item.m_returnTo.transform);
-                    UnequipItem(oldEquippedItem.gameObject);
+					item.m_returnTo.GetComponent<Slot>().m_containsItem = true;
+					UnequipItem(oldEquippedItem.gameObject);
                 }
+				if(item.m_twoHandedWeapon)
+				{
+					var shieldSlot = GetEquipmentSlot(Item.ItemType.SHIELD);
+					if(shieldSlot.m_containsItem)
+					{
+						var shieldItem = shieldSlot.GetComponentsInChildren<Item>()[0];
+						var inventorySlots = m_inventorySlots.GetComponentsInChildren<Slot>();
+						for(int i = 0; i < inventorySlots.Length; ++i)
+						{
+							var inventorySlot = inventorySlots[i];
+							if(!inventorySlot.m_containsItem)
+							{
+								shieldItem.transform.SetParent(inventorySlot.transform);
+								inventorySlot.m_containsItem = true;
+								break;
+							}
+						}
+						UnequipItem(shieldItem.gameObject);
+					}
+				}
                 EquipItem(item.gameObject);
-                item.m_returnTo.GetComponent<Slot>().m_containsItem = false;
                 item.m_returnTo = transform;
             }
             else if (m_isInventory)

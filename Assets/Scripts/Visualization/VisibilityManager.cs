@@ -6,6 +6,7 @@ public class VisibilityManager : MonoBehaviour
 {
 
 	public static TileRenderer sm_moveRangeRenderer;
+	public static TileRenderer sm_rangedIndicatorRenderer;
 	public static TileRenderer sm_openLosRenderer;
 	public static TileRenderer sm_closedLosRenderer;
 	public static TileRenderer sm_wallRenderer;
@@ -33,6 +34,8 @@ public class VisibilityManager : MonoBehaviour
 		{
 			if (renderers[i].m_type == TileRenderer.TileRendererType.Movement)
 				sm_moveRangeRenderer = renderers[i];
+			else if (renderers[i].m_type == TileRenderer.TileRendererType.Range)
+				sm_rangedIndicatorRenderer = renderers[i];
 			else if (renderers[i].m_type == TileRenderer.TileRendererType.FogOfWarOpen)
 				sm_openLosRenderer = renderers[i];
 			else if (renderers[i].m_type == TileRenderer.TileRendererType.FogOfWarClosed)
@@ -58,7 +61,7 @@ public class VisibilityManager : MonoBehaviour
 		bool hideMoveRange = false;
 
 		var player = CharManager.GetLocalPlayer();
-		if (player && !player.m_mover.IsMoving )
+		if (player && !SyncManager.GetTurnProgress())
 		{
 			showMoveRange = !moveRangeVisible;
 			moveRangeVisible = true;
@@ -69,15 +72,19 @@ public class VisibilityManager : MonoBehaviour
 			moveRangeVisible = false;
 		}
 
+
 		if (showMoveRange)
 		{
 			UpdateMoveRange();
+			UpdateRangedIndicator();
 			sm_moveRangeRenderer.Show();
+			sm_rangedIndicatorRenderer.Show();
 		}
 
 		if (hideMoveRange)
 		{
 			sm_moveRangeRenderer.Hide();
+			sm_rangedIndicatorRenderer.Hide();
 		}
 		
 		UpdateMinimap();
@@ -89,6 +96,35 @@ public class VisibilityManager : MonoBehaviour
 		{
 			sm_moveRangeRenderer.CreateMovementRangeMesh(sm_moveRangeMap);
 		}
+	}
+
+	public static void UpdateRangedIndicator()
+	{
+		var player = CharManager.GetLocalPlayer();
+		if (player == null || player.m_equipment == null)
+			return;
+		var rangedAttack = player.m_equipment.GetRangedAttack();
+		HashSet<Vector2i> rangedTiles = new HashSet<Vector2i>();
+
+		if (rangedAttack == null)
+		{
+			sm_rangedIndicatorRenderer.CreateMovementRangeMesh(rangedTiles);
+			return;
+		}
+
+		var pos = player.m_mover.m_gridPos;
+		int range = (int)rangedAttack.m_maxRange;
+		for(int x = -range; x <= range; ++x)
+		{
+			for(int y = -range; y <= range; ++y)
+			{
+				var tilePos = pos + new Vector2i(x, y);
+				if (!LineOfSight.CheckLOS(player.m_mover.m_navAgent, pos, tilePos, range).blocked)
+					rangedTiles.Add(tilePos);
+			}
+		}
+
+		sm_rangedIndicatorRenderer.CreateMovementRangeMesh(rangedTiles);
 	}
 
 	private static bool InBounds(Vector2i tile)

@@ -10,7 +10,7 @@ public class SyncManager : NetworkBehaviour
 {
     public static List<string> sm_chatLog = new List<string>();
 
-	private float m_lastSync = -99.0f;
+	public static float m_lastSync = -99.0f;
 
 	private static ClientData sm_clientData; // stores all data relevant only to client, null if server
 	private static ServerData sm_serverData; // stores all data relevant only to server, null if client
@@ -21,7 +21,6 @@ public class SyncManager : NetworkBehaviour
 	private static List<MoveOrder> sm_visualizeMoveOrders = new List<MoveOrder>();
 	private static List<PickupOrder> sm_pickupOrders = new List<PickupOrder>();
 	private static List<AttackOrder> sm_attackOrders = new List<AttackOrder>();
-	private static List<DeathOrder> sm_deathOrders = new List<DeathOrder>();
     private static List<EquipOrder> sm_equipOrders = new List<EquipOrder>();
 	private static List<ActionData> sm_outgoingActions = new List<ActionData>();
 	private static List<ActionData> sm_incomingActions = new List<ActionData>();
@@ -33,7 +32,13 @@ public class SyncManager : NetworkBehaviour
 	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
-	
+
+	public AudioSource m_audioSource;
+	public AudioClip m_succesfullInput, m_unsuccesfullInput;
+
+	public static AudioSource sm_audioSource;
+	public static AudioClip sm_succesfullInput, sm_unsuccesfullInput;
+
 	public static int sm_currentTurn = 0;
 	public static bool sm_running = false;
 	private static int sm_clientCount = 0;
@@ -47,6 +52,13 @@ public class SyncManager : NetworkBehaviour
 	{
         m_chatManager = FindObjectOfType<ChatManager>();
 		m_turnLogicManager = FindObjectOfType<ClientTurnLogicManager>();
+	}
+
+	void Awake() // Set editor references to static ones. A bit dumb, maybe there's a better way.
+	{
+		sm_audioSource = m_audioSource;
+		sm_succesfullInput = m_succesfullInput;
+		sm_unsuccesfullInput = m_unsuccesfullInput;
 	}
 
 	public override void OnStartServer()
@@ -74,13 +86,26 @@ public class SyncManager : NetworkBehaviour
 		}
 	}
 
+	public static bool GetTurnProgress()
+	{
+		if (sm_isServer && sm_serverData != null)
+			return sm_serverData.m_turnInProgress;
+		else if (sm_clientData != null)
+			return sm_clientData.m_turnInProgress;
+		else
+			return true;
+	}
+
+	public bool GetTurnProgress(out float progress)
+	{
+		progress = Mathf.Clamp((Time.realtimeSinceStartup - m_lastSync) / m_syncRate, 0, 1);
+		return GetTurnProgress();
+    }
+
 	public void InitOnServer() // initialize server side sync logic
 	{
-		//NetworkServer.RegisterHandler((short)msgType.moveOrder, OnServerReceiveMoveOrders);
 		NetworkServer.RegisterHandler((short)msgType.connected, OnServerReceiveConnection);
 		NetworkServer.RegisterHandler((short)msgType.pickupOrder, EmptyMessageHandler);
-		//NetworkServer.RegisterHandler((short)msgType.attackOrder, OnServerReceiveAttackOrders);
-		NetworkServer.RegisterHandler((short)msgType.death, EmptyMessageHandler);
 		NetworkServer.RegisterHandler((short)msgType.turnSync, EmptyMessageHandler);
 		NetworkServer.RegisterHandler((short)msgType.actionOrder, OnServerRecieveActionOrders);
         NetworkServer.RegisterHandler((short)msgType.equipOrder, OnServerReceiveEquipOrders);
@@ -91,6 +116,7 @@ public class SyncManager : NetworkBehaviour
 		sm_isServer = true;
 		sm_running = true;
 		gameObject.SetActive(true);
+		m_lastSync = -99.0f;
 		//NetworkServer.Spawn(gameObject);
 	}
 
@@ -105,8 +131,6 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.RegisterHandler((short)msgType.connected, OnClientReceiveConnection);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.visualize, EmptyMessageHandler);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.pickupOrder, OnClientReceivePickupOrders);
-		//sm_clientData.m_connection.RegisterHandler((short)msgType.attackOrder, OnClientReceiveAttackOrders);
-		sm_clientData.m_connection.RegisterHandler((short)msgType.death, OnClientReceiveDeath);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.turnSync, OnClientReceiveTurnSync);
 		sm_clientData.m_connection.RegisterHandler((short)msgType.actionOrder, OnClientReceiveActionOrders);
         sm_clientData.m_connection.RegisterHandler((short)msgType.equipOrder, OnClientReceiveEquipOrders);
@@ -117,6 +141,7 @@ public class SyncManager : NetworkBehaviour
 
 		var msg = new ConnectionMessage();
 		msg.m_clientID = -1;
+		m_lastSync = -99.0f;
 		sm_clientData.m_connection.Send((short)msgType.connected, msg); // send netId of this object to server so that it can keep track of connections using it
 	}
 
@@ -128,7 +153,6 @@ public class SyncManager : NetworkBehaviour
 		NetworkServer.UnregisterHandler((short)msgType.visualize);
 		NetworkServer.UnregisterHandler((short)msgType.pickupOrder);
 		NetworkServer.UnregisterHandler((short)msgType.attackOrder);
-		NetworkServer.UnregisterHandler((short)msgType.death);
 		NetworkServer.UnregisterHandler((short)msgType.turnSync);
         NetworkServer.UnregisterHandler((short)msgType.equipOrder);
         sm_serverData = null;
@@ -146,7 +170,6 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.pickupOrder);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.attackOrder);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.death);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.turnSync);
         sm_clientData.m_connection.UnregisterHandler((short)msgType.equipOrder);
 		}
@@ -186,16 +209,6 @@ public class SyncManager : NetworkBehaviour
 		return sm_serverData.m_playerData.Count;
 	}
 
-	//void handleMoveOrdersOnServer()
-	//{
-	//	for (int i = 0; i < sm_moveOrders.Count; ++i)
-	//	{
-	//		var order = sm_moveOrders[i];
-	//		MovementManager.OrderMove(order);
-	//	}
-	//	sm_moveOrders.Clear();
-	//}
-
 	void RunEquipOrder(EquipOrder order)
 	{
 		var player = CharManager.GetObject(order.m_playerID);
@@ -217,9 +230,17 @@ public class SyncManager : NetworkBehaviour
 			return;
 		}
 		if (order.m_equipType && !equipment.m_equipment.Contains(item.gameObject)) // make sure we haven't already equipped this item (host will have run this in server-side code already)
+		{
 			equipment.m_equipment.Add(item.gameObject);
+			equipment.m_playerStrength += item.m_strength;
+			equipment.m_playerVitality += item.m_vitality;
+		}
 		else if (!order.m_equipType)
+		{
 			equipment.m_equipment.Remove(item.gameObject);
+			equipment.m_playerStrength -= item.m_strength;
+			equipment.m_playerVitality -= item.m_vitality;
+		}
 	}
 
     void handleEquipOrdersOnServer()
@@ -227,16 +248,6 @@ public class SyncManager : NetworkBehaviour
         for (int i = 0; i < sm_equipOrders.Count; ++i)
 			RunEquipOrder(sm_equipOrders[i]);
     }
-
- //   void handleVisualizeMoveOrdersOnClient()
-	//{
-	//	for (int i = 0; i < sm_visualizeMoveOrders.Count; ++i)
-	//	{
-	//		var order = sm_visualizeMoveOrders[i];
-	//		MovementManager.OrderMoveVisualize(order);
-	//	}
-	//	sm_visualizeMoveOrders.Clear();
-	//}
 
     void handleEquipOrdersOnClient()
     {
@@ -254,26 +265,6 @@ public class SyncManager : NetworkBehaviour
 		}
 		sm_pickupOrders.Clear();
 	}
-
-	//void handleAttackOrdersOnClient()
-	//{
-	//	for (int i = 0; i < sm_attackOrders.Count; ++i)
-	//	{
-	//		//var order = sm_attackOrders[i];
-	//		//TODO: visualize attacks
-	//	}
-	//	sm_attackOrders.Clear();
-	//}
-
-	//void handleAttackOrdersOnServer()
-	//{
-	//	for (int i = 0; i < sm_attackOrders.Count; ++i)
-	//	{
-	//		var order = sm_attackOrders[i];
-	//		MovementManager.OrderAttack(order);
-	//	}
-	//	sm_attackOrders.Clear();
-	//}
 
 	void handleActionOrdersOnClient()
 	{
@@ -330,10 +321,9 @@ public class SyncManager : NetworkBehaviour
 	void EndServerTurn() // finishes the server side turn
 	{
 		handleActionOrdersOnServer();
-		//handleMoveOrdersOnServer();
-		//handleAttackOrdersOnServer();
         handleEquipOrdersOnServer();
         MovementManager.RunServerTurn();
+		SendEquipOrdersToClients();
 		sm_serverData.StartVisualization();
 		SendVisualizeOrdersToClients();
 		Debug.Log("start visualization");
@@ -344,13 +334,12 @@ public class SyncManager : NetworkBehaviour
 	{
 		Debug.Log("end visualization");
 		SendPickupOrdersToClients();
-		SendDeathOrdersToClients();
-        SendEquipOrdersToClients();
 
 		sm_currentTurn++;
 		SyncTurnNumber();
 		m_lastSync = Time.realtimeSinceStartup;
 		sm_serverData.m_turnInProgress = false;
+		m_lastSync = Time.realtimeSinceStartup;
 	}
 
 	IEnumerator WaitForClientVisualizationCoRoutine()
@@ -373,20 +362,6 @@ public class SyncManager : NetworkBehaviour
 
 		sm_clientData.m_turnInProgress = true;
 		sm_clientData.m_receivedInput = false;
-
-		//var attackMsg = new AttackOrderMessage();
-		//AttackOrder[] attackOrders = sm_attackOrders.ToArray();
-		//sm_attackOrders.Clear();
-		//attackMsg.m_orders = attackOrders;
-		//attackMsg.m_clientID = sm_clientData.m_clientID;
-		//sm_clientData.m_connection.Send((short)msgType.attackOrder, attackMsg);
-
-		//var msg = new MoveOrderMessage();
-		//MoveOrder[] orders = sm_moveOrders.ToArray();
-		//sm_moveOrders.Clear();
-		//msg.m_orders = orders;
-		//msg.m_clientID = sm_clientData.m_clientID;
-		//sm_clientData.m_connection.Send((short)msgType.moveOrder, msg);
 
         var equipMsg = new EquipOrderMessage();
         EquipOrder[] equipOrders = sm_equipOrders.ToArray();
@@ -431,14 +406,6 @@ public class SyncManager : NetworkBehaviour
 			conn.Send((short)msgType.turnSync, msg);
 	}
 
-	void SendDeathOrdersToClients()
-	{
-		var msg = new DeathMessage();
-		msg.m_orders = sm_deathOrders.ToArray();
-		sm_deathOrders.Clear();
-		NetworkServer.SendToAll((short)msgType.death, msg);
-	}
-
     void SendEquipOrdersToClients()
     {
         var msg = new EquipOrderMessage();
@@ -461,25 +428,6 @@ public class SyncManager : NetworkBehaviour
 	{
 	}
 
-	//void OnServerReceiveMoveOrders(NetworkMessage msg) // handles move order data received from client
-	//{
-	//	var moveOrderMessage = msg.ReadMessage<MoveOrderMessage>();
-
-	//	var playerData = GetPlayerDataFromID(moveOrderMessage.m_clientID);
-	//	if (playerData != null)
-	//	{
-	//		playerData.m_receivedMoveInput = true;
-	//		for (int i = 0; i < moveOrderMessage.m_orders.Length; ++i)
-	//		{
-	//			var order = moveOrderMessage.m_orders[i];
-	//			if (order.IsValid())
-	//				sm_moveOrders.Add(order);
-	//		}
-	//	}
-	//	else
-	//		Debug.Log("Can't find player data for client ID: " + moveOrderMessage.m_clientID);
-	//}
-
     private void OnServerReceiveChatMessage(NetworkMessage netMsg)
     {
         NetworkServer.SendToAll((short)msgType.chatMessage, netMsg.ReadMessage<ChatMessage>());
@@ -492,6 +440,7 @@ public class SyncManager : NetworkBehaviour
 		ConnectionMessage msg = new ConnectionMessage();
 		msg.m_clientID = sm_clientData.m_clientID;
 		sm_clientData.m_connection.Send((short)msgType.visualize, msg);
+		m_lastSync = Time.realtimeSinceStartup;
 	}
 
 	private void OnServerReceiveVisualizeDone(NetworkMessage netMsg)
@@ -512,13 +461,6 @@ public class SyncManager : NetworkBehaviour
         m_chatManager.AddMessage(netMsg.ReadMessage<ChatMessage>().m_message);
     }
 
-	void OnClientReceiveDeath(NetworkMessage msg)
-	{
-		var deathMsg = msg.ReadMessage<DeathMessage>();
-		for (int i = 0; i < deathMsg.m_orders.Length; ++i)
-			MovementManager.KillObject(deathMsg.m_orders[i].m_targetID);
-	}
-
 	void OnClientReceiveTurnSync(NetworkMessage msg)
 	{
 		var syncMsg = msg.ReadMessage<TurnSyncMessage>();
@@ -526,13 +468,6 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_receivedInput = true;
 		sm_clientData.m_turnInProgress = false;
 	}
-
-	//void OnClientReceiveVisualizationOrders(NetworkMessage msg) // handles received move visualization order data on client
-	//{
-	//	var visualizeMoveOrderMessage = msg.ReadMessage<MoveOrderMessage>();
-	//	sm_visualizeMoveOrders.AddRange(visualizeMoveOrderMessage.m_orders);
-	//	handleVisualizeMoveOrdersOnClient();
-	//}
 
     void OnClientReceiveEquipOrders(NetworkMessage msg)
     {
@@ -594,34 +529,6 @@ public class SyncManager : NetworkBehaviour
 		int clientID = connectMsg.m_clientID;
 		sm_clientData.m_clientID = clientID;
 	}
-	
-
-	//void OnServerReceiveAttackOrders(NetworkMessage msg)
-	//{
-	//	var attackMsg = msg.ReadMessage<AttackOrderMessage>();
-
-	//	var playerData = GetPlayerDataFromID(attackMsg.m_clientID);
-	//	if (playerData != null)
-	//	{
-	//		playerData.m_receivedAttackInput = true;
-	//		for(int i = 0; i < attackMsg.m_orders.Length; ++i)
-	//		{
-	//			var order = attackMsg.m_orders[i];
-	//			if(order.IsValid())
-	//				sm_attackOrders.Add(order);
-	//		}
-	//	}
-	//	else
-	//		Debug.Log("Can't find player data for client ID: " + attackMsg.m_clientID);
-
-	//}
-
-	//void OnClientReceiveAttackOrders(NetworkMessage msg)
-	//{
-	//	var attackMsg = msg.ReadMessage<AttackOrderMessage>();
-	//	sm_attackOrders.AddRange(attackMsg.m_orders);
-	//	handleAttackOrdersOnClient();
-	//}
 
 	void OnClientReceivePickupOrders(NetworkMessage msg) // handle received item pickup orders on client
 	{
@@ -638,45 +545,28 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.Send((short)msgType.chatMessage, msg);
     }
 
-	//public static void AddMoveOrder(Vector2i targetGridPos, int moverID)
-	//{
-	//	if (sm_clientData.m_turnInProgress) // block input when turn processing is in progress. TODO: visualize this somehow
-	//		return;
-
-	//	var order = new MoveOrder(targetGridPos, moverID);
-	//	sm_moveOrders.Add(order);
-	//}
-
-	public static void AddDeathOrder(int targetID)
+	public static bool CheckInputPossible(bool playSounds = true, bool onlyCancelSounds = false)
 	{
-		var order = new DeathOrder(targetID);
-		sm_deathOrders.Add(order);
+		if (GetTurnProgress())
+		{
+			if(playSounds)
+				sm_audioSource.PlayOneShot(sm_unsuccesfullInput);
+			return false;
+		}
+		if(playSounds && ! onlyCancelSounds)
+			sm_audioSource.PlayOneShot(sm_succesfullInput);
+		return true;
 	}
 
     public static void AddEquipOrder(int itemID, int playerID, bool equipType)
     {
-        if (sm_clientData.m_turnInProgress) // block input when turn processing is in progress. TODO: visualize this somehow
-            return;
-
         var order = new EquipOrder(equipType, itemID, playerID);
         sm_equipOrders.Add(order);
     }
-
- //   public static void AddAttackOrder(int targetID, int moverID)
-	//{
-	//	if (sm_clientData.m_turnInProgress) // block input when turn processing is in progress. TODO: visualize this somehow
-	//		return;
-
-	//	var order = new AttackOrder(moverID, targetID);
-	//	sm_attackOrders.Add(order);
-	//}
-
-	public static void AddAction(ActionData action, bool ClearPrevious = true)
+	
+	public static void AddAction(ActionData action, bool ClearPrevious = true) // Version that ignores turn progress
 	{
-		if (sm_clientData.m_turnInProgress && !sm_isServer)
-			return;
-
-		if(ClearPrevious)
+		if (ClearPrevious)
 			sm_outgoingActions.Clear();
 
 		sm_outgoingActions.Add(action);
@@ -686,18 +576,6 @@ public class SyncManager : NetworkBehaviour
 	{
 		sm_outgoingVisualizeActions.Add(action);
 	}
-
-	public static void AddServerAttackOrder(int targetID, int moverID) // Version that ignores turn in progress
-	{
-		var order = new AttackOrder(moverID, targetID);
-		sm_attackOrders.Add(order);
-	}
-
-	//public static void AddMoveVisualizationOrder(Vector2i targetGridPos, int moverID)
-	//{
-	//	var order = new MoveOrder(targetGridPos, moverID);
-	//	sm_visualizeMoveOrders.Add(order);
-	//}
 
 	// add new item pickup order to input list
 	public static void AddPickupOrder(int moverID, int itemID)

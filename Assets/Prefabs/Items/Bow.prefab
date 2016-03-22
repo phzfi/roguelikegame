@@ -95,8 +95,6 @@ GameObject:
   - 114: {fileID: 11477904}
   - 114: {fileID: 11433240}
   - 114: {fileID: 11480794}
-  - 114: {fileID: 11403194}
-  - 114: {fileID: 11446734}
   - 114: {fileID: 11457016}
   - 114: {fileID: 11499114}
   m_Layer: 0
@@ -254,23 +252,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 1
---- !u!114 &11403194
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 194028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d884946a504d85444b202cea254948f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_targetingType: 1
-  m_targetEnemies: 1
-  m_targetFriendlies: 0
-  m_targetSelf: 0
-  m_targetingMaxRange: 10
-  ID: 18446744073709551615
 --- !u!114 &11433240
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,36 +264,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_tooltip: {fileID: 175626, guid: 36879e06ff64652479fd9736886d233b, type: 2}
---- !u!114 &11446734
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 194028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 11403194}
-          m_MethodName: OnMouseClick
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 0
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
 --- !u!114 &11457016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -324,11 +275,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d63ff75e83bf1d440a3784be32987630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_maxRange: 10
+  m_maxRange: 5
   m_damage: 2
   m_velocity: 14
   m_rangedSound: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
   m_projectilePrefab: {fileID: 155786, guid: da5f265d9a79e40098c12ae1e606e3a6, type: 2}
+  m_attackAction: {fileID: 0}
+  m_damageVisualizeAction: {fileID: 0}
 --- !u!114 &11469688
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -403,6 +356,7 @@ MonoBehaviour:
   m_returnTo: {fileID: 0}
   m_changeIndex: 0
   m_itemType: 0
+  m_twoHandedWeapon: 0
 --- !u!114 &11481820
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -438,7 +392,8 @@ MonoBehaviour:
   m_agility: 0
   m_intelligence: 0
   m_vitality: 0
-  m_typeOfItem: 6
+  m_twoHandedWeapon: 1
+  m_typeOfItem: 0
 --- !u!114 &11499114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -580,6 +535,18 @@ Prefab:
       value: 
       objectReference: {fileID: 21300000, guid: e8a64636f3f6ff841b16510b53406c43,
         type: 3}
+    - target: {fileID: 0}
+      propertyPath: m_typeOfItem
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_maxRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_twoHandedWeapon
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 194028}

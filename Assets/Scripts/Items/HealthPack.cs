@@ -18,7 +18,7 @@ public class HealthPack : MonoBehaviour
     {
         var player = CharManager.GetLocalPlayer();
         var combatSystem = player.GetComponent<CombatSystem>();
-        combatSystem.ChangeHP(m_heals);
+        combatSystem.Heal(m_heals);
         var inventory = player.GetComponent<Inventory>();
         for (int i = 0; i < inventory.m_items.Count; ++i)
         {

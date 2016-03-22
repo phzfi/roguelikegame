@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class TileRenderer : MonoBehaviour {
 
 	public string m_name;
-	public enum TileRendererType { FogOfWarOpen = 0, Movement, FogOfWarClosed, MinimapWalls, MinimapItems, MinimapPlayers};
+	public enum TileRendererType { FogOfWarOpen = 0, Movement, FogOfWarClosed, MinimapWalls, MinimapItems, MinimapPlayers, Range };
 	public TileRendererType m_type;
 	public float m_tileSize = .5f;
 
