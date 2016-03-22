@@ -72,7 +72,7 @@ public class Inventory : MonoBehaviour
 			Debug.Log("Picked up item: " + itemName + ", ID: " + item.GetComponent<Item>().ID);
             if (!m_player.isLocalPlayer)
             {
-                item.GetComponent<MeshRenderer>().enabled = false;
+                item.GetComponent<Item>().Hide();
                 return true;
             }
 
@@ -83,7 +83,7 @@ public class Inventory : MonoBehaviour
                 else
                 {
                     UpdatePotionCount();
-					item.GetComponent<MeshRenderer>().enabled = false;
+					item.GetComponent<Item>().Hide();
 				}
             }
             else
@@ -93,7 +93,7 @@ public class Inventory : MonoBehaviour
         }
 		if (itemName == "Coins")
 		{
-			item.GetComponent<MeshRenderer>().enabled = false;
+			item.GetComponent<Item>().Hide();
 			m_amountOfCoins += 1;
 			Debug.Log(m_amountOfCoins);
 			m_audioSource.PlayOneShot(m_coinPickupAudio);

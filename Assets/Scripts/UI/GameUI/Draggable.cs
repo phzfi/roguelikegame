@@ -94,6 +94,16 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                             outline.effectColor = new Color(1, 0, 0, 1);
                             outline.enabled = true;
                         }
+						if(m_itemType == Item.ItemType.SHIELD)
+						{
+							var weaponSlot = slot.GetEquipmentSlot(Item.ItemType.WEAPON);
+							if(weaponSlot.m_containsItem)
+                            {
+								var weaponSlotItem = weaponSlot.GetComponentsInChildren<Draggable>()[0];
+								if (weaponSlotItem.m_twoHandedWeapon)
+									outline.effectColor = new Color(1, 0, 0, 1);
+							}
+						}
                     }
                 }
             }

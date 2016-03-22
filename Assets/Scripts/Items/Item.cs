@@ -58,6 +58,18 @@ public class Item : NetworkBehaviour
 		return true;
 	}
 
+	public void Hide()
+	{
+		for (int i = 0; i < transform.childCount; ++i)
+			transform.GetChild(i).gameObject.SetActive(false);
+	}
+
+	public void Show()
+	{
+		for (int i = 0; i < transform.childCount; ++i)
+			transform.GetChild(i).gameObject.SetActive(true);
+	}
+
 	void OnDestroy()
 	{
 		ItemManager.Unregister(ID);

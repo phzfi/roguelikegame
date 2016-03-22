@@ -281,6 +281,7 @@ MonoBehaviour:
   m_rangedSound: {fileID: 8300000, guid: abd7bed3e8594964a95f73d400f6572b, type: 3}
   m_projectilePrefab: {fileID: 155786, guid: da5f265d9a79e40098c12ae1e606e3a6, type: 2}
   m_attackAction: {fileID: 0}
+  m_damageVisualizeAction: {fileID: 0}
 --- !u!114 &11469688
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -355,6 +356,7 @@ MonoBehaviour:
   m_returnTo: {fileID: 0}
   m_changeIndex: 0
   m_itemType: 0
+  m_twoHandedWeapon: 0
 --- !u!114 &11481820
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -390,6 +392,7 @@ MonoBehaviour:
   m_agility: 0
   m_intelligence: 0
   m_vitality: 0
+  m_twoHandedWeapon: 1
   m_typeOfItem: 0
 --- !u!114 &11499114
 MonoBehaviour:
@@ -539,6 +542,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_maxRange
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_twoHandedWeapon
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

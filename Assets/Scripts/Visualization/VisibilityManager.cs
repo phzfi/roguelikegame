@@ -61,7 +61,7 @@ public class VisibilityManager : MonoBehaviour
 		bool hideMoveRange = false;
 
 		var player = CharManager.GetLocalPlayer();
-		if (player && !player.m_mover.IsMoving )
+		if (player && !SyncManager.GetTurnProgress())
 		{
 			showMoveRange = !moveRangeVisible;
 			moveRangeVisible = true;
@@ -72,9 +72,11 @@ public class VisibilityManager : MonoBehaviour
 			moveRangeVisible = false;
 		}
 
+
 		if (showMoveRange)
 		{
 			UpdateMoveRange();
+			UpdateRangedIndicator();
 			sm_moveRangeRenderer.Show();
 			sm_rangedIndicatorRenderer.Show();
 		}
@@ -94,17 +96,22 @@ public class VisibilityManager : MonoBehaviour
 		{
 			sm_moveRangeRenderer.CreateMovementRangeMesh(sm_moveRangeMap);
 		}
-		UpdateRangedIndicator();
 	}
 
 	public static void UpdateRangedIndicator()
 	{
 		var player = CharManager.GetLocalPlayer();
-		var rangedAttack = player.m_equipment.GetRangedAttack();
-		if (rangedAttack == null)
+		if (player == null || player.m_equipment == null)
 			return;
-
+		var rangedAttack = player.m_equipment.GetRangedAttack();
 		HashSet<Vector2i> rangedTiles = new HashSet<Vector2i>();
+
+		if (rangedAttack == null)
+		{
+			sm_rangedIndicatorRenderer.CreateMovementRangeMesh(rangedTiles);
+			return;
+		}
+
 		var pos = player.m_mover.m_gridPos;
 		int range = (int)rangedAttack.m_maxRange;
 		for(int x = -range; x <= range; ++x)

@@ -10,7 +10,7 @@ public class SyncManager : NetworkBehaviour
 {
     public static List<string> sm_chatLog = new List<string>();
 
-	private float m_lastSync = -99.0f;
+	public static float m_lastSync = -99.0f;
 
 	private static ClientData sm_clientData; // stores all data relevant only to client, null if server
 	private static ServerData sm_serverData; // stores all data relevant only to server, null if client
@@ -73,10 +73,21 @@ public class SyncManager : NetworkBehaviour
 		}
 	}
 
+	public static bool GetTurnProgress()
+	{
+		if (sm_isServer)
+			return sm_serverData.m_turnInProgress;
+		else
+			return sm_clientData.m_turnInProgress;
+	}
+
 	public bool GetTurnProgress(out float progress)
 	{
 		progress = Mathf.Clamp((Time.realtimeSinceStartup - m_lastSync) / m_syncRate, 0, 1);
-		return sm_serverData.m_turnInProgress;
+		if (sm_isServer)
+			return sm_serverData.m_turnInProgress;
+		else
+			return sm_clientData.m_turnInProgress;
     }
 
 	public void InitOnServer() // initialize server side sync logic
@@ -95,6 +106,7 @@ public class SyncManager : NetworkBehaviour
 		sm_isServer = true;
 		sm_running = true;
 		gameObject.SetActive(true);
+		m_lastSync = -99.0f;
 		//NetworkServer.Spawn(gameObject);
 	}
 
@@ -120,6 +132,7 @@ public class SyncManager : NetworkBehaviour
 
 		var msg = new ConnectionMessage();
 		msg.m_clientID = -1;
+		m_lastSync = -99.0f;
 		sm_clientData.m_connection.Send((short)msgType.connected, msg); // send netId of this object to server so that it can keep track of connections using it
 	}
 
@@ -491,6 +504,7 @@ public class SyncManager : NetworkBehaviour
 		ConnectionMessage msg = new ConnectionMessage();
 		msg.m_clientID = sm_clientData.m_clientID;
 		sm_clientData.m_connection.Send((short)msgType.visualize, msg);
+		m_lastSync = Time.realtimeSinceStartup;
 	}
 
 	private void OnServerReceiveVisualizeDone(NetworkMessage netMsg)
