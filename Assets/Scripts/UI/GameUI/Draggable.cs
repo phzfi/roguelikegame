@@ -16,6 +16,8 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
 	[HideInInspector]
 	public Item.ItemType m_itemType;
+	[HideInInspector]
+	public bool m_twoHandedWeapon;
 
 	private GameObject m_slots;
     private GameObject m_inventoryCanvas;
@@ -26,7 +28,9 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
         m_inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas");
         if (GetComponent<Item>() != null)
 		{
-			m_itemType = GetComponent<Item>().m_typeOfItem;
+			var item = GetComponent<Item>();
+            m_itemType = item.m_typeOfItem;
+			m_twoHandedWeapon = item.m_twoHandedWeapon && item.m_typeOfItem == Item.ItemType.WEAPON;
 		}
 
 		var panels = m_inventoryCanvas.transform.GetChild(0);
@@ -72,14 +76,20 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                 var outline = child.GetComponent<Outline>();
                 if (outline != null)
                 {
-                    if (child.GetComponent<Slot>() != null)
+					var slot = child.GetComponent<Slot>();
+                    if (slot != null)
                     {
-                        if (child.GetComponent<Slot>().m_itemType == m_itemType)
+                        if (slot.m_itemType == m_itemType)
                         {
                             outline.effectColor = new Color(0, 1, 0, 1);
                             outline.enabled = true;
                         }
-                        else
+						else if(m_twoHandedWeapon && slot.m_itemType == Item.ItemType.SHIELD)
+						{
+							outline.effectColor = new Color(1, 1, 0, 1);
+							outline.enabled = true;
+						}
+						else
                         {
                             outline.effectColor = new Color(1, 0, 0, 1);
                             outline.enabled = true;

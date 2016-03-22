@@ -18,6 +18,7 @@ public class Item : NetworkBehaviour
     public int m_intelligence = 0;
     [SyncVar]
     public int m_vitality = 0;
+	public bool m_twoHandedWeapon = false;
 
     [SyncVar]
 	private bool m_onMap = true;

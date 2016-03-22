@@ -218,9 +218,15 @@ public class SyncManager : NetworkBehaviour
 			return;
 		}
 		if (order.m_equipType && !equipment.m_equipment.Contains(item.gameObject)) // make sure we haven't already equipped this item (host will have run this in server-side code already)
+		{
 			equipment.m_equipment.Add(item.gameObject);
+			equipment.m_playerStrength += item.m_strength;
+		}
 		else if (!order.m_equipType)
+		{
 			equipment.m_equipment.Remove(item.gameObject);
+			equipment.m_playerStrength -= item.m_strength;
+		}
 	}
 
     void handleEquipOrdersOnServer()
