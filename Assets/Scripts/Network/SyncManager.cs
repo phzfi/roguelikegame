@@ -88,19 +88,18 @@ public class SyncManager : NetworkBehaviour
 
 	public static bool GetTurnProgress()
 	{
-		if (sm_isServer)
+		if (sm_isServer && sm_serverData != null)
 			return sm_serverData.m_turnInProgress;
-		else
+		else if (sm_clientData != null)
 			return sm_clientData.m_turnInProgress;
+		else
+			return true;
 	}
 
 	public bool GetTurnProgress(out float progress)
 	{
 		progress = Mathf.Clamp((Time.realtimeSinceStartup - m_lastSync) / m_syncRate, 0, 1);
-		if (sm_isServer)
-			return sm_serverData.m_turnInProgress;
-		else
-			return sm_clientData.m_turnInProgress;
+		return GetTurnProgress();
     }
 
 	public void InitOnServer() // initialize server side sync logic

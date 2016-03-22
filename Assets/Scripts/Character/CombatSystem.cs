@@ -69,13 +69,13 @@ public class CombatSystem : NetworkBehaviour
 	private int GetDamage() // Get the attack damage of this object, modified by weapons etc.
 	{
         var actualDamage = GetReducedDamage(m_damage + Mathf.CeilToInt(m_equipment.m_playerStrength * 0.25f));
-		return actualDamage; // TODO: damage modifiers
+		return actualDamage;
 	}
 
 	public int GetReducedDamage(int incomingDamage) // Modify incoming attack damage by damage reduction from armor
 	{
         var actualDamage = incomingDamage - Mathf.CeilToInt(0.25f * m_equipment.m_playerVitality);
-		return actualDamage; // TODO: damage reduction
+		return Mathf.Clamp(actualDamage, 0, incomingDamage);
 	}
 
     private void PlayAttackSound()
