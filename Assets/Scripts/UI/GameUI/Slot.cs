@@ -17,7 +17,7 @@ public class Slot : MonoBehaviour, IDropHandler
 
     public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
-    public void Start()
+    public void Awake()
     {
         var player = CharManager.GetLocalPlayer();
         if (player == null)
@@ -58,7 +58,7 @@ public class Slot : MonoBehaviour, IDropHandler
                 {
                     m_containsItem = true;
                 }
-                else if(m_containsItem)
+                else if(m_containsItem && transform.childCount > 1)
                 {
                     var oldEquippedItem = transform.GetChild(transform.childCount - 1);
                     oldEquippedItem.SetParent(item.m_returnTo.transform);

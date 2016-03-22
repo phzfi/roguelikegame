@@ -134,6 +134,7 @@ public class Inventory : MonoBehaviour
             var slot = inventorySlots.transform.GetChild(i).GetComponent<Slot>();
             if(!slot.m_containsItem)
             {
+                item.GetComponent<Draggable>().m_returnTo = slot.transform;
                 item.transform.SetParent(slot.transform);
                 item.GetComponent<RectTransform>().localScale = Vector3.one;
                 slot.m_containsItem = true;

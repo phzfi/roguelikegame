@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
 	[HideInInspector]
 	public bool m_isDraggedButton = false;
@@ -110,6 +110,51 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
             }
 
             GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.clickCount == 2 && eventData.button == PointerEventData.InputButton.Left)
+        {
+            var action = GetComponent<Action>();
+            if(action != null)
+            {
+                action.OnMouseClick();
+            }
+            else
+            {
+                var item = GetComponent<Item>();
+                if(item != null)
+                {
+                    for(int i = 0; i < m_slots.transform.childCount; i++)
+                    {
+                        var slot = m_slots.transform.GetChild(i).GetComponent<Slot>();
+                        if (slot.m_itemType == item.m_typeOfItem)
+                        {
+                            if(slot.m_containsItem)
+                            {
+                                var inventorySlot = m_returnTo;
+                                var oldEquippedItem = slot.transform.GetChild(1).GetComponent<Draggable>();
+                                oldEquippedItem.m_returnTo = m_returnTo;
+                                m_returnTo = slot.transform;
+                                transform.SetParent(m_returnTo);
+                                oldEquippedItem.transform.SetParent(oldEquippedItem.m_returnTo);
+                                slot.UnequipItem(oldEquippedItem.gameObject);
+                            }
+                            else
+                            {
+                                m_returnTo.GetComponent<Slot>().m_containsItem = false;
+                                m_returnTo = slot.transform;
+                                slot.GetComponent<Slot>().m_containsItem = true;
+                                transform.SetParent(m_returnTo);
+                            }
+                            slot.EquipItem(item.gameObject);
+                        }
+                    }
+                }
+            }
+            eventData.clickCount = 0;
         }
     }
 }
