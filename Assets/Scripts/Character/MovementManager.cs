@@ -20,6 +20,9 @@ public class MovementManager : MonoBehaviour
 
 	public static void InputAttackOrder(int targetID)
 	{
+		if (!SyncManager.CheckInputPossible())
+			return;
+
 		for (int i = 0; i < CharManager.Objects.Count; ++i)
 		{
 			var controller = CharManager.Objects[i];

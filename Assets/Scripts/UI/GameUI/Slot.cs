@@ -68,7 +68,10 @@ public class Slot : MonoBehaviour, IDropHandler
         Draggable item = eventData.pointerDrag.GetComponent<Draggable>();
         if (item != null && !item.m_isDraggedButton)
 		{
-			if(item.m_itemType == Item.ItemType.SHIELD)
+			if (!SyncManager.CheckInputPossible())
+				return;
+
+			if (item.m_itemType == Item.ItemType.SHIELD)
 			{
 				var weaponSlot = GetEquipmentSlot(Item.ItemType.WEAPON);
 				if(weaponSlot.m_containsItem)

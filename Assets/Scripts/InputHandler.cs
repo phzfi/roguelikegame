@@ -102,8 +102,11 @@ public class InputHandler : Singleton<InputHandler>
 
 		if (Input.GetMouseButtonUp(1))
 		{
+
 			if (m_actionManager.m_currentlyTargeting) // If action targeting is active, use action instead of attacking or moving
 			{
+				if (!SyncManager.CheckInputPossible())
+					return;
 				m_actionManager.TargetPosition(mouseGridPos);
 			}
 			else
@@ -114,6 +117,8 @@ public class InputHandler : Singleton<InputHandler>
 					var target = CharManager.Objects[i];
 					if (mouseGridPos == target.m_mover.m_gridPos)
 					{
+						if (!SyncManager.CheckInputPossible())
+							return;
 						attack = true;
 						MovementManager.InputAttackOrder(target.ID);
 						break;
@@ -122,6 +127,8 @@ public class InputHandler : Singleton<InputHandler>
 
 				if (!attack)
 				{
+					if (!SyncManager.CheckInputPossible(true, true))
+						return;
 					MovementManager.InputMoveOrder(mouseGridPos);
 				}
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);

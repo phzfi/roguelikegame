@@ -115,6 +115,17 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
+			if(!SyncManager.CheckInputPossible())
+			{
+				for (int i = 0; i < m_slots.transform.childCount; i++)
+				{
+					var child = m_slots.transform.GetChild(i);
+					var outline = child.GetComponent<Outline>();
+					transform.SetParent(m_returnTo);
+					outline.enabled = false;
+				}
+				return;
+			}
             transform.SetParent(m_returnTo);
             if (m_isDraggedButton)
             {
