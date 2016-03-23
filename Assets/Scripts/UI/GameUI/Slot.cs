@@ -17,17 +17,22 @@ public class Slot : MonoBehaviour, IDropHandler
 
     public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
-    public void Awake()
+    public void Start()
+    {
+        Invoke("Setup", 0.1f);
+        m_audioSource = gameObject.AddComponent<AudioSource>();
+    }
+
+    void Setup()
     {
         var player = CharManager.GetLocalPlayer();
         if (player == null)
             Debug.LogError("Could not find local player for slot");
         m_equipment = player.GetComponent<Equipment>();
-		m_inventory = player.GetComponent<Inventory>();
+        m_inventory = player.GetComponent<Inventory>();
         m_playerID = player.ID;
         if (m_equipment == null)
             Debug.LogError("Could not find equipment for slot");
-        m_audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void EquipItem(GameObject itemName)

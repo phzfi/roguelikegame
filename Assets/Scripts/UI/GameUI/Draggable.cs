@@ -68,22 +68,17 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
             for (int i = 0; i < m_slots.transform.childCount; i++)
             {
-                var child = m_slots.transform.GetChild(i);
-                var outline = child.GetComponent<Outline>();
-                if (outline != null)
+                var slot = m_slots.transform.GetChild(i);
+                
+                if (slot.GetComponent<Slot>() != null && slot.GetComponent<Image>().color.a == 1)
                 {
-                    if (child.GetComponent<Slot>() != null)
+                    if (slot.GetComponent<Slot>().m_itemType == m_itemType)
                     {
-                        if (child.GetComponent<Slot>().m_itemType == m_itemType)
-                        {
-                            outline.effectColor = new Color(0, 1, 0, 1);
-                            outline.enabled = true;
-                        }
-                        else
-                        {
-                            outline.effectColor = new Color(1, 0, 0, 1);
-                            outline.enabled = true;
-                        }
+                        slot.GetComponent<Image>().color = new Color(0, 1, 0, 1);
+                    }
+                    else
+                    {
+                        slot.GetComponent<Image>().color = new Color(1, 0, 0, 1);
                     }
                 }
             }
@@ -104,9 +99,13 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
             for (int i = 0; i < m_slots.transform.childCount; i++)
             {
-                var child = m_slots.transform.GetChild(i);
-                var outline = child.GetComponent<Outline>();
-                outline.enabled = false;
+                var slot = m_slots.transform.GetChild(i);
+                if(slot.GetComponent<Image>().color.a == 1)
+                {
+                    var img = slot.GetComponent<Image>();
+                    img.color = new Color(1, 1, 1, 1);
+                }
+                
             }
 
             GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -150,6 +149,10 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                                 transform.SetParent(m_returnTo);
                             }
                             slot.EquipItem(item.gameObject);
+                            var sprite = item.GetComponent<Image>();
+                            Color col = sprite.color;
+                            col.a = 0f;
+                            sprite.color = col;
                         }
                     }
                 }

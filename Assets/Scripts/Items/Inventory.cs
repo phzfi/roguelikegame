@@ -137,6 +137,10 @@ public class Inventory : MonoBehaviour
                 item.GetComponent<Draggable>().m_returnTo = slot.transform;
                 item.transform.SetParent(slot.transform);
                 item.GetComponent<RectTransform>().localScale = Vector3.one;
+                var sprite = item.GetComponent<Image>();
+                Color col = sprite.color;
+                col.a = 0f;
+                sprite.color = col;
                 slot.m_containsItem = true;
                 break;
             }
