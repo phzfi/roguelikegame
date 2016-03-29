@@ -15,7 +15,9 @@ public enum msgType : short
 	turnSync,
     equipOrder,
     chatMessage,
-	actionOrder
+	actionOrder,
+    localPlayerDeath,
+    endMatch
 } // start higher since unity reserves some message types
 
 public struct MoveOrder
@@ -169,6 +171,11 @@ public class TurnSyncMessage : MessageBase
 	public int m_turnNumber;
 }
 
+public class EmptyMessage : MessageBase
+{
+}
+
+
 public class ClientData
 {
 	public bool m_turnInProgress;
@@ -190,6 +197,7 @@ public class ServerData
 {
 	public List<PlayerData> m_playerData = new List<PlayerData>();
 	public bool m_turnInProgress;
+    public int m_deathCount = 0;
 
 	public bool ReceivedAllInput()
 	{

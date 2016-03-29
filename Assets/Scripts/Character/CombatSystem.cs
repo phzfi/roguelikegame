@@ -30,6 +30,7 @@ public class CombatSystem : NetworkBehaviour
 	private CharController m_controller;
     private AudioSource m_audioSource;
     private CharacterAnimation m_animator;
+    private SyncManager m_syncManager;
 
     public enum AttackStyle { MELEE, MAGE, RANGED };
 
@@ -47,7 +48,7 @@ public class CombatSystem : NetworkBehaviour
         m_audioSource = GetComponent<AudioSource>();
         m_animator = GetComponent<CharacterAnimation>();
 
-		var actionpool = GetComponent<ActionPool>();
+        var actionpool = GetComponent<ActionPool>();
 		m_attackVisualizeAction = gameObject.AddComponent<Action>();
 		m_attackVisualizeAction.Initialize();
 		m_attackVisualizeAction.m_useDelegate = VisualizeAttack;
@@ -187,6 +188,11 @@ public class CombatSystem : NetworkBehaviour
 		if (m_currentHp <= 0)
         {
             m_currentHp = 0;
+            if(gameObject.tag == "Player")
+            {
+                SyncManager.SendDeathMessage();
+                Debug.Log("Death in combatSystem");
+            }
 
 			ActionData action = new ActionData();
 			action.m_actionID = m_deathVisualizeAction.ID;
