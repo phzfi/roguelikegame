@@ -48,17 +48,13 @@ public class SyncManager : NetworkBehaviour
 		get { return sm_isServer; }
 	}
 
-	void Start()
-	{
-        m_chatManager = FindObjectOfType<ChatManager>();
-		m_turnLogicManager = FindObjectOfType<ClientTurnLogicManager>();
-	}
-
 	void Awake() // Set editor references to static ones. A bit dumb, maybe there's a better way.
 	{
 		sm_audioSource = m_audioSource;
 		sm_succesfullInput = m_succesfullInput;
 		sm_unsuccesfullInput = m_unsuccesfullInput;
+		m_chatManager = FindObjectOfType<ChatManager>();
+		m_turnLogicManager = FindObjectOfType<ClientTurnLogicManager>();
 	}
 
 	public override void OnStartServer()
