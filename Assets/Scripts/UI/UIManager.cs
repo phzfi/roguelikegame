@@ -71,18 +71,54 @@ public class UIManager : MonoBehaviour
             UseHotkey(9);
     }
 
+    void ToggleInventoryAlpha(float alpha)
+    {
+        var inventory = m_inventoryPanel.GetComponentsInChildren<Image>();
+        var texts = m_inventoryPanel.GetComponentsInChildren<Text>();
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            Color col = inventory[i].color;
+            col.a = alpha;
+            inventory[i].color = col;
+        }
+        for (int i = 0; i < texts.Length; i++)
+        {
+            Color col = texts[i].color;
+            col.a = alpha;
+            texts[i].color = col;
+        }
+    }
+
+    void ToggleEquipmentAlpha(float alpha)
+    {
+        var equipment = m_equipmentPanel.GetComponentsInChildren<Image>();
+        var texts = m_equipmentPanel.GetComponentsInChildren<Text>();
+        for (int i = 0; i < equipment.Length; i++)
+        {
+            Color col = equipment[i].color;
+            col.a = alpha;
+            equipment[i].color = col;
+        }
+        for (int i = 0; i < texts.Length; i++)
+        {
+            Color col = texts[i].color;
+            col.a = alpha;
+            texts[i].color = col;
+        }
+    }
+
     public void ToggleInventory()
     {
         if(!ChatManager.sm_chatOpen)
         {
             if (!sm_inventoryOpen)
             {
-                m_inventoryPanel.SetActive(true);
+                ToggleInventoryAlpha(1f);
                 sm_inventoryOpen = true;
             }
             else if (sm_inventoryOpen)
             {
-                m_inventoryPanel.SetActive(false);
+                ToggleInventoryAlpha(0f);
                 sm_inventoryOpen = false;
                 if (Tooltip.sm_tooltipOpen)
                 {
@@ -101,12 +137,12 @@ public class UIManager : MonoBehaviour
         {
             if (!sm_equipmentOpen)
             {
-                m_equipmentPanel.SetActive(true);
+                ToggleEquipmentAlpha(1f);
                 sm_equipmentOpen = true;
             }
             else if (sm_equipmentOpen)
             {
-                m_equipmentPanel.SetActive(false);
+                ToggleEquipmentAlpha(0f);
                 sm_equipmentOpen = false;
                 if (m_tooltip.activeInHierarchy)
                     m_tooltip.SetActive(false);

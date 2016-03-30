@@ -20,6 +20,12 @@ public class Slot : MonoBehaviour, IDropHandler
 
     public void Start()
     {
+        Invoke("Setup", 0.1f);
+        m_audioSource = gameObject.AddComponent<AudioSource>();
+    }
+
+    void Setup()
+    {
         var player = CharManager.GetLocalPlayer();
         if (player == null)
             Debug.LogError("Could not find local player for slot");
@@ -28,7 +34,6 @@ public class Slot : MonoBehaviour, IDropHandler
         m_playerID = player.ID;
         if (m_equipment == null)
             Debug.LogError("Could not find equipment for slot");
-        m_audioSource = gameObject.AddComponent<AudioSource>();
 		m_inventorySlots = GameObject.FindGameObjectWithTag("InventorySlots");
 		if(m_inventorySlots == null)
 			Debug.LogError("Could not find inventory slots for slot");
@@ -67,7 +72,7 @@ public class Slot : MonoBehaviour, IDropHandler
     {
         Draggable item = eventData.pointerDrag.GetComponent<Draggable>();
         if (item != null && !item.m_isDraggedButton)
-		{
+        {
 			if (!SyncManager.CheckInputPossible())
 				return;
 
@@ -82,18 +87,18 @@ public class Slot : MonoBehaviour, IDropHandler
 				}
 			}
 			item.m_returnTo.GetComponent<Slot>().m_containsItem = false;
-			if (m_itemType == item.m_itemType)
+            if (m_itemType == item.m_itemType)
             {
                 if (!m_containsItem)
                 {
                     m_containsItem = true;
                 }
-                else if(m_containsItem)
+                else if(m_containsItem && transform.childCount > 1)
                 {
                     var oldEquippedItem = transform.GetChild(transform.childCount - 1);
                     oldEquippedItem.SetParent(item.m_returnTo.transform);
 					item.m_returnTo.GetComponent<Slot>().m_containsItem = true;
-					UnequipItem(oldEquippedItem.gameObject);
+                    UnequipItem(oldEquippedItem.gameObject);
                 }
 				if(item.m_twoHandedWeapon)
 				{

@@ -114,10 +114,13 @@ public class LevelMapManager : NetworkBehaviour
             Vector3 pos = MapGrid.GridToWorldPoint(gridPos, -1.0f);
             
             // Create item and place on map
-            GameObject obj = (GameObject)Instantiate(itemsToPlace[i], pos, Quaternion.identity);
+            GameObject obj = (GameObject)Instantiate(itemsToPlace[i], pos, itemsToPlace[i].transform.rotation);
             var item = obj.GetComponent<Item>();
             ItemManager.GetID(out item.ID);
             item.m_pos = MapGrid.WorldToGridPoint(pos);
+            Vector3 position = item.transform.position;
+            position.z = -0.05f;
+            item.transform.position = position;
             NetworkServer.Spawn(obj);
         }
     }

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
 	[HideInInspector]
 	public bool m_isDraggedButton = false;
@@ -72,39 +72,28 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
             for (int i = 0; i < m_slots.transform.childCount; i++)
             {
-                var child = m_slots.transform.GetChild(i);
-                var outline = child.GetComponent<Outline>();
-                if (outline != null)
+                var slot = m_slots.transform.GetChild(i).GetComponent<Slot>();
+				var image = slot.GetComponent<Image>();
+                
+                if (slot != null && image.color.a == 1)
                 {
-					var slot = child.GetComponent<Slot>();
-                    if (slot != null)
-                    {
-                        if (slot.m_itemType == m_itemType)
+                    if (slot.m_itemType == m_itemType)
+						image.color = new Color(0, 1, 0, 1);
+					else if(m_twoHandedWeapon && slot.m_itemType == Item.ItemType.SHIELD)
+						image.color = new Color(1, 1, 0, 1);
+                    else
+						image.color = new Color(1, 0, 0, 1);
+
+					if(m_itemType == Item.ItemType.SHIELD && !slot.m_isInventory) // Check that no two-handed weapon is equipped when equipping shield
+					{
+						var weaponSlot = slot.GetEquipmentSlot(Item.ItemType.WEAPON);
+						if(weaponSlot.m_containsItem)
                         {
-                            outline.effectColor = new Color(0, 1, 0, 1);
-                            outline.enabled = true;
-                        }
-						else if(m_twoHandedWeapon && slot.m_itemType == Item.ItemType.SHIELD)
-						{
-							outline.effectColor = new Color(1, 1, 0, 1);
-							outline.enabled = true;
+							var weaponSlotItem = weaponSlot.GetComponentsInChildren<Draggable>()[0];
+							if (weaponSlotItem.m_twoHandedWeapon)
+								image.color = new Color(1, 0, 0, 1);
 						}
-						else
-                        {
-                            outline.effectColor = new Color(1, 0, 0, 1);
-                            outline.enabled = true;
-                        }
-						if(m_itemType == Item.ItemType.SHIELD)
-						{
-							var weaponSlot = slot.GetEquipmentSlot(Item.ItemType.WEAPON);
-							if(weaponSlot.m_containsItem)
-                            {
-								var weaponSlotItem = weaponSlot.GetComponentsInChildren<Draggable>()[0];
-								if (weaponSlotItem.m_twoHandedWeapon)
-									outline.effectColor = new Color(1, 0, 0, 1);
-							}
-						}
-                    }
+					}
                 }
             }
             GetComponent<CanvasGroup>().blocksRaycasts = false;
@@ -124,12 +113,65 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
             for (int i = 0; i < m_slots.transform.childCount; i++)
             {
-                var child = m_slots.transform.GetChild(i);
-                var outline = child.GetComponent<Outline>();
-                outline.enabled = false;
+                var slot = m_slots.transform.GetChild(i);
+                if(slot.GetComponent<Image>().color.a == 1)
+                {
+                    var img = slot.GetComponent<Image>();
+                    img.color = new Color(1, 1, 1, 1);
+            }
+
             }
 
             GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.clickCount == 2 && eventData.button == PointerEventData.InputButton.Left)
+        {
+            var action = GetComponent<Action>();
+            if(action != null)
+            {
+                action.OnMouseClick();
+            }
+            else
+            {
+                var item = GetComponent<Item>();
+                if(item != null)
+                {
+                    for(int i = 0; i < m_slots.transform.childCount; i++)
+                    {
+                        var slot = m_slots.transform.GetChild(i).GetComponent<Slot>();
+                        if (slot.m_itemType == item.m_typeOfItem)
+                        {
+                            if(slot.m_containsItem)
+                            {
+                                var inventorySlot = m_returnTo;
+                                var oldEquippedItem = slot.transform.GetChild(1).GetComponent<Draggable>();
+                                oldEquippedItem.m_returnTo = m_returnTo;
+                                m_returnTo = slot.transform;
+                                transform.SetParent(m_returnTo);
+                                oldEquippedItem.transform.SetParent(oldEquippedItem.m_returnTo);
+                                slot.UnequipItem(oldEquippedItem.gameObject);
+                            }
+                            else
+                            {
+                                m_returnTo.GetComponent<Slot>().m_containsItem = false;
+                                m_returnTo = slot.transform;
+                                slot.GetComponent<Slot>().m_containsItem = true;
+                                transform.SetParent(m_returnTo);
+                            }
+                            slot.EquipItem(item.gameObject);
+                            var sprite = item.GetComponent<Image>();
+                            Color col = sprite.color;
+                            col.a = 0f;
+                            sprite.color = col;
+                        }
+                    }
+                }
+            }
+            eventData.clickCount = 0;
         }
     }
 }
