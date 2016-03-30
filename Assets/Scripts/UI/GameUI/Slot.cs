@@ -16,7 +16,7 @@ public class Slot : MonoBehaviour, IDropHandler
     private AudioSource m_audioSource;
 	private GameObject m_inventorySlots;
 
-    public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
+    //public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
     public void Start()
     {
@@ -76,7 +76,7 @@ public class Slot : MonoBehaviour, IDropHandler
 			if (!SyncManager.CheckInputPossible())
 				return;
 
-			if (item.m_itemType == Item.ItemType.SHIELD)
+			if (item.m_itemType == Item.ItemType.SHIELD && !m_isInventory) // Check for two-handed weapon when equipping shield
 			{
 				var weaponSlot = GetEquipmentSlot(Item.ItemType.WEAPON);
 				if(weaponSlot.m_containsItem)
@@ -166,7 +166,7 @@ public class Slot : MonoBehaviour, IDropHandler
             }
             else
             {
-                m_warningSign.SetActive(true);
+                //m_warningSign.SetActive(true);
             }
         }
     }

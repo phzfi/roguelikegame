@@ -60,8 +60,11 @@ public class Action : NetworkBehaviour {
 
 	public void OnMouseClick()
 	{
+
 		if (m_targetingType == ActionTargetingType.self)
+		{
 			Use(new ActionTargetData());
+		}
 		else
 		{
 			m_actionManager.m_currentAction = this;
