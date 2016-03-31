@@ -12,18 +12,26 @@ public class LevelMapManager : NetworkBehaviour
     public int m_coinCount;
     public int m_itemCount;
     public List<GameObject> m_items;
+    public int m_enemyCount;
+    public GameObject m_grunt;
+    public GameObject m_warrior;
+    public GameObject m_boss;
     
-
 	private LevelMap m_map = null;
+    private List<Vector2i> m_occupiedPositions;
+    private System.Random m_rand; 
 
 	void Awake()
 	{
 		m_map = GetComponent<LevelMap>();
 		m_map.Generate(m_width, m_height);
         m_mapVisualization.MarchingSquaresMesh(m_map);
+        m_rand = new System.Random(m_map.m_seed.GetHashCode());
+        m_occupiedPositions = new List<Vector2i>();
         GeneratePlayerStartPositions();
 		//GenerateItems();
 		StartCoroutine(DelayItemGenerate());
+        StartCoroutine(DelayEnemySpawn());
 	}
 
 	public LevelMap GetMap()
@@ -48,6 +56,8 @@ public class LevelMapManager : NetworkBehaviour
 			Vector2i gridPos = new Vector2i(center + direction * distanceToCenter);
 
 			gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
+
+            m_occupiedPositions.Add(gridPos);
 
 			GameObject playerStartPosGo = new GameObject();
 			playerStartPosGo.name = "PlayerStartPosition" + i;
@@ -75,7 +85,26 @@ public class LevelMapManager : NetworkBehaviour
 		}
 	}
 
-	private void GenerateItems()
+    IEnumerator DelayEnemySpawn()
+    {
+        while (true)
+        {
+            if (SyncManager.IsServer)
+            {
+                SpawnEnemies();
+                yield break;
+            }
+            else if (SyncManager.sm_running)
+            {
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
+
+
+    private void GenerateItems()
     {
         
         List<GameObject> itemsToPlace = new List<GameObject>();
@@ -87,7 +116,6 @@ public class LevelMapManager : NetworkBehaviour
             itemsToPlace.Add(m_items[i % m_items.Count]);
 
         // Create dimensions for square grid
-        System.Random pseudoRandom = new System.Random(m_map.m_seed.GetHashCode());
         int dim = Mathf.CeilToInt(Mathf.Sqrt(itemsToPlace.Count));
         int widthStep = (m_width - 1) / dim;
         int heightStep = (m_height - 1) / dim;
@@ -99,18 +127,20 @@ public class LevelMapManager : NetworkBehaviour
             // Find an unvisited square
             do
             {
-                index = pseudoRandom.Next(0, dim * dim);
+                index = m_rand.Next(0, dim * dim);
             } while (visited.Contains(index));
             visited.Add(index);
 
             // Generate a random position within the square
-            Vector2i gridPos = new Vector2i(pseudoRandom.Next((index % dim) * widthStep + 1, ((index % dim + 1) * widthStep)),
-                                            pseudoRandom.Next((index / dim) * heightStep + 1, (index / dim + 1) * heightStep));
+            Vector2i gridPos = new Vector2i(m_rand.Next((index % dim) * widthStep + 1, ((index % dim + 1) * widthStep)),
+                                            m_rand.Next((index / dim) * heightStep + 1, (index / dim + 1) * heightStep));
             gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
 
             // Skip if inside wall
-            if (!m_map.IsAccessible(gridPos.x, gridPos.y))
+            if (!m_map.IsAccessible(gridPos.x, gridPos.y) && !m_occupiedPositions.Contains(gridPos))
                 continue;
+
+            m_occupiedPositions.Add(gridPos);
             Vector3 pos = MapGrid.GridToWorldPoint(gridPos, -1.0f);
             
             // Create item and place on map
@@ -125,4 +155,39 @@ public class LevelMapManager : NetworkBehaviour
         }
     }
 
+    private void SpawnEnemies()
+    {
+        int i = 0;
+        int warriors = m_enemyCount / 3;
+        int grunts = m_enemyCount - warriors;
+
+        while (i <= m_enemyCount)
+        {
+            Vector2i gridPos = new Vector2i(m_rand.Next(1, m_map.Width - 1), m_rand.Next(1, m_map.Height - 1));
+            gridPos = m_map.GetNavGrid().FindClosestAccessiblePosition(gridPos, 0.5f);
+
+            // Skip if inside wall
+            if (!m_map.IsAccessible(gridPos.x, gridPos.y) && !m_occupiedPositions.Contains(gridPos))
+                continue;
+
+            m_occupiedPositions.Add(gridPos);
+            Vector3 pos = MapGrid.GridToWorldPoint(gridPos, 0.0f);
+
+            // Create item and place on map
+            GameObject obj;
+            if (i<warriors)
+            {
+                obj = (GameObject)Instantiate(m_warrior, pos, Quaternion.identity);
+            } else if (i >= warriors && i<m_enemyCount)
+            {
+                obj = (GameObject)Instantiate(m_grunt, pos, Quaternion.identity);
+            } else
+            {
+                obj = (GameObject)Instantiate(m_boss, pos, Quaternion.identity);
+            }
+
+            i++;
+            NetworkServer.Spawn(obj);
+        }
+    }
 }
