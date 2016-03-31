@@ -149,7 +149,7 @@ public class LevelMapManager : NetworkBehaviour
             ItemManager.GetID(out item.ID);
             item.m_pos = MapGrid.WorldToGridPoint(pos);
             Vector3 position = item.transform.position;
-            position.z = -0.05f;
+            if (i >= m_coinCount) position.z = -0.05f;
             item.transform.position = position;
             NetworkServer.Spawn(obj);
         }
