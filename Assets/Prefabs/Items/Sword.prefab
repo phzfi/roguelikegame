@@ -226,10 +226,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_name: Sword
   ID: -1
-  m_strength: 10
+  m_strength: 4
   m_agility: 0
   m_intelligence: 0
   m_vitality: 0
+  m_twoHandedWeapon: 0
   m_typeOfItem: 0
 --- !u!114 &11489960
 MonoBehaviour:
@@ -246,6 +247,7 @@ MonoBehaviour:
   m_returnTo: {fileID: 0}
   m_changeIndex: 0
   m_itemType: 0
+  m_twoHandedWeapon: 0
 --- !u!114 &11491306
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -260,22 +262,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 97
-    i1: 204
-    i2: 5
-    i3: 116
-    i4: 216
-    i5: 156
-    i6: 123
-    i7: 244
-    i8: 168
-    i9: 205
-    i10: 93
-    i11: 154
-    i12: 234
-    i13: 91
-    i14: 55
-    i15: 54
+    i0: 239
+    i1: 241
+    i2: 103
+    i3: 14
+    i4: 180
+    i5: 250
+    i6: 52
+    i7: 110
+    i8: 184
+    i9: 171
+    i10: 52
+    i11: 77
+    i12: 60
+    i13: 60
+    i14: 39
+    i15: 123
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!222 &22288928
@@ -351,7 +353,7 @@ Prefab:
       objectReference: {fileID: 4300000, guid: f962bb4024092fc4089360aed210bf65, type: 3}
     - target: {fileID: 0}
       propertyPath: m_strength
-      value: 10
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

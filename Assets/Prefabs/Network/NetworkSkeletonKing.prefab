@@ -994,7 +994,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 194426}
-  m_LocalRotation: {x: .634646297, y: .363188475, z: .332055509, w: .595866859}
+  m_LocalRotation: {x: .634646356, y: .363188505, z: .332055539, w: .595866919}
   m_LocalPosition: {x: -.421166986, y: -8.88178367e-17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1755,10 +1755,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_equipment: []
-  m_playerStrength: 0
+  m_playerStrength: 4
   m_playerAgility: 0
   m_playerIntelligence: 0
-  m_playerVitality: 0
+  m_playerVitality: 4
 --- !u!114 &11421756
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2283,6 +2283,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_maxHp
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_playerVitality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_playerStrength
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
