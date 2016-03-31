@@ -1325,7 +1325,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 116040}
-  m_LocalRotation: {x: .258395433, y: -.707380593, z: -.370614558, w: .543589294}
+  m_LocalRotation: {x: .258395463, y: -.707380652, z: -.370614588, w: .543589354}
   m_LocalPosition: {x: -.0837196782, y: .0613652058, z: .0440563671}
   m_LocalScale: {x: .999999821, y: .999999881, z: .999999881}
   m_Children:
@@ -1548,7 +1548,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1572,7 +1574,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1691,6 +1695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_currentHp: 3
+  m_visualizeHp: 0
   m_maxHp: 3
   m_damage: 1
   isBoss: 0
@@ -1706,6 +1711,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b27efd798b7f04a15bb72e2404d282cb, type: 3}
   m_attackSoundOffset: 0
   m_attackVisualizeAction: {fileID: 0}
+  m_deathVisualizeAction: {fileID: 0}
+  m_damageVisualizeAction: {fileID: 0}
+  m_healVisualizeAction: {fileID: 0}
 --- !u!114 &11418082
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1717,7 +1725,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee580ca42eaadbb4bba0be68dfcbe7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_chaseRange: 4
+  m_chaseRange: 7
+  m_steps: 3
 --- !u!114 &11432496
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1774,6 +1783,7 @@ MonoBehaviour:
   m_syncer: {fileID: 0}
   m_moveAction: {fileID: 0}
   m_visualizeMoveAction: {fileID: 0}
+  m_turnToFaceAction: {fileID: 0}
 --- !u!114 &11484940
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1840,6 +1850,7 @@ MonoBehaviour:
   m_equipment: {fileID: 0}
   m_combatSystem: {fileID: 0}
   m_enemyAI: {fileID: 0}
+  m_name: 
   m_isPlayer: 0
 --- !u!137 &13719076
 SkinnedMeshRenderer:
@@ -1859,7 +1870,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1939,7 +1952,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2019,7 +2034,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2099,7 +2116,9 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -2230,11 +2249,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_chaseRange
-      value: 4
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_gridSpeed
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_steps
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -994,7 +994,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 194426}
-  m_LocalRotation: {x: .634646356, y: .363188505, z: .332055539, w: .595866919}
+  m_LocalRotation: {x: .634646297, y: .363188475, z: .332055509, w: .595866859}
   m_LocalPosition: {x: -.421166986, y: -8.88178367e-17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1770,7 +1770,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee580ca42eaadbb4bba0be68dfcbe7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_chaseRange: 15
+  m_chaseRange: 6
+  m_steps: 2
 --- !u!114 &11432042
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1783,6 +1784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_currentHp: 3
+  m_visualizeHp: 0
   m_maxHp: 3
   m_damage: 1
   isBoss: 0
@@ -1798,6 +1800,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b27efd798b7f04a15bb72e2404d282cb, type: 3}
   m_attackSoundOffset: .300000012
   m_attackVisualizeAction: {fileID: 0}
+  m_deathVisualizeAction: {fileID: 0}
+  m_damageVisualizeAction: {fileID: 0}
+  m_healVisualizeAction: {fileID: 0}
 --- !u!114 &11433872
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1859,6 +1864,7 @@ MonoBehaviour:
   m_syncer: {fileID: 0}
   m_moveAction: {fileID: 0}
   m_visualizeMoveAction: {fileID: 0}
+  m_turnToFaceAction: {fileID: 0}
 --- !u!114 &11476100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1877,6 +1883,7 @@ MonoBehaviour:
   m_equipment: {fileID: 0}
   m_combatSystem: {fileID: 0}
   m_enemyAI: {fileID: 0}
+  m_name: 
   m_isPlayer: 0
 --- !u!114 &11488498
 MonoBehaviour:
@@ -2260,6 +2267,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_actionCount
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_chaseRange
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_steps
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
