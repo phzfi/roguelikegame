@@ -112,6 +112,7 @@ public class Slot : MonoBehaviour, IDropHandler
 							var inventorySlot = inventorySlots[i];
 							if(!inventorySlot.m_containsItem)
 							{
+                                shieldSlot.m_containsItem = false;
 								shieldItem.transform.SetParent(inventorySlot.transform);
 								inventorySlot.m_containsItem = true;
 								break;
