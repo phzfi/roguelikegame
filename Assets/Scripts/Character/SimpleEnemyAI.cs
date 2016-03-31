@@ -6,7 +6,7 @@ public class SimpleEnemyAI : EnemyAI {
     public int m_steps = 1;
 
     private int m_turn = 0;
-
+    
 	override public void TakeTurn() // Runs the turn decision logic for this NPC. 
 	{
 		float minDist = m_chaseRange;
@@ -18,17 +18,18 @@ public class SimpleEnemyAI : EnemyAI {
 			var controller = CharManager.Objects[i];
 			if (!controller.m_isPlayer)
 				continue;
-
 			var mover = controller.m_mover;
 			var myPos = m_mover.m_gridPos;
 			var enemyPos = mover.m_gridPos;
 			float dist = myPos.Distance(enemyPos);
 
-			if(dist < minDist && controller.m_enemyAI == null) // TODO: line of sight and some smarter parameters
-			{
-				minDist = dist;
-				target = controller;
-				foundTarget = true;
+            if (dist < minDist && controller.m_enemyAI == null)
+            {
+                if (!LineOfSight.CheckLOS(m_mover.m_navAgent, myPos, enemyPos, minDist).blocked) { 
+                    minDist = dist;
+                    target = controller;
+                    foundTarget = true;
+                }
 			}
 		}
 
