@@ -14,21 +14,34 @@ public class Slot : MonoBehaviour, IDropHandler
 	private Inventory m_inventory;
     private int m_playerID;
     private AudioSource m_audioSource;
+	private bool m_playerSet = false;
 
     public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
     public void Start()
     {
-        var player = CharManager.GetLocalPlayer();
-        if (player == null)
-            Debug.LogError("Could not find local player for slot");
-        m_equipment = player.GetComponent<Equipment>();
-		m_inventory = player.GetComponent<Inventory>();
-        m_playerID = player.ID;
-        if (m_equipment == null)
-            Debug.LogError("Could not find equipment for slot");
         m_audioSource = gameObject.AddComponent<AudioSource>();
     }
+
+	public void Update()
+	{
+		if(!m_playerSet)
+		{
+			var player = CharManager.GetLocalPlayer();
+			if (player == null)
+			{
+				Debug.Log("Could not find local player for slot (player not yet initialized)");
+				return;
+			}
+			m_equipment = player.GetComponent<Equipment>();
+			m_inventory = player.GetComponent<Inventory>();
+			m_playerID = player.ID;
+			if (m_equipment == null)
+				Debug.LogError("Could not find equipment for slot");
+
+			m_playerSet = true;
+		}
+	}
 
     public void EquipItem(GameObject itemName)
     {
