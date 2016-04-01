@@ -15,31 +15,39 @@ public class Slot : MonoBehaviour, IDropHandler
     private int m_playerID;
     private AudioSource m_audioSource;
 	private GameObject m_inventorySlots;
+	private bool m_playerSet = false;
 
     //public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
     public void Start()
-    {
-        Invoke("Setup", 0.1f);
-        m_audioSource = gameObject.AddComponent<AudioSource>();
-    }
-
-    void Setup()
-    {
-        var player = CharManager.GetLocalPlayer();
-        if (player == null)
-            Debug.LogError("Could not find local player for slot");
-        m_equipment = player.GetComponent<Equipment>();
-		m_inventory = player.GetComponent<Inventory>();
-        m_playerID = player.ID;
-        if (m_equipment == null)
-            Debug.LogError("Could not find equipment for slot");
+	{
 		m_inventorySlots = GameObject.FindGameObjectWithTag("InventorySlots");
-		if(m_inventorySlots == null)
+		if (m_inventorySlots == null)
 			Debug.LogError("Could not find inventory slots for slot");
+		m_audioSource = gameObject.AddComponent<AudioSource>();
     }
 
-    public void EquipItem(GameObject itemName)
+	public void Update()
+	{
+		if (!m_playerSet)
+		{
+			var player = CharManager.GetLocalPlayer();
+			if (player == null)
+			{
+				Debug.Log("Could not find local player for slot (player not yet initialized)");
+				return;
+			}
+			m_equipment = player.GetComponent<Equipment>();
+			m_inventory = player.GetComponent<Inventory>();
+			m_playerID = player.ID;
+			if (m_equipment == null)
+				Debug.LogError("Could not find equipment for slot");
+
+			m_playerSet = true;
+		}
+	}
+
+	public void EquipItem(GameObject itemName)
     {
         var item = itemName.GetComponent<Item>();
         SyncManager.AddEquipOrder(item.ID, m_playerID, true);
