@@ -71,7 +71,7 @@ public class CombatSystem : NetworkBehaviour
 
 	private int GetDamage() // Get the attack damage of this object, modified by weapons etc.
 	{
-        var actualDamage = GetReducedDamage(m_damage + Mathf.CeilToInt(m_equipment.m_playerStrength * 0.25f));
+        var actualDamage = m_damage + Mathf.CeilToInt(m_equipment.m_playerStrength * 0.25f);
 		return actualDamage;
 	}
 

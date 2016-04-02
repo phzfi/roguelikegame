@@ -197,22 +197,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 105
-    i1: 179
-    i2: 65
-    i3: 79
-    i4: 136
-    i5: 189
-    i6: 51
-    i7: 68
-    i8: 155
-    i9: 13
-    i10: 221
-    i11: 233
-    i12: 90
-    i13: 121
-    i14: 36
-    i15: 178
+    i0: 171
+    i1: 8
+    i2: 237
+    i3: 43
+    i4: 39
+    i5: 221
+    i6: 132
+    i7: 126
+    i8: 59
+    i9: 69
+    i10: 187
+    i11: 146
+    i12: 206
+    i13: 33
+    i14: 210
+    i15: 111
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &11421672
@@ -230,6 +230,7 @@ MonoBehaviour:
   m_returnTo: {fileID: 0}
   m_changeIndex: 0
   m_itemType: 0
+  m_twoHandedWeapon: 0
 --- !u!114 &11435968
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -276,7 +277,8 @@ MonoBehaviour:
   m_strength: 0
   m_agility: 0
   m_intelligence: 0
-  m_vitality: 8
+  m_vitality: 4
+  m_twoHandedWeapon: 0
   m_typeOfItem: 5
 --- !u!222 &22254738
 CanvasRenderer:
@@ -334,7 +336,7 @@ Prefab:
       objectReference: {fileID: 175626, guid: 36879e06ff64652479fd9736886d233b, type: 2}
     - target: {fileID: 0}
       propertyPath: m_vitality
-      value: 8
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
