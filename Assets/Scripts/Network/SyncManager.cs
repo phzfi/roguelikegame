@@ -42,7 +42,7 @@ public class SyncManager : NetworkBehaviour
 	public static int sm_currentTurn = 0;
 	public static bool sm_running = false;
 	private static int sm_clientCount = 0;
-    private static bool sm_reset = false;
+    private static bool sm_isVictory = true;
 
 	public static bool IsServer
 	{
@@ -564,7 +564,6 @@ public class SyncManager : NetworkBehaviour
 
     void OnClientReceiveEndMatch(NetworkMessage msg) // handle received item pickup orders on client
     {
-        sm_reset = false;
         StartCoroutine("WaitForEnd");
     }
 
@@ -578,6 +577,7 @@ public class SyncManager : NetworkBehaviour
 
     public static void SendDeathMessage(int size)
     {
+        sm_isVictory = false;
         var msg = new DeathMessage();
         msg.decreaseSize = size;
         sm_clientData.m_connection.Send((short)msgType.localPlayerDeath, msg);
@@ -636,7 +636,6 @@ public class SyncManager : NetworkBehaviour
 
     private IEnumerator WaitForEnd()
     {
-        bool isVictory = CharManager.GetLocalPlayer().gameObject.GetComponent<CombatSystem>().IsAlive();
         ActionBar actionBar = FindObjectOfType<ActionBar>();
         for (;;)
         {
@@ -644,7 +643,7 @@ public class SyncManager : NetworkBehaviour
                 break;
             yield return null;
         }
-        actionBar.m_exitMenu.SetEndGameText(isVictory);
+        actionBar.m_exitMenu.SetEndGameText(!sm_isVictory);
         actionBar.ExitGameButtonPressed();
     }
 }
