@@ -15,9 +15,9 @@ public class LobbyManager : Singleton<LobbyManager>
 	private System.Action m_exitAction;
 
 	// PHZ dedicated server, hardcoded for now...
-	public const string dedicatedServerNetworkAddress = "orthanc.phz.fi";
+	public const string dedicatedServerNetworkAddress = "localhost";
 	public const string dedicatedServerLocalAddress = "0.0.0.0";
-	public const int dedicatedServerNetworkPort = 443;
+	public const int dedicatedServerNetworkPort = 20000;
 	public const int dedicatedServerMaxPlayers = 4;
 	
 	// TODO check when connecting
@@ -223,7 +223,6 @@ public class LobbyManager : Singleton<LobbyManager>
 	public void AddLobbyPlayer(CustomNetworkLobbyPlayer lobbyPlayer)
 	{
 		LobbyMenuScreen lobbyMenu = FindObjectOfType<LobbyMenuScreen>();
-		SyncManager.IncrementClientCount();
 		lobbyMenu.AddLobbyPlayer(lobbyPlayer);
 	}
 

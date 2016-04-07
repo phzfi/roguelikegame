@@ -32,6 +32,8 @@ public class SyncManager : NetworkBehaviour
 	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
+	public float m_visualizationStartTime = 0;
+	public float m_visualizationTimeOut = 30;
 
 	public AudioSource m_audioSource;
 	public AudioClip m_succesfullInput, m_unsuccesfullInput;
@@ -46,6 +48,11 @@ public class SyncManager : NetworkBehaviour
 	public static bool IsServer
 	{
 		get { return sm_isServer; }
+	}
+
+	public static bool IsDedicatedServer
+	{
+		get { return LobbyManager.Instance.m_dedicatedServer; }
 	}
 
 	void Awake() // Set editor references to static ones. A bit dumb, maybe there's a better way.
@@ -75,8 +82,11 @@ public class SyncManager : NetworkBehaviour
 	{
 		if (sm_isServer && Time.realtimeSinceStartup - m_lastSync > m_syncRate && !sm_serverData.m_turnInProgress) // start turn change if enough time has passed since last turn, and we're on the server
 		{
-			if (GetClientCount() < sm_clientCount) // If all clients haven't yet sent their connection messages, wait.
+			if (GetClientCount() < sm_clientCount || GetClientCount() == 0) // If all clients haven't yet sent their connection messages, wait.
+			{
+				Debug.Log("Waiting for clients to join. Client count: " + sm_clientCount + ", joined count: " + GetClientCount());
 				return;
+			}
 			m_lastSync = Time.realtimeSinceStartup;
 			StartServerTurn();
 		}
@@ -154,23 +164,27 @@ public class SyncManager : NetworkBehaviour
         sm_serverData = null;
 		enabled = false;
 		sm_isServer = false;
+		sm_running = false;
 		sm_clientCount = 0;
+		Reset();
 	}
 
 	public void StopOnClient() // stop client side sync logic
 	{
 		if (sm_clientData != null)
 		{
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.moveOrder);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.connected);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.pickupOrder);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.attackOrder);
-		sm_clientData.m_connection.UnregisterHandler((short)msgType.turnSync);
-        sm_clientData.m_connection.UnregisterHandler((short)msgType.equipOrder);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.moveOrder);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.connected);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.visualize);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.pickupOrder);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.attackOrder);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.turnSync);
+			sm_clientData.m_connection.UnregisterHandler((short)msgType.equipOrder);
 		}
         sm_clientData = null;
+		sm_running = false;
 		enabled = false;
+		Reset();
 	}
 
 	public void DisconnectClient(NetworkConnection connection) // remove disconnected client from players list so that we won't wait for them during turn changes
@@ -184,7 +198,7 @@ public class SyncManager : NetworkBehaviour
 			if (playerData.m_connectionID == connection.connectionId) // tell server to stop tracking disconnected client
 			{
 				sm_serverData.m_playerData.RemoveAt(i);
-				sm_clientCount--;
+				DecrementClientCount();
 				return;
 			}
 		}
@@ -192,6 +206,7 @@ public class SyncManager : NetworkBehaviour
 
 	public static void IncrementClientCount()
 	{
+		Debug.Log("Client connected!");
 		sm_clientCount++;
 	}
 
@@ -202,6 +217,8 @@ public class SyncManager : NetworkBehaviour
 
 	public int GetClientCount()
 	{
+		if (sm_serverData == null)
+			return 0;
 		return sm_serverData.m_playerData.Count;
 	}
 
@@ -340,8 +357,19 @@ public class SyncManager : NetworkBehaviour
 
 	IEnumerator WaitForClientVisualizationCoRoutine()
 	{
+		m_visualizationStartTime = Time.realtimeSinceStartup;
 		while(true)
 		{
+			if(sm_serverData == null)
+			{
+				Debug.Log("Ending turn prematurely. Server closed.");
+				yield break;
+			}
+			if (Time.realtimeSinceStartup - m_visualizationStartTime > m_visualizationTimeOut)
+			{
+				Debug.Log("Ending turn prematurely. Visualization timeout.");
+				yield break;
+			}
 			if (sm_serverData.VisualizationDone())
 			{
 				FinalizeServerTurn();
@@ -590,5 +618,17 @@ public class SyncManager : NetworkBehaviour
 	void Reset()
 	{
 		sm_currentTurn = 0;
+		sm_attackOrders.Clear();
+		sm_equipOrders.Clear();
+		sm_outgoingActions.Clear();
+		sm_incomingActions.Clear();
+		sm_outgoingVisualizeActions.Clear();
+		sm_incomingVisualizeActions.Clear();
+		sm_moveOrders.Clear();
+		sm_visualizeMoveOrders.Clear();
+		sm_pickupOrders.Clear();
+		ActionPool.ResetCounter();
+		ItemManager.Reset();
+		CharManager.Reset();
 	}
 }

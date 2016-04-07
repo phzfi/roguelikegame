@@ -6,12 +6,18 @@ using System;
 public class CustomNetworkLobbyManager : NetworkLobbyManager
 {
 	private SyncManager m_syncManager;
+	private PlayerSpawner m_spawner;
 
 	[SerializeField]
 	private MainMenuScreen m_mainMenu;
 
 	private System.Action m_onErrorCallback;
 	private System.Action m_onConnectedCallback;
+
+	public void Awake()
+	{
+		m_spawner = GetComponent<PlayerSpawner>();
+	}
 
 	private IEnumerator ShowMainMenu()
 	{
@@ -22,6 +28,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override void OnServerConnect(NetworkConnection conn)
 	{
+		float timestamp = Time.realtimeSinceStartup;
 		base.OnServerConnect(conn);
 		if (conn.connectionId >= maxConnections)
 		{
@@ -34,7 +41,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		base.OnServerDisconnect(conn);
 		Debug.Log("Client disconnected");
-		SyncManager.DecrementClientCount();
 		if (m_syncManager)
 		{
 			m_syncManager.DisconnectClient(conn);
@@ -56,6 +62,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		yield return new WaitForSeconds(1.0f);
 		StopServer();
 		yield return new WaitForSeconds(1.0f);
+		Debug.Log("Starting server");
 		StartServer();
 	}
 
@@ -93,11 +100,21 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override void OnStopServer()
 	{
+		m_mainMenu.Show();
+		//DestroyImmediate(gameObject);
+		//enabled = false;
 		Debug.Log("OnStopServer");
 		base.OnStopServer();
 		if (m_syncManager)
 			m_syncManager.StopOnServer();
-		StartCoroutine(ShowMainMenu());
+		//StartCoroutine(ShowMainMenu());
+		//m_mainMenu.Show();
+	}
+
+	public override void OnStartServer()
+	{
+		base.OnStartServer();
+		Debug.Log("OnStartServer (lobby)");
 	}
 
 	// Server / Host
@@ -123,7 +140,9 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection conn, short playerControllerId)
 	{
-		return base.OnLobbyServerCreateGamePlayer(conn, playerControllerId);
+		SyncManager.IncrementClientCount();
+		return m_spawner.Spawn(conn, playerControllerId);
+		//return base.OnLobbyServerCreateGamePlayer(conn, playerControllerId);
 	}
 
 	public override void OnServerError(NetworkConnection conn, int errorCode)
@@ -186,7 +205,8 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		base.OnStopClient();
 		if (m_syncManager)
 			m_syncManager.StopOnClient();
-		StartCoroutine(ShowMainMenu());
+		m_mainMenu.Show();
+		//StartCoroutine(ShowMainMenu());
 
 		if (m_onErrorCallback != null)
 		{

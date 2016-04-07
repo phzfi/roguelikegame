@@ -35,6 +35,9 @@ public class InputHandler : Singleton<InputHandler>
 		if (ExitGameScreen.sm_exitMenuOpen)
 			return;
 
+		if (SyncManager.IsDedicatedServer) // Don't read input if dedicated server
+			return;
+
 		Vector2i mouseGridPos = GetMouseGridPosition();
 
 		// Visualize tile that mouse cursor hovers over

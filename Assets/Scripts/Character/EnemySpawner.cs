@@ -9,6 +9,8 @@ public class EnemySpawner : NetworkBehaviour
 	public void Start()
 	{
 		GameObject obj = (GameObject)Instantiate(m_prefab, transform.position, m_prefab.transform.rotation);
+		var controller = obj.GetComponent<CharController>();
+		controller.ID = CharManager.GetNextID();
 		NetworkServer.Spawn(obj);
 		Destroy(gameObject);
 	}

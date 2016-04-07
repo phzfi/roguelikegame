@@ -16,10 +16,10 @@ public class ItemManager : MonoBehaviour
 
 	private static int sm_curID = 0; // TODO: will not stay synchronized if client and server have different amounts of objects, eg. when not synchronizing unseen objects
 
-	public static void OnLevelWasLoaded(int level) // reset all containers and sm_curID when loading new scene
-	{
-		Reset();
-	}
+	//public static void OnLevelWasLoaded(int level) // reset all containers and sm_curID when loading new scene
+	//{
+	//	Reset();
+	//}
 
 	public static void Register(Item item, bool onMap = true) // Add item to relevant containers
 	{
@@ -87,7 +87,7 @@ public class ItemManager : MonoBehaviour
 		item.Pickup(mover.gameObject);
 	}
 
-	private static void Reset()
+	public static void Reset()
 	{
 		sm_allItems = new List<Item>();
 		sm_itemsOnMap = new List<Item>();

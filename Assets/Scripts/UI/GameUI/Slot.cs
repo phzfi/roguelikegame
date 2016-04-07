@@ -20,12 +20,15 @@ public class Slot : MonoBehaviour, IDropHandler
 
     public void Start()
     {
-        Invoke("Setup", 0.1f);
+        Invoke("Setup", 2.0f);
         m_audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     void Setup()
     {
+		if (SyncManager.IsDedicatedServer) // Do not initialize for dedicated server
+			return;
+
         var player = CharManager.GetLocalPlayer();
         if (player == null)
             Debug.LogError("Could not find local player for slot");

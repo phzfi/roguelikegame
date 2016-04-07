@@ -20,8 +20,11 @@ public class UIManager : MonoBehaviour
     private Inventory m_localInventory;
     
     void Update()
-    {
-        if (m_localPlayer == null)
+	{
+		if (SyncManager.IsDedicatedServer)
+			return;
+
+		if (m_localPlayer == null)
         {
             m_localPlayer = CharManager.GetLocalPlayer();
         }

@@ -29,11 +29,18 @@ public class ActionManager : MonoBehaviour
 	{
 		if (sm_actionDictionary.ContainsKey(ID))
 			return sm_actionDictionary[ID];
+		Debug.LogError("Unable to find action by ID: " + ID);
 		return null;
 	}
 
 	public void TargetPosition(Vector2i mouseGridPos)
 	{
+		if(SyncManager.IsDedicatedServer)
+		{
+			Debug.LogError("Tried to use action on dedicated server");
+			return;
+		}
+
 		m_currentlyTargeting = false;
 
 		if (m_currentAction == null)
