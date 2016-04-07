@@ -20,7 +20,7 @@ public class CombatSystem : NetworkBehaviour
     public AudioClip m_rangedAudio;
     public List<AudioClip> m_deathSounds;
     public float m_attackSoundOffset = 0f;
-	public Action m_attackVisualizeAction, m_deathVisualizeAction, m_damageVisualizeAction;
+	public Action m_attackVisualizeAction, m_deathVisualizeAction, m_damageVisualizeAction, m_healVisualizeAction;
 
 	private GameObject m_textCanvas;
 	private Text m_label;
@@ -58,6 +58,9 @@ public class CombatSystem : NetworkBehaviour
 		m_damageVisualizeAction = gameObject.AddComponent<Action>();
 		m_damageVisualizeAction.Initialize();
 		m_damageVisualizeAction.m_useDelegate = VisualizeDealtDamage;
+		m_healVisualizeAction = gameObject.AddComponent<Action>();
+		m_healVisualizeAction.Initialize();
+		m_healVisualizeAction.m_useDelegate = VisualizeHeal;
 
 	}
 
@@ -69,7 +72,7 @@ public class CombatSystem : NetworkBehaviour
 
 	private int GetDamage() // Get the attack damage of this object, modified by weapons etc.
 	{
-        var actualDamage = GetReducedDamage(m_damage + Mathf.CeilToInt(m_equipment.m_playerStrength * 0.25f));
+        var actualDamage = m_damage + Mathf.CeilToInt(m_equipment.m_playerStrength * 0.25f);
 		return actualDamage;
 	}
 
@@ -130,6 +133,13 @@ public class CombatSystem : NetworkBehaviour
 		ClientTurnLogicManager.MarkActionFinished();
 	}
 
+	public void VisualizeHeal(ActionTargetData data)
+	{
+		int heal = data.m_gridTarget.x; // TODO: potato solution. Make something better.
+		m_visualizeHp = Mathf.Min(m_maxHp, m_visualizeHp + heal);
+		ClientTurnLogicManager.MarkActionFinished();
+	}
+
 	public void VisualizeAttack(ActionTargetData data)
 	{
 		Debug.Log("visualizing attack, id: " + m_controller.ID);
@@ -175,9 +185,17 @@ public class CombatSystem : NetworkBehaviour
 		}
 	}
 
-	public void Heal(int amount)
+	public void Heal(int amount, ref List<ActionData> visualization)
 	{
 		m_currentHp = Mathf.Min(m_maxHp, m_currentHp + amount);
+
+		ActionData action = new ActionData();
+		action.m_actionID = m_healVisualizeAction.ID;
+		ActionTargetData target = new ActionTargetData();
+		target.m_gridTarget = new Vector2i(amount, 0);
+		target.m_targetID = m_controller.ID;
+		action.m_target = target;
+		visualization.Add(action);
 	}
 
 	public void TakeDamage(int amount, ref List<ActionData> visualization)

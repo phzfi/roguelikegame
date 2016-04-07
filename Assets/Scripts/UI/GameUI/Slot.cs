@@ -15,26 +15,39 @@ public class Slot : MonoBehaviour, IDropHandler
     private int m_playerID;
     private AudioSource m_audioSource;
 	private GameObject m_inventorySlots;
+	private bool m_playerSet = false;
 
-    public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
+    //public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
     public void Start()
-    {
-        var player = CharManager.GetLocalPlayer();
-        if (player == null)
-            Debug.LogError("Could not find local player for slot");
-        m_equipment = player.GetComponent<Equipment>();
-		m_inventory = player.GetComponent<Inventory>();
-        m_playerID = player.ID;
-        if (m_equipment == null)
-            Debug.LogError("Could not find equipment for slot");
-        m_audioSource = gameObject.AddComponent<AudioSource>();
+	{
 		m_inventorySlots = GameObject.FindGameObjectWithTag("InventorySlots");
-		if(m_inventorySlots == null)
+		if (m_inventorySlots == null)
 			Debug.LogError("Could not find inventory slots for slot");
+		m_audioSource = gameObject.AddComponent<AudioSource>();
     }
 
-    public void EquipItem(GameObject itemName)
+	public void Update()
+	{
+		if (!m_playerSet)
+		{
+			var player = CharManager.GetLocalPlayer();
+			if (player == null)
+			{
+				Debug.Log("Could not find local player for slot (player not yet initialized)");
+				return;
+			}
+			m_equipment = player.GetComponent<Equipment>();
+			m_inventory = player.GetComponent<Inventory>();
+			m_playerID = player.ID;
+			if (m_equipment == null)
+				Debug.LogError("Could not find equipment for slot");
+
+			m_playerSet = true;
+		}
+	}
+
+	public void EquipItem(GameObject itemName)
     {
         var item = itemName.GetComponent<Item>();
         SyncManager.AddEquipOrder(item.ID, m_playerID, true);
@@ -67,11 +80,11 @@ public class Slot : MonoBehaviour, IDropHandler
     {
         Draggable item = eventData.pointerDrag.GetComponent<Draggable>();
         if (item != null && !item.m_isDraggedButton)
-		{
+        {
 			if (!SyncManager.CheckInputPossible())
 				return;
 
-			if (item.m_itemType == Item.ItemType.SHIELD)
+			if (item.m_itemType == Item.ItemType.SHIELD && !m_isInventory) // Check for two-handed weapon when equipping shield
 			{
 				var weaponSlot = GetEquipmentSlot(Item.ItemType.WEAPON);
 				if(weaponSlot.m_containsItem)
@@ -82,18 +95,18 @@ public class Slot : MonoBehaviour, IDropHandler
 				}
 			}
 			item.m_returnTo.GetComponent<Slot>().m_containsItem = false;
-			if (m_itemType == item.m_itemType)
+            if (m_itemType == item.m_itemType)
             {
                 if (!m_containsItem)
                 {
                     m_containsItem = true;
                 }
-                else if(m_containsItem)
+                else if(m_containsItem && transform.childCount > 1)
                 {
                     var oldEquippedItem = transform.GetChild(transform.childCount - 1);
                     oldEquippedItem.SetParent(item.m_returnTo.transform);
 					item.m_returnTo.GetComponent<Slot>().m_containsItem = true;
-					UnequipItem(oldEquippedItem.gameObject);
+                    UnequipItem(oldEquippedItem.gameObject);
                 }
 				if(item.m_twoHandedWeapon)
 				{
@@ -161,7 +174,7 @@ public class Slot : MonoBehaviour, IDropHandler
             }
             else
             {
-                m_warningSign.SetActive(true);
+                //m_warningSign.SetActive(true);
             }
         }
     }
