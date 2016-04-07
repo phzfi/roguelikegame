@@ -201,6 +201,11 @@ public class CombatSystem : NetworkBehaviour
 			
 	}
 
+    public bool IsAlive()
+    {
+        return m_currentHp != 0;
+    }
+
 	public void VisualizeDeath(ActionTargetData data)
 	{
         if (isBoss)

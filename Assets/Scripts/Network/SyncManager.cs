@@ -577,7 +577,10 @@ public class SyncManager : NetworkBehaviour
 
     void OnClientReceiveEndMatch(NetworkMessage msg) // handle received item pickup orders on client
     {
-        sm_reset = true;
+        bool isVictory = CharManager.GetLocalPlayer().gameObject.GetComponent<CombatSystem>().IsAlive();
+        ActionBar actionBar = FindObjectOfType<ActionBar>();
+        actionBar.m_exitMenu.SetEndGameText(isVictory);
+        actionBar.ExitGameButtonPressed();
     }
 
     public static void AddChatMessage(string message, int id)
