@@ -148,21 +148,9 @@ public class PickupOrderMessage : MessageBase
 	public PickupOrder[] m_orders;
 }
 
-public struct DeathOrder
-{
-	public int m_targetID;
-	public int m_turnNumber;
-
-	public DeathOrder(int targetID)
-	{
-		m_targetID = targetID;
-		m_turnNumber = SyncManager.sm_currentTurn;
-	}
-}
-
 public class DeathMessage : MessageBase
 {
-	public DeathOrder[] m_orders;
+    public int decreaseSize;
 	public uint m_clientID;
 }
 

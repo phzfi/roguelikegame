@@ -58,16 +58,6 @@ public class SyncManager : NetworkBehaviour
 		m_turnLogicManager = FindObjectOfType<ClientTurnLogicManager>();
 	}
 
-    void LateUpdate()
-    {
-        if(sm_reset)
-        {
-            sm_reset = false;
-            m_turnLogicManager.Clear();
-            LobbyManager.Instance.ExitGame();
-        }
-    }
-
 	public override void OnStartServer()
 	{
 		Debug.Log("OnStartServer");
@@ -360,10 +350,11 @@ public class SyncManager : NetworkBehaviour
     void OnServerHandleDeathMessage(NetworkMessage netMsg)
     {
         int players = sm_serverData.m_playerData.Count;
-        sm_serverData.m_deathCount++;
+        DeathMessage deathMsg = netMsg.ReadMessage<DeathMessage>(); ;
         if (players != 1)
-            players--;
+            --players;
 
+        sm_serverData.m_deathCount += deathMsg.decreaseSize;
         if (sm_serverData.m_deathCount >= players)
         {
             var msg = new EmptyMessage();
@@ -475,7 +466,7 @@ public class SyncManager : NetworkBehaviour
 		msg.m_clientID = sm_clientData.m_clientID;
 		sm_clientData.m_connection.Send((short)msgType.visualize, msg);
 		m_lastSync = Time.realtimeSinceStartup;
-	}
+    }
 
 	private void OnServerReceiveVisualizeDone(NetworkMessage netMsg)
 	{
@@ -573,10 +564,8 @@ public class SyncManager : NetworkBehaviour
 
     void OnClientReceiveEndMatch(NetworkMessage msg) // handle received item pickup orders on client
     {
-        bool isVictory = CharManager.GetLocalPlayer().gameObject.GetComponent<CombatSystem>().IsAlive();
-        ActionBar actionBar = FindObjectOfType<ActionBar>();
-        actionBar.m_exitMenu.SetEndGameText(isVictory);
-        actionBar.ExitGameButtonPressed();
+        sm_reset = false;
+        StartCoroutine("WaitForEnd");
     }
 
     public static void AddChatMessage(string message, int id)
@@ -587,9 +576,10 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.Send((short)msgType.chatMessage, msg);
     }
 
-    public static void SendDeathMessage()
+    public static void SendDeathMessage(int size)
     {
         var msg = new DeathMessage();
+        msg.decreaseSize = size;
         sm_clientData.m_connection.Send((short)msgType.localPlayerDeath, msg);
     }
 
@@ -643,4 +633,18 @@ public class SyncManager : NetworkBehaviour
 	{
 		sm_currentTurn = 0;
 	}
+
+    private IEnumerator WaitForEnd()
+    {
+        bool isVictory = CharManager.GetLocalPlayer().gameObject.GetComponent<CombatSystem>().IsAlive();
+        ActionBar actionBar = FindObjectOfType<ActionBar>();
+        for (;;)
+        {
+            if (!sm_clientData.m_turnInProgress)
+                break;
+            yield return null;
+        }
+        actionBar.m_exitMenu.SetEndGameText(isVictory);
+        actionBar.ExitGameButtonPressed();
+    }
 }

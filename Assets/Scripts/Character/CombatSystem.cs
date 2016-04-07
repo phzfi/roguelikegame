@@ -208,7 +208,7 @@ public class CombatSystem : NetworkBehaviour
             m_currentHp = 0;
             if(gameObject.tag == "Player")
             {
-                SyncManager.SendDeathMessage();
+                SyncManager.SendDeathMessage(1);
                 Debug.Log("Death in combatSystem");
             }
 
@@ -228,7 +228,8 @@ public class CombatSystem : NetworkBehaviour
 	{
         if (isBoss)
         {
-            Debug.Log("boss killed!!"); // TODO: victory sequence
+            SyncManager.SendDeathMessage(100);
+            Debug.Log("boss killed!!");
         } 
         
 		m_controller.Unregister();
