@@ -10,14 +10,14 @@ public class LobbyManager : Singleton<LobbyManager>
 	public bool m_dedicatedServer = false;
 
 	private CustomNetworkDiscovery m_discovery;
-	private CustomNetworkLobbyManager m_manager;
+	public CustomNetworkLobbyManager m_manager;
 	private System.Action m_onErrorCallback;
 	private System.Action m_exitAction;
 
 	// PHZ dedicated server, hardcoded for now...
-	public const string dedicatedServerNetworkAddress = "orthanc.phz.fi";
+	public const string dedicatedServerNetworkAddress = "orthanc.phz.fi:20000";
 	public const string dedicatedServerLocalAddress = "0.0.0.0";
-	public const int dedicatedServerNetworkPort = 443;
+	public const int dedicatedServerNetworkPort = 20000;
 	public const int dedicatedServerMaxPlayers = 4;
 	
 	// TODO check when connecting
@@ -68,18 +68,21 @@ public class LobbyManager : Singleton<LobbyManager>
 
 	void Start()
 	{
-		
-
 		if (m_dedicatedServer)
 		{
-			if (!StartDedicatedServerLobby())
-			{
-				Debug.LogError("Unable to start dedicated server!");
-				Application.Quit();
+			Invoke("StartDedicatedServer", 2.0f);
+		}
+	}
+
+	void StartDedicatedServer()
+	{
+		if (!StartDedicatedServerLobby())
+		{
+			Debug.LogError("Unable to start dedicated server!");
+			Application.Quit();
 #if UNITY_EDITOR
-				UnityEditor.EditorApplication.isPlaying = false;
+			UnityEditor.EditorApplication.isPlaying = false;
 #endif
-			}
 		}
 	}
 
@@ -169,6 +172,7 @@ public class LobbyManager : Singleton<LobbyManager>
 	public void StartListeningLocalBroadcasts()
 	{
 		m_discovery.Initialize();
+		NetworkTransport.Init();
 		StartCoroutine(StartDiscoveryAsClient());
 	}
 
@@ -177,7 +181,7 @@ public class LobbyManager : Singleton<LobbyManager>
 	// restarting discovery just fails...
 	private IEnumerator StartDiscoveryAsClient()
 	{
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.4f);
 		m_discovery.StartAsClient();
 	}
 
@@ -223,8 +227,8 @@ public class LobbyManager : Singleton<LobbyManager>
 	public void AddLobbyPlayer(CustomNetworkLobbyPlayer lobbyPlayer)
 	{
 		LobbyMenuScreen lobbyMenu = FindObjectOfType<LobbyMenuScreen>();
-		SyncManager.IncrementClientCount();
 		lobbyMenu.AddLobbyPlayer(lobbyPlayer);
+		Debug.Log("Added player " + lobbyPlayer.m_playerName);
 	}
 
 	public void SetReady(bool ready)

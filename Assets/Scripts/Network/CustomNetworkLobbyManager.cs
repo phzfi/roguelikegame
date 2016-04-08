@@ -6,12 +6,27 @@ using System;
 public class CustomNetworkLobbyManager : NetworkLobbyManager
 {
 	private SyncManager m_syncManager;
+	private PlayerSpawner m_spawner;
+	private NetworkReset m_resetter;
 
 	[SerializeField]
 	private MainMenuScreen m_mainMenu;
 
 	private System.Action m_onErrorCallback;
 	private System.Action m_onConnectedCallback;
+
+	public void Awake()
+	{
+		m_spawner = GetComponent<PlayerSpawner>();
+		m_resetter = FindObjectOfType<NetworkReset>();
+	}
+
+	void OnDestroy()
+	{
+		//StopServer();
+		Network.Disconnect();
+		Debug.Log("Network destroyed");
+	}
 
 	private IEnumerator ShowMainMenu()
 	{
@@ -22,6 +37,8 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override void OnServerConnect(NetworkConnection conn)
 	{
+		float timestamp = Time.realtimeSinceStartup;
+		Debug.Log("Incoming connection");
 		base.OnServerConnect(conn);
 		if (conn.connectionId >= maxConnections)
 		{
@@ -34,7 +51,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		base.OnServerDisconnect(conn);
 		Debug.Log("Client disconnected");
-		SyncManager.DecrementClientCount();
 		if (m_syncManager)
 		{
 			m_syncManager.DisconnectClient(conn);
@@ -45,8 +61,9 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 				m_syncManager.StopOnServer();
 				StartCoroutine(ShowMainMenu());
 
-				Debug.Log("Restarting dedicated server lobby");
-				StartCoroutine(RestartServerRoutine());
+				StopServer();
+				//Debug.Log("Restarting dedicated server lobby");
+				//StartCoroutine(RestartServerRoutine());
 			}
 		}
 	}
@@ -56,6 +73,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		yield return new WaitForSeconds(1.0f);
 		StopServer();
 		yield return new WaitForSeconds(1.0f);
+		Debug.Log("Starting server");
 		StartServer();
 	}
 
@@ -81,7 +99,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		base.OnServerSceneChanged(sceneName);
 
-		if (Application.loadedLevelName == playScene)
+		if(Application.loadedLevelName == playScene)
 		{
 			Debug.Log("Start game on server!");
 			m_syncManager = FindObjectOfType<SyncManager>();
@@ -93,11 +111,18 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override void OnStopServer()
 	{
+		StartCoroutine(ShowMainMenu());
 		Debug.Log("OnStopServer");
 		base.OnStopServer();
 		if (m_syncManager)
 			m_syncManager.StopOnServer();
-		StartCoroutine(ShowMainMenu());
+		m_resetter.RestartNetwork();
+	}
+
+	public override void OnStartServer()
+	{
+		base.OnStartServer();
+		Debug.Log("OnStartServer (lobby)");
 	}
 
 	// Server / Host
@@ -123,7 +148,11 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection conn, short playerControllerId)
 	{
-		return base.OnLobbyServerCreateGamePlayer(conn, playerControllerId);
+		SyncManager.IncrementClientCount();
+		if (m_spawner == null)
+			m_spawner = GetComponent<PlayerSpawner>();
+		return m_spawner.Spawn(conn, playerControllerId);
+		//return base.OnLobbyServerCreateGamePlayer(conn, playerControllerId);
 	}
 
 	public override void OnServerError(NetworkConnection conn, int errorCode)
@@ -187,11 +216,15 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		if (m_syncManager)
 			m_syncManager.StopOnClient();
 		StartCoroutine(ShowMainMenu());
+		//StartCoroutine(ShowMainMenu());
 
 		if (m_onErrorCallback != null)
 		{
 			m_onErrorCallback();
 		}
+
+		if(!m_resetter.m_running)
+			m_resetter.RestartNetwork();
 	}
 
 	public override void OnClientError(NetworkConnection conn, int errorCode)

@@ -60,6 +60,9 @@ public class VisibilityManager : MonoBehaviour
 		bool showMoveRange = false;
 		bool hideMoveRange = false;
 
+		if (SyncManager.IsDedicatedServer)
+			return;
+
 		var player = CharManager.GetLocalPlayer();
 		if (player && !SyncManager.GetTurnProgress())
 		{
@@ -100,6 +103,9 @@ public class VisibilityManager : MonoBehaviour
 
 	public static void UpdateRangedIndicator()
 	{
+		if (SyncManager.IsDedicatedServer)
+			Debug.LogError("Tried to add chat message for dedicated server, not supported");
+
 		var player = CharManager.GetLocalPlayer();
 		if (player == null || player.m_equipment == null)
 			return;
@@ -184,7 +190,8 @@ public class VisibilityManager : MonoBehaviour
 
 	public static void UpdateMinimap()
 	{
-		int sightRange = 10;
+		if (SyncManager.IsDedicatedServer)
+			return;
 
 		var player = CharManager.GetLocalPlayer();
 
@@ -268,6 +275,9 @@ public class VisibilityManager : MonoBehaviour
 	// Returns true if move range map has changed
 	public static bool BreadthFirstSearch()
 	{
+		if(SyncManager.IsDedicatedServer)
+			return false;
+
 		var player = CharManager.GetLocalPlayer();
 		if (player == null)
 		{

@@ -9,16 +9,17 @@ public class CharManager : MonoBehaviour {
 	private static Dictionary<int, CharController> sm_objectDictionary = new Dictionary<int, CharController>(); // Private dictionary for fast item fetching by ID. Use GetObject to access this.
 
 	public static ReadOnlyCollection<CharController> Objects { get { return sm_objects.AsReadOnly(); } } // Public property exposes only read-only version of list to prevent modification
+	private static int sm_lastID = 0;
+	//public void OnLevelWasLoaded(int level) // Reset all containers and sm_curID when loading new scene
+	//{
+	//	Reset();
+	//}
 
-	public void OnLevelWasLoaded(int level) // Reset all containers and sm_curID when loading new scene
-	{
-		Reset();
-	}
-
-	private static void Reset()
+	public static void Reset()
 	{
 		sm_objectDictionary = new Dictionary<int, CharController>();
 		sm_objects = new List<CharController>();
+		sm_lastID = 0;
 	}
 
 	public static void Register(CharController item) // Add new object to objects list
@@ -57,4 +58,8 @@ public class CharManager : MonoBehaviour {
 		return sm_objectDictionary[ID];
 	}
 
+	public static int GetNextID()
+	{
+		return sm_lastID++;
+	}
 }

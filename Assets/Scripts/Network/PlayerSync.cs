@@ -28,7 +28,7 @@ public class PlayerSync : NetworkBehaviour
 
 	void Update()
 	{
-		m_mover.m_gridPos = m_syncPosition;
+		//m_mover.m_gridPos = m_syncPosition;
 	}
 
 	void OnDestroy()
