@@ -42,6 +42,7 @@ public class SyncManager : NetworkBehaviour
 	public static int sm_currentTurn = 0;
 	public static bool sm_running = false;
 	private static int sm_clientCount = 0;
+    private static bool sm_isVictory = true;
 
 	public static bool IsServer
 	{
@@ -107,6 +108,8 @@ public class SyncManager : NetworkBehaviour
         NetworkServer.RegisterHandler((short)msgType.equipOrder, OnServerReceiveEquipOrders);
         NetworkServer.RegisterHandler((short)msgType.chatMessage, OnServerReceiveChatMessage);
 		NetworkServer.RegisterHandler((short)msgType.visualize, OnServerReceiveVisualizeDone);
+        NetworkServer.RegisterHandler((short)msgType.localPlayerDeath, OnServerHandleDeathMessage);
+        NetworkServer.RegisterHandler((short)msgType.endMatch, EmptyMessageHandler);
         sm_serverData = new ServerData();
 		enabled = true;
 		sm_isServer = true;
@@ -131,6 +134,8 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.RegisterHandler((short)msgType.actionOrder, OnClientReceiveActionOrders);
         sm_clientData.m_connection.RegisterHandler((short)msgType.equipOrder, OnClientReceiveEquipOrders);
         sm_clientData.m_connection.RegisterHandler((short)msgType.chatMessage, OnClientReceiveChatMessage);
+        sm_clientData.m_connection.RegisterHandler((short)msgType.localPlayerDeath, EmptyMessageHandler);
+        sm_clientData.m_connection.RegisterHandler((short)msgType.endMatch, OnClientReceiveEndMatch);
         enabled = true;
 		sm_running = true;
 		gameObject.SetActive(true);
@@ -151,6 +156,8 @@ public class SyncManager : NetworkBehaviour
 		NetworkServer.UnregisterHandler((short)msgType.attackOrder);
 		NetworkServer.UnregisterHandler((short)msgType.turnSync);
         NetworkServer.UnregisterHandler((short)msgType.equipOrder);
+        NetworkServer.UnregisterHandler((short)msgType.localPlayerDeath);
+        NetworkServer.UnregisterHandler((short)msgType.endMatch);
         sm_serverData = null;
 		enabled = false;
 		sm_isServer = false;
@@ -168,6 +175,8 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.attackOrder);
 		sm_clientData.m_connection.UnregisterHandler((short)msgType.turnSync);
         sm_clientData.m_connection.UnregisterHandler((short)msgType.equipOrder);
+        sm_clientData.m_connection.UnregisterHandler((short)msgType.localPlayerDeath);
+        sm_clientData.m_connection.UnregisterHandler((short)msgType.endMatch);
 		}
         sm_clientData = null;
 		enabled = false;
@@ -338,6 +347,26 @@ public class SyncManager : NetworkBehaviour
 		m_lastSync = Time.realtimeSinceStartup;
 	}
 
+    void OnServerHandleDeathMessage(NetworkMessage netMsg)
+    {
+        int players = sm_serverData.m_playerData.Count;
+        DeathMessage deathMsg = netMsg.ReadMessage<DeathMessage>(); ;
+        if (players != 1)
+            --players;
+
+        sm_serverData.m_deathCount += deathMsg.decreaseSize;
+        if (sm_serverData.m_deathCount >= players)
+        {
+            var msg = new EmptyMessage();
+            NetworkServer.SendToAll((short)msgType.endMatch, msg);
+        }
+        else
+        {
+            Debug.Log("Death registerd on host, death until end: " +
+                (players - sm_serverData.m_deathCount));
+        }
+    }
+
 	IEnumerator WaitForClientVisualizationCoRoutine()
 	{
 		while(true)
@@ -437,7 +466,7 @@ public class SyncManager : NetworkBehaviour
 		msg.m_clientID = sm_clientData.m_clientID;
 		sm_clientData.m_connection.Send((short)msgType.visualize, msg);
 		m_lastSync = Time.realtimeSinceStartup;
-	}
+    }
 
 	private void OnServerReceiveVisualizeDone(NetworkMessage netMsg)
 	{
@@ -533,12 +562,25 @@ public class SyncManager : NetworkBehaviour
 		handlePickupOrdersOnClient();
 	}
 
+    void OnClientReceiveEndMatch(NetworkMessage msg) // handle received item pickup orders on client
+    {
+        StartCoroutine("WaitForEnd");
+    }
+
     public static void AddChatMessage(string message, int id)
     {
         var msg = new ChatMessage();
         msg.m_clientID = id;
         msg.m_message = message;
         sm_clientData.m_connection.Send((short)msgType.chatMessage, msg);
+    }
+
+    public static void SendDeathMessage(int size)
+    {
+        sm_isVictory = false;
+        var msg = new DeathMessage();
+        msg.decreaseSize = size;
+        sm_clientData.m_connection.Send((short)msgType.localPlayerDeath, msg);
     }
 
 	public static bool CheckInputPossible(bool playSounds = true, bool onlyCancelSounds = false)
@@ -591,4 +633,17 @@ public class SyncManager : NetworkBehaviour
 	{
 		sm_currentTurn = 0;
 	}
+
+    private IEnumerator WaitForEnd()
+    {
+        ActionBar actionBar = FindObjectOfType<ActionBar>();
+        for (;;)
+        {
+            if (!sm_clientData.m_turnInProgress)
+                break;
+            yield return null;
+        }
+        actionBar.m_exitMenu.SetEndGameText(!sm_isVictory);
+        actionBar.ExitGameButtonPressed();
+    }
 }

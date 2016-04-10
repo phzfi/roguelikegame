@@ -336,5 +336,4 @@ public class SimpleCharacterMovement : NetworkBehaviour
 			Gizmos.DrawLine(start, end);
 		}
 	}
-
 }

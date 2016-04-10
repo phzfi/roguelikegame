@@ -44,13 +44,17 @@ MonoBehaviour:
   m_height: 50
   m_mapVisualization: {fileID: 0}
   m_coinsPrefab: {fileID: 146226, guid: 764265fd7bda69646b05a870304039cb, type: 2}
-  m_coinCount: 10
-  m_itemCount: 7
+  m_coinCount: 8
+  m_itemCount: 10
   m_items:
   - {fileID: 129782, guid: cab6cda1137c36f478393a42a6d0c2ee, type: 2}
   - {fileID: 194028, guid: 786de7147f9dec84cb8fa7f4b862d174, type: 2}
   - {fileID: 122640, guid: eff1670eb4fa346eb8ab344d3c3c277b, type: 2}
   - {fileID: 121334, guid: ab08ed2b27dd847e3b45bb92ce21d26f, type: 2}
+  m_enemyCount: 4
+  m_grunt: {fileID: 188406, guid: b69f0025fd33fbe4fae6e561e8b8a996, type: 2}
+  m_warrior: {fileID: 190718, guid: 1941cad29c720974eabf96b24c65c9a9, type: 2}
+  m_boss: {fileID: 155062, guid: d3324265805be7b4d9279c18addfc9f7, type: 2}
 --- !u!114 &11479710
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -83,7 +87,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_items.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_coinsPrefab
@@ -96,18 +100,18 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_items.Array.data[1]
       value: 
-      objectReference: {fileID: 112124, guid: a5d493cdb7b00e84ab77854466d255e5, type: 2}
+      objectReference: {fileID: 194028, guid: 786de7147f9dec84cb8fa7f4b862d174, type: 2}
     - target: {fileID: 0}
       propertyPath: m_coins
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_coinCount
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_itemCount
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_AssetId.i0
@@ -181,6 +185,14 @@ Prefab:
       propertyPath: m_items.Array.data[2]
       value: 
       objectReference: {fileID: 102422, guid: 786de7147f9dec84cb8fa7f4b862d174, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_enemyCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_items.Array.data[4]
+      value: 
+      objectReference: {fileID: 194028, guid: 786de7147f9dec84cb8fa7f4b862d174, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 183562}
