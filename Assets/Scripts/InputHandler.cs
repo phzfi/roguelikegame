@@ -12,6 +12,7 @@ public class InputHandler : Singleton<InputHandler>
 	public Color selectedColor = Color.red;
     public Texture2D m_swordCursor;
     public Texture2D m_walkCursor;
+	public ExitGameScreen m_exitMenu;
 
 	public PathVisualization pathVisualization;
 	private ActionManager m_actionManager;
@@ -98,7 +99,16 @@ public class InputHandler : Singleton<InputHandler>
         }
 
 		if (Input.GetKeyDown(KeyCode.Escape)) // Esc cancels action targeting
-			m_actionManager.m_currentlyTargeting = false;
+		{
+			if (m_actionManager.m_currentlyTargeting)
+			{
+				m_actionManager.m_currentlyTargeting = false;
+			}
+			else
+			{
+				m_exitMenu.ToggleExitGamePanel();	
+			}				
+		}
 
 		if (Input.GetMouseButtonUp(1))
 		{
