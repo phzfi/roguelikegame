@@ -19,36 +19,21 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
     [HideInInspector]
     public bool m_twoHandedWeapon;
 
-    private GameObject m_slots;
+    private GameObject m_equipmentSlots;
+    private GameObject m_inventorySlots;
     private GameObject m_inventoryCanvas;
 
     //Maybe find a better idea for getting the game object "Slots", or even make a better solution for slots
     void Start()
     {
+        m_equipmentSlots = GameObject.FindGameObjectWithTag("Equipment");
         m_inventoryCanvas = GameObject.FindGameObjectWithTag("InventoryCanvas");
+        m_inventorySlots = GameObject.FindGameObjectWithTag("InventorySlots");
         if (GetComponent<Item>() != null)
         {
             var item = GetComponent<Item>();
             m_itemType = item.m_typeOfItem;
             m_twoHandedWeapon = item.m_twoHandedWeapon && item.m_typeOfItem == Item.ItemType.WEAPON;
-        }
-
-        var panels = m_inventoryCanvas.transform.GetChild(0);
-        for (int i = 0; i < panels.childCount; ++i)
-        {
-            var equipment = panels.transform.GetChild(i);
-            if (equipment.tag == "Equipment")
-            {
-                var equipmentPanel = equipment.GetChild(0);
-                for (int j = 0; j < equipmentPanel.childCount; ++j)
-                {
-                    if (equipmentPanel.GetChild(j).name.Contains("Slots"))
-                    {
-                        m_slots = equipmentPanel.GetChild(j).gameObject;
-                        return;
-                    }
-                }
-            }
         }
     }
 
@@ -70,9 +55,9 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                 element.ignoreLayout = true;
             }
 
-            for (int i = 0; i < m_slots.transform.childCount; i++)
+            for (int i = 0; i < m_equipmentSlots.transform.childCount; i++)
             {
-                var slot = m_slots.transform.GetChild(i).GetComponent<Slot>();
+                var slot = m_equipmentSlots.transform.GetChild(i).GetComponent<Slot>();
                 var image = slot.GetComponent<Image>();
 
                 if (slot != null && image.color.a == 1)
@@ -111,9 +96,9 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                 element.ignoreLayout = false;
             }
 
-            for (int i = 0; i < m_slots.transform.childCount; i++)
+            for (int i = 0; i < m_equipmentSlots.transform.childCount; i++)
             {
-                var slot = m_slots.transform.GetChild(i);
+                var slot = m_equipmentSlots.transform.GetChild(i);
                 if (slot.GetComponent<Image>().color.a == 1)
                 {
                     var img = slot.GetComponent<Image>();
@@ -123,6 +108,38 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
 
             GetComponent<CanvasGroup>().blocksRaycasts = true;
         }
+    }
+
+    private bool UnequipShield(GameObject shield, GameObject shieldSlot)
+    {
+        for(int i = 0; i < m_inventorySlots.transform.childCount; i++)
+        {
+            var slot = m_inventorySlots.transform.GetChild(i);
+            if (slot.GetComponent<Slot>().m_containsItem)
+                continue;
+            shield.transform.SetParent(slot);
+            shield.GetComponent<Draggable>().m_returnTo = slot.transform;
+            slot.GetComponent<Slot>().m_containsItem = true;
+            shieldSlot.GetComponent<Slot>().m_containsItem = false;
+            return true;
+        }
+        return false;
+    }
+
+    private bool Unequip2h(GameObject twohand, GameObject weaponSlot)
+    {
+        for (int i = 0; i < m_inventorySlots.transform.childCount; i++)
+        {
+            var slot = m_inventorySlots.transform.GetChild(i);
+            if (slot.GetComponent<Slot>().m_containsItem)
+                continue;
+            twohand.transform.SetParent(slot);
+            twohand.GetComponent<Draggable>().m_returnTo = slot.transform;
+            slot.GetComponent<Slot>().m_containsItem = true;
+            weaponSlot.GetComponent<Slot>().m_containsItem = false;
+            return true;
+        }
+        return false;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -141,16 +158,44 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                 {
                     if (item != null)
                     {
-                        for (int i = 0; i < m_slots.transform.childCount; i++)
+                        for (int i = 0; i < m_equipmentSlots.transform.childCount; i++)
                         {
-                            var slot = m_slots.transform.GetChild(i).GetComponent<Slot>();
+                            var slot = m_equipmentSlots.transform.GetChild(i).GetComponent<Slot>();
                             if (slot.m_itemType == item.m_typeOfItem)
                             {
-                                if (slot.m_containsItem && slot.transform.childCount > 1)
+                                var shieldSlot = slot.GetEquipmentSlot(Item.ItemType.SHIELD);
+                                var shieldItem = shieldSlot.GetComponentInChildren<Item>();
+
+                                var weaponSlot = slot.GetEquipmentSlot(Item.ItemType.WEAPON);
+                                var weaponItem = weaponSlot.GetComponentInChildren<Item>();
+
+                                var inventorySlot = m_returnTo;
+                                if (m_twoHandedWeapon)
                                 {
-                                    var inventorySlot = m_returnTo;
+                                    if(shieldItem != null)
+                                    {
+                                        if(UnequipShield(shieldItem.gameObject, shieldSlot.gameObject))
+                                            shieldSlot.UnequipItem(shieldItem.gameObject);
+                                    }
+                                }
+                                else
+                                {
+                                    if(m_itemType == Item.ItemType.SHIELD)
+                                    {
+                                        if(weaponItem != null)
+                                        {
+                                            if(weaponItem.m_twoHandedWeapon)
+                                            {
+                                                if (Unequip2h(weaponItem.gameObject, weaponSlot.gameObject))
+                                                    weaponSlot.UnequipItem(weaponItem.gameObject);
+                                            }
+                                        }
+                                    }
+                                }
+                                if (slot.m_containsItem && slot.transform.childCount > 0)
+                                {
                                     var oldEquippedItem = slot.transform.GetChild(1).GetComponent<Draggable>();
-                                    oldEquippedItem.m_returnTo = m_returnTo;
+                                    oldEquippedItem.m_returnTo = inventorySlot;
                                     m_returnTo = slot.transform;
                                     transform.SetParent(m_returnTo);
                                     oldEquippedItem.transform.SetParent(oldEquippedItem.m_returnTo);
@@ -169,28 +214,6 @@ public class Draggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
                                 if (!UIManager.sm_equipmentOpen)
                                     col.a = 0f;
                                 sprite.color = col;
-                                if(m_twoHandedWeapon)
-                                {
-                                    var shieldSlot = slot.GetEquipmentSlot(Item.ItemType.SHIELD);
-                                    var shieldItem = slot.GetComponentsInChildren<Item>()[0];
-                                    if (shieldItem == null)
-                                        break;
-                                    for(int j = 0; j < m_slots.transform.childCount; ++j)
-                                    {
-                                        var inventorySlot = m_slots.transform.GetChild(j).GetComponent<Slot>();
-                                        if(!inventorySlot.m_containsItem)
-                                        {
-                                            var shield = shieldItem.GetComponent<Draggable>();
-                                            shield.m_returnTo = inventorySlot.transform;
-                                            shieldItem.transform.SetParent(shield.m_returnTo);
-                                            shieldSlot.m_containsItem = false;
-                                            inventorySlot.m_containsItem = true;
-                                            slot.UnequipItem(shieldItem.gameObject);
-                                            break;
-                                        }
-
-                                    }
-                                }
                             }
                         }
                     }
