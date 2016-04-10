@@ -120,6 +120,7 @@ public class Slot : MonoBehaviour, IDropHandler
 							var inventorySlot = inventorySlots[i];
 							if(!inventorySlot.m_containsItem)
 							{
+                                shieldSlot.m_containsItem = false;
 								shieldItem.transform.SetParent(inventorySlot.transform);
 								inventorySlot.m_containsItem = true;
 								break;
@@ -159,7 +160,7 @@ public class Slot : MonoBehaviour, IDropHandler
                     m_containsItem = true;
                     UnequipItem(item.gameObject);
                 }
-                else if (!oldSlot.m_isInventory && m_containsItem) //for swapping items by dragging from equipment to inventory
+                else if (!oldSlot.m_isInventory && m_containsItem && transform.childCount > 0) //for swapping items by dragging from equipment to inventory
                 {
                     var swapEquippedItem = transform.GetChild(0).GetComponent<Item>();
                     if (swapEquippedItem.m_typeOfItem == oldSlot.m_itemType)

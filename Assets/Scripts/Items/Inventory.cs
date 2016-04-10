@@ -139,7 +139,8 @@ public class Inventory : MonoBehaviour
                 item.GetComponent<RectTransform>().localScale = Vector3.one;
                 var sprite = item.GetComponent<Image>();
                 Color col = sprite.color;
-                col.a = 0f;
+                if(!UIManager.sm_inventoryOpen)
+                    col.a = 0f;
                 sprite.color = col;
                 slot.m_containsItem = true;
                 break;

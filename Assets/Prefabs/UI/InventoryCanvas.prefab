@@ -136,7 +136,7 @@ GameObject:
   - 224: {fileID: 22471448}
   m_Layer: 0
   m_Name: Slots
-  m_TagString: Untagged
+  m_TagString: Equipment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1007,7 +1007,7 @@ GameObject:
   - 114: {fileID: 11437898}
   m_Layer: 0
   m_Name: Equipment
-  m_TagString: Equipment
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1065,7 +1065,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11402196
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1207,7 +1206,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11404784
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1347,7 +1345,6 @@ MonoBehaviour:
   m_itemType: 0
   m_containsItem: 0
   m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11410794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1417,7 +1414,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11415748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1580,7 +1576,6 @@ MonoBehaviour:
   m_itemType: 5
   m_containsItem: 0
   m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11423184
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1816,7 +1811,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11432646
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1975,7 +1969,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11437654
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2041,7 +2034,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11439966
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2123,7 +2115,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11443386
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2257,7 +2248,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11448904
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2332,7 +2322,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11449454
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2366,7 +2355,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11451488
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2420,7 +2408,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11452424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2597,7 +2584,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11457278
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2740,7 +2726,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11462330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2862,7 +2847,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11466220
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2922,7 +2906,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11467020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2998,7 +2981,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11467594
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3034,7 +3016,6 @@ MonoBehaviour:
   m_itemType: 1
   m_containsItem: 0
   m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11471446
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3138,7 +3119,6 @@ MonoBehaviour:
   m_itemType: 2
   m_containsItem: 0
   m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11472780
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3184,7 +3164,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11473508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3481,7 +3460,6 @@ MonoBehaviour:
   m_itemType: 3
   m_containsItem: 0
   m_equipSound: {fileID: 8300000, guid: c9517907f1800c44db7f749a01d3e017, type: 3}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11486610
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3497,7 +3475,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11486894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3552,7 +3529,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11488002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3784,7 +3760,6 @@ MonoBehaviour:
   m_itemType: 7
   m_containsItem: 0
   m_equipSound: {fileID: 0}
-  m_warningSign: {fileID: 112604}
 --- !u!114 &11494648
 MonoBehaviour:
   m_ObjectHideFlags: 1
