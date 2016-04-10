@@ -55,4 +55,12 @@ public class ClientTurnLogicManager : MonoBehaviour {
 		sm_visualizationRunning = false;
 		SyncManager.OnClientSendVisualizeDone();
 	}
+
+    public void Clear()
+    {
+        sm_actions.Clear();
+        m_nextAction = 0;
+        sm_visualizationRunning = false;
+        sm_lastActionFinished = true;
+    }
 }

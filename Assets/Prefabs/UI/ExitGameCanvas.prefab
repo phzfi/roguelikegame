@@ -68,7 +68,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &114900
 GameObject:
   m_ObjectHideFlags: 1
@@ -2030,6 +2030,8 @@ MonoBehaviour:
   m_exitSettings: {fileID: 11449700}
   m_exitGame: {fileID: 113830}
   m_background: {fileID: 158424}
+  m_victoryTextPrefab: {fileID: 111706, guid: 0940547bef3dfb14f99771689645c5a0, type: 2}
+  m_gameOverTextPrefab: {fileID: 188524, guid: 05d25702244b991479480e6b30f31e89, type: 2}
 --- !u!114 &11497500
 MonoBehaviour:
   m_ObjectHideFlags: 1
