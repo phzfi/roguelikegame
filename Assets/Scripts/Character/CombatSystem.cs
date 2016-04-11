@@ -208,9 +208,14 @@ public class CombatSystem : NetworkBehaviour
             m_currentHp = 0;
             if(gameObject.tag == "Player")
             {
-                SyncManager.SendDeathMessage(1);
+                SyncManager.IncrementDeathCount(1);
                 Debug.Log("Death in combatSystem");
-            }
+			}
+			if (isBoss)
+			{
+				SyncManager.IncrementDeathCount(100);
+				Debug.Log("boss killed!!");
+			}
 
 			ActionData action = new ActionData();
 			action.m_actionID = m_deathVisualizeAction.ID;
@@ -231,11 +236,6 @@ public class CombatSystem : NetworkBehaviour
 
 	public void VisualizeDeath(ActionTargetData data)
 	{
-        if (isBoss)
-        {
-            SyncManager.SendDeathMessage(100);
-            Debug.Log("boss killed!!");
-        } 
         
 		m_controller.Unregister();
 		m_label.enabled = false;

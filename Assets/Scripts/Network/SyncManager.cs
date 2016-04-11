@@ -119,7 +119,6 @@ public class SyncManager : NetworkBehaviour
         NetworkServer.RegisterHandler((short)msgType.equipOrder, OnServerReceiveEquipOrders);
         NetworkServer.RegisterHandler((short)msgType.chatMessage, OnServerReceiveChatMessage);
 		NetworkServer.RegisterHandler((short)msgType.visualize, OnServerReceiveVisualizeDone);
-        NetworkServer.RegisterHandler((short)msgType.localPlayerDeath, OnServerHandleDeathMessage);
         NetworkServer.RegisterHandler((short)msgType.endMatch, EmptyMessageHandler);
         sm_serverData = new ServerData();
 		enabled = true;
@@ -145,7 +144,6 @@ public class SyncManager : NetworkBehaviour
 		sm_clientData.m_connection.RegisterHandler((short)msgType.actionOrder, OnClientReceiveActionOrders);
         sm_clientData.m_connection.RegisterHandler((short)msgType.equipOrder, OnClientReceiveEquipOrders);
         sm_clientData.m_connection.RegisterHandler((short)msgType.chatMessage, OnClientReceiveChatMessage);
-        sm_clientData.m_connection.RegisterHandler((short)msgType.localPlayerDeath, EmptyMessageHandler);
         sm_clientData.m_connection.RegisterHandler((short)msgType.endMatch, OnClientReceiveEndMatch);
         enabled = true;
 		sm_running = true;
@@ -379,26 +377,6 @@ public class SyncManager : NetworkBehaviour
 		m_lastSync = Time.realtimeSinceStartup;
 	}
 
-    void OnServerHandleDeathMessage(NetworkMessage netMsg)
-    {
-        int players = sm_serverData.m_playerData.Count;
-        DeathMessage deathMsg = netMsg.ReadMessage<DeathMessage>(); ;
-        if (players != 1)
-            --players;
-
-        sm_serverData.m_deathCount += deathMsg.decreaseSize;
-        if (sm_serverData.m_deathCount >= players)
-        {
-            var msg = new EmptyMessage();
-            NetworkServer.SendToAll((short)msgType.endMatch, msg);
-        }
-        else
-        {
-            Debug.Log("Death registerd on host, death until end: " +
-                (players - sm_serverData.m_deathCount));
-        }
-    }
-
 	IEnumerator WaitForClientVisualizationCoRoutine()
 	{
 		m_visualizationStartTime = Time.realtimeSinceStartup;
@@ -620,13 +598,29 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.Send((short)msgType.chatMessage, msg);
     }
 
-    public static void SendDeathMessage(int size)
+	public static void IncrementDeathCount(int amount)
     {
         sm_isVictory = false;
-        var msg = new DeathMessage();
-        msg.decreaseSize = size;
-        sm_clientData.m_connection.Send((short)msgType.localPlayerDeath, msg);
-    }
+		//var msg = new DeathMessage();
+		//msg.decreaseSize = size;
+		//sm_clientData.m_connection.Send((short)msgType.localPlayerDeath, msg);
+
+		int players = sm_serverData.m_playerData.Count;
+		if (players != 1)
+			--players;
+
+		sm_serverData.m_deathCount += amount;
+		if (sm_serverData.m_deathCount >= players)
+		{
+			var msg = new EmptyMessage();
+			NetworkServer.SendToAll((short)msgType.endMatch, msg);
+		}
+		else
+		{
+			Debug.Log("Death registerd on host, death until end: " +
+				(players - sm_serverData.m_deathCount));
+		}
+	}
 
 	public static bool CheckInputPossible(bool playSounds = true, bool onlyCancelSounds = false)
 	{
