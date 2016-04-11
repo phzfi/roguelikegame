@@ -4,7 +4,7 @@ using System.Threading;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace UnityTest
+namespace UnityTest2
 {
     [TestFixture]
     [Category("Sample Tests")]
