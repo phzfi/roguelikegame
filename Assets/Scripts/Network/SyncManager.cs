@@ -10,7 +10,7 @@ public class SyncManager : NetworkBehaviour
 {
     public static List<string> sm_chatLog = new List<string>();
 
-	public static float m_lastSync = -99.0f;
+	public static float m_lastSync = 99.0f;
 
 	private static ClientData sm_clientData; // stores all data relevant only to client, null if server
 	private static ServerData sm_serverData; // stores all data relevant only to server, null if client
@@ -32,6 +32,8 @@ public class SyncManager : NetworkBehaviour
 	
 	public float m_syncRate = .5f;
 	public float m_timeOutTurn = 1.0f;
+	public float m_visualizationStartTime = 0;
+	public float m_visualizationTimeOut = 30;
 
 	public AudioSource m_audioSource;
 	public AudioClip m_succesfullInput, m_unsuccesfullInput;
@@ -49,6 +51,11 @@ public class SyncManager : NetworkBehaviour
 		get { return sm_isServer; }
 	}
 
+	public static bool IsDedicatedServer
+	{
+		get { return LobbyManager.Instance.m_dedicatedServer; }
+	}
+
 	void Awake() // Set editor references to static ones. A bit dumb, maybe there's a better way.
 	{
 		sm_audioSource = m_audioSource;
@@ -56,6 +63,7 @@ public class SyncManager : NetworkBehaviour
 		sm_unsuccesfullInput = m_unsuccesfullInput;
 		m_chatManager = FindObjectOfType<ChatManager>();
 		m_turnLogicManager = FindObjectOfType<ClientTurnLogicManager>();
+		m_lastSync = Time.realtimeSinceStartup + 5; // Dont start first turn until five seconds have passed to allow time for connection setup
 	}
 
 	public override void OnStartServer()
@@ -76,8 +84,11 @@ public class SyncManager : NetworkBehaviour
 	{
 		if (sm_isServer && Time.realtimeSinceStartup - m_lastSync > m_syncRate && !sm_serverData.m_turnInProgress) // start turn change if enough time has passed since last turn, and we're on the server
 		{
-			if (GetClientCount() < sm_clientCount) // If all clients haven't yet sent their connection messages, wait.
+			if (GetClientCount() < sm_clientCount || GetClientCount() == 0) // If all clients haven't yet sent their connection messages, wait.
+			{
+				Debug.Log("Waiting for clients to join. Client count: " + sm_clientCount + ", joined count: " + GetClientCount());
 				return;
+			}
 			m_lastSync = Time.realtimeSinceStartup;
 			StartServerTurn();
 		}
@@ -115,7 +126,7 @@ public class SyncManager : NetworkBehaviour
 		sm_isServer = true;
 		sm_running = true;
 		gameObject.SetActive(true);
-		m_lastSync = -99.0f;
+		m_lastSync = Time.realtimeSinceStartup + 5;
 		//NetworkServer.Spawn(gameObject);
 	}
 
@@ -142,7 +153,7 @@ public class SyncManager : NetworkBehaviour
 
 		var msg = new ConnectionMessage();
 		msg.m_clientID = -1;
-		m_lastSync = -99.0f;
+		m_lastSync = Time.realtimeSinceStartup + 5;
 		sm_clientData.m_connection.Send((short)msgType.connected, msg); // send netId of this object to server so that it can keep track of connections using it
 	}
 
@@ -161,7 +172,9 @@ public class SyncManager : NetworkBehaviour
         sm_serverData = null;
 		enabled = false;
 		sm_isServer = false;
+		sm_running = false;
 		sm_clientCount = 0;
+		Reset();
 	}
 
 	public void StopOnClient() // stop client side sync logic
@@ -179,7 +192,9 @@ public class SyncManager : NetworkBehaviour
         sm_clientData.m_connection.UnregisterHandler((short)msgType.endMatch);
 		}
         sm_clientData = null;
+		sm_running = false;
 		enabled = false;
+		Reset();
 	}
 
 	public void DisconnectClient(NetworkConnection connection) // remove disconnected client from players list so that we won't wait for them during turn changes
@@ -193,7 +208,7 @@ public class SyncManager : NetworkBehaviour
 			if (playerData.m_connectionID == connection.connectionId) // tell server to stop tracking disconnected client
 			{
 				sm_serverData.m_playerData.RemoveAt(i);
-				sm_clientCount--;
+				DecrementClientCount();
 				return;
 			}
 		}
@@ -201,6 +216,7 @@ public class SyncManager : NetworkBehaviour
 
 	public static void IncrementClientCount()
 	{
+		Debug.Log("Client connected!");
 		sm_clientCount++;
 	}
 
@@ -211,6 +227,8 @@ public class SyncManager : NetworkBehaviour
 
 	public int GetClientCount()
 	{
+		if (sm_serverData == null)
+			return 0;
 		return sm_serverData.m_playerData.Count;
 	}
 
@@ -220,28 +238,30 @@ public class SyncManager : NetworkBehaviour
 		var item = ItemManager.GetItem(order.m_itemID);
 		if (player == null)
 		{
-			Debug.Log("player not found for equip order");
+			Debug.LogError("player not found for equip order");
 			return;
 		}
 		if (item == null)
 		{
-			Debug.Log("item not found for equip order");
+			Debug.LogError("item not found for equip order");
 			return;
 		}
 		var equipment = player.GetComponent<Equipment>();
 		if (equipment == null)
 		{
-			Debug.Log("equipment not found for equip order");
+			Debug.LogError("equipment not found for equip order");
 			return;
 		}
 		if (order.m_equipType && !equipment.m_equipment.Contains(item.gameObject)) // make sure we haven't already equipped this item (host will have run this in server-side code already)
 		{
+			Debug.Log("player " + order.m_playerID + " equipped item " + item.m_name + " (ID: " + item.ID + ")");
 			equipment.m_equipment.Add(item.gameObject);
 			equipment.m_playerStrength += item.m_strength;
 			equipment.m_playerVitality += item.m_vitality;
 		}
 		else if (!order.m_equipType)
 		{
+			Debug.Log("player " + order.m_playerID + " unequipped item " + item.m_name + " (ID: " + item.ID + ")");
 			equipment.m_equipment.Remove(item.gameObject);
 			equipment.m_playerStrength -= item.m_strength;
 			equipment.m_playerVitality -= item.m_vitality;
@@ -269,6 +289,16 @@ public class SyncManager : NetworkBehaviour
 			ItemManager.OrderPickup(order);
 		}
 		sm_pickupOrders.Clear();
+		Debug.Log("Cleared pickup orders");
+	}
+
+	void handlePickupOrdersOnServer()
+	{
+		for (int i = 0; i < sm_pickupOrders.Count; ++i)
+		{
+			var order = sm_pickupOrders[i];
+			ItemManager.OrderPickup(order);
+		}
 	}
 
 	void handleActionOrdersOnClient()
@@ -338,6 +368,8 @@ public class SyncManager : NetworkBehaviour
 	void FinalizeServerTurn()
 	{
 		Debug.Log("end visualization");
+		if (IsDedicatedServer) // For dedicated server we must handle pickup orders as special case since there's no host client to do it.
+			handlePickupOrdersOnServer();
 		SendPickupOrdersToClients();
 
 		sm_currentTurn++;
@@ -369,8 +401,19 @@ public class SyncManager : NetworkBehaviour
 
 	IEnumerator WaitForClientVisualizationCoRoutine()
 	{
+		m_visualizationStartTime = Time.realtimeSinceStartup;
 		while(true)
 		{
+			if(sm_serverData == null)
+			{
+				Debug.Log("Ending turn prematurely. Server closed.");
+				yield break;
+			}
+			if (Time.realtimeSinceStartup - m_visualizationStartTime > m_visualizationTimeOut)
+			{
+				Debug.Log("Ending turn prematurely. Visualization timeout.");
+				yield break;
+			}
 			if (sm_serverData.VisualizationDone())
 			{
 				FinalizeServerTurn();
@@ -466,7 +509,7 @@ public class SyncManager : NetworkBehaviour
 		msg.m_clientID = sm_clientData.m_clientID;
 		sm_clientData.m_connection.Send((short)msgType.visualize, msg);
 		m_lastSync = Time.realtimeSinceStartup;
-    }
+	}
 
 	private void OnServerReceiveVisualizeDone(NetworkMessage netMsg)
 	{
@@ -476,6 +519,7 @@ public class SyncManager : NetworkBehaviour
 			var data = sm_serverData.m_playerData[i];
 			if (data.m_connectionID == msg.m_clientID)
 			{
+				Debug.Log("Client " + data.m_connectionID + " completed visualization!");
 				data.m_visualizationInProgress = false;
 			}
 		}
@@ -559,6 +603,7 @@ public class SyncManager : NetworkBehaviour
 	{
 		var pickupMsg = msg.ReadMessage<PickupOrderMessage>();
 		sm_pickupOrders.AddRange(pickupMsg.m_orders);
+		Debug.Log("received " + pickupMsg.m_orders.Length + " pickup orders");
 		handlePickupOrdersOnClient();
 	}
 
@@ -632,6 +677,18 @@ public class SyncManager : NetworkBehaviour
 	void Reset()
 	{
 		sm_currentTurn = 0;
+		sm_attackOrders.Clear();
+		sm_equipOrders.Clear();
+		sm_outgoingActions.Clear();
+		sm_incomingActions.Clear();
+		sm_outgoingVisualizeActions.Clear();
+		sm_incomingVisualizeActions.Clear();
+		sm_moveOrders.Clear();
+		sm_visualizeMoveOrders.Clear();
+		sm_pickupOrders.Clear();
+		ActionPool.ResetCounter();
+		ItemManager.Reset();
+		CharManager.Reset();
 	}
 
     private IEnumerator WaitForEnd()

@@ -4,8 +4,8 @@ using UnityEngine.Networking;
 
 public class CharController : NetworkBehaviour
 {
-	[HideInInspector]
-	public int ID;
+	[SyncVar]
+	public int ID = -1;
 	[HideInInspector]
 	public SimpleCharacterMovement m_mover = null; // Store references to avoid having to use GetComponent everywhere
 	[HideInInspector]
@@ -26,7 +26,10 @@ public class CharController : NetworkBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		ID = (int)netId.Value;
+		//ID = (int)netId.Value;
+		if (ID == -1)
+			Debug.LogError("ID not set for charcontroller of " + gameObject.name);
+		Debug.Log("ID = " + ID + " for " + gameObject.name);
 		CharManager.Register(this);
 		m_syncer = GetComponent<PlayerSync>();
 		m_mover = GetComponent<SimpleCharacterMovement>();

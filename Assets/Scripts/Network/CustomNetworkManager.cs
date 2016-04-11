@@ -20,6 +20,7 @@ public class CustomNetworkManager : NetworkManager
 
 	public override void OnStartServer() // called when starting server or host
 	{
+		Debug.Log("OnStartServer");
 		base.OnStartServer();
 		m_syncManager.InitOnServer();
 		m_syncManager.enabled = true;

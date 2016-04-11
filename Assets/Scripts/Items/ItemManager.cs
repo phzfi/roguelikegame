@@ -16,10 +16,10 @@ public class ItemManager : MonoBehaviour
 
 	private static int sm_curID = 0; // TODO: will not stay synchronized if client and server have different amounts of objects, eg. when not synchronizing unseen objects
 
-	public static void OnLevelWasLoaded(int level) // reset all containers and sm_curID when loading new scene
-	{
-		Reset();
-	}
+	//public static void OnLevelWasLoaded(int level) // reset all containers and sm_curID when loading new scene
+	//{
+	//	Reset();
+	//}
 
 	public static void Register(Item item, bool onMap = true) // Add item to relevant containers
 	{
@@ -83,11 +83,15 @@ public class ItemManager : MonoBehaviour
 	public static void OrderPickup(PickupOrder order) // Get mover and item associated with given order, tell mover to pick item up
 	{
 		var mover = CharManager.GetObject(order.m_playerID);
+		if (mover == null)
+			Debug.LogError("No mover (ID:"+order.m_playerID + ") found for pickup order!");
 		var item = GetItemOnMap(order.m_itemID);
+		if (item == null)
+			Debug.LogError("No item (ID:" + order.m_itemID + ") found for pickup order!");
 		item.Pickup(mover.gameObject);
 	}
 
-	private static void Reset()
+	public static void Reset()
 	{
 		sm_allItems = new List<Item>();
 		sm_itemsOnMap = new List<Item>();

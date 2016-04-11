@@ -215,6 +215,11 @@ public class CombatSystem : NetworkBehaviour
 			ActionData action = new ActionData();
 			action.m_actionID = m_deathVisualizeAction.ID;
 			visualization.Add(action);
+			if(LobbyManager.Instance.m_dedicatedServer)
+			{
+				m_controller.Unregister();
+				Disable();
+			}
         }
 			
 	}

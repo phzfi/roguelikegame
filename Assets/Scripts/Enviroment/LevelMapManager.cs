@@ -186,6 +186,9 @@ public class LevelMapManager : NetworkBehaviour
                 obj = (GameObject)Instantiate(m_boss, pos, Quaternion.identity);
             }
 
+			var controller = obj.GetComponent<CharController>();
+			controller.ID = CharManager.GetNextID();
+
             i++;
             NetworkServer.Spawn(obj);
         }

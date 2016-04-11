@@ -15,6 +15,7 @@ public class SimpleCharacterMovement : NetworkBehaviour
 
 	public int m_gridSpeed = 6;
 
+	[SyncVar]
 	public Vector2i m_gridPos;
 	[HideInInspector]
 	public PlayerSync m_syncer;

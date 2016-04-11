@@ -87,7 +87,7 @@ public class MovementManager : MonoBehaviour
 
 			if (moved)
 			{
-				mover.m_syncer.SyncPosition(mover.m_gridPos);
+				//mover.m_syncer.SyncPosition(mover.m_gridPos);
 				ActionTargetData target = new ActionTargetData();
 				target.m_gridTarget = mover.m_gridPos;
 				ActionData actionData = new ActionData();

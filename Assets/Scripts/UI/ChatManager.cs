@@ -33,6 +33,11 @@ public class ChatManager : NetworkBehaviour
 
     public void AddMessage(string msg)
     {
+		if(SyncManager.IsDedicatedServer)
+		{
+			Debug.LogError("Tried to add chat message for dedicated server, not supported");
+			return;
+		}
         var player = CharManager.GetLocalPlayer();
         m_chatMessagePrefab.text = msg;
         var messageText = Instantiate(m_chatMessagePrefab);
@@ -48,8 +53,13 @@ public class ChatManager : NetworkBehaviour
     }
 
     public void SendMessage()
-    {
-        var player = CharManager.GetLocalPlayer();
+	{
+		if (SyncManager.IsDedicatedServer)
+		{
+			Debug.LogError("Tried to send chat message for dedicated server, not supported");
+			return;
+		}
+		var player = CharManager.GetLocalPlayer();
         if (m_messageToBeSent.text.Length == 0)
             return;
         string message = player.m_name.ToString() + ": " + m_messageToBeSent.text;

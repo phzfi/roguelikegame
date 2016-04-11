@@ -25,6 +25,9 @@ public class TargetingRenderer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		if (SyncManager.IsDedicatedServer)
+			return;
+
 		var player = CharManager.GetLocalPlayer();
 		if (!m_actionManager.m_currentlyTargeting || player == null) // If not targeting right now, disable renderer and exit function
 		{

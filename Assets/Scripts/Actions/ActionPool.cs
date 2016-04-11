@@ -29,4 +29,9 @@ public class ActionPool : NetworkBehaviour {
 	{
 		return (((ulong)(m_objectID) << 32) | (m_firstFreeIndex++));
 	}
+
+	public static void ResetCounter()
+	{
+		sm_lastID = 0;
+	}
 }

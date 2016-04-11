@@ -20,23 +20,26 @@ public class Slot : MonoBehaviour, IDropHandler
     //public GameObject m_warningSign; //appears if player tries to equip for example a weapon in legs-slot
 
     public void Start()
-	{
+    {
 		m_inventorySlots = GameObject.FindGameObjectWithTag("InventorySlots");
 		if (m_inventorySlots == null)
 			Debug.LogError("Could not find inventory slots for slot");
-		m_audioSource = gameObject.AddComponent<AudioSource>();
+        m_audioSource = gameObject.AddComponent<AudioSource>();
     }
 
 	public void Update()
-	{
+    {
 		if (!m_playerSet)
 		{
+			if (SyncManager.IsDedicatedServer) // Do not initialize for dedicated server
+				return;
+
 			var player = CharManager.GetLocalPlayer();
 			if (player == null)
-			{
-				Debug.Log("Could not find local player for slot (player not yet initialized)");
-				return;
-			}
+				{
+					Debug.Log("Could not find local player for slot (player not yet initialized)");
+					return;
+				}
 			m_equipment = player.GetComponent<Equipment>();
 			m_inventory = player.GetComponent<Inventory>();
 			m_playerID = player.ID;
@@ -45,9 +48,9 @@ public class Slot : MonoBehaviour, IDropHandler
 
 			m_playerSet = true;
 		}
-	}
+    }
 
-	public void EquipItem(GameObject itemName)
+    public void EquipItem(GameObject itemName)
     {
         var item = itemName.GetComponent<Item>();
         SyncManager.AddEquipOrder(item.ID, m_playerID, true);
